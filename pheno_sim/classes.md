@@ -183,13 +183,15 @@ from_spec_dict(spec_dict: Dict)
 - Constructs the InputStep object from a specification dictionary 'input'
 key's value.
 
-__call__(input_files: str, List[str], or Dict[str, str]) -> Dict[str, HaplotypeValues or Values]
+\_\_call\_\_(input_files: str, List[str], or Dict[str, str]) -> Dict[str, HaplotypeValues or Values]
 - Runs the input nodes. The input files can be a single file, a list of files,
 or a dictionary of files where the key is some alias for the path. Returns
 a Dict of HaplotypeValues (and maybe also Values).
 
 
 ### SimulationStep
+
+Each SimulationStep contains a single function node.
 
 
 
