@@ -43,21 +43,21 @@ run_simulation(input_files: str, List[str], or Dict[str, str])
 
 I'm on the fence as to if these have to be classes or not.
 
-HaplotypeValues: Tuple[numpy.ndarray, numpy.ndarray]
-	A tuple of two numpy arrays, each representing one of the two copies of
-	the chromosome. These values should be indexed such that for two
-	HaplotypeValues on the same chromosome, which index corresponds to which
-	copy of the chromosome is the same. 
-	e.g.:
-		hap_val1 = (vals_from_chr9_copy1_loci1, vals_from_chr9_copy2_loci1)
-		hap_val2 = (vals_from_chr9_copy1_loci2, vals_from_chr9_copy2_loci2)
+#### HaplotypeValues: Tuple[numpy.ndarray, numpy.ndarray]
+A tuple of two numpy arrays, each representing one of the two copies of
+the chromosome. These values should be indexed such that for two
+HaplotypeValues on the same chromosome, which index corresponds to which
+copy of the chromosome is the same. 
+e.g.:
+	hap_val1 = (vals_from_chr9_copy1_loci1, vals_from_chr9_copy2_loci1)
+	hap_val2 = (vals_from_chr9_copy1_loci2, vals_from_chr9_copy2_loci2)
 
-Values: numpy.ndarray
-	A numpy array of values. One dimension should be length the number of
-	samples, and the other dimension should be length the number of 
-	values for each sample (e.g. the alt allele counts over 5 LOF loci for
-	50 samples, a single cumulative value representing the effect of some gene
-	for the 50 samples being simulated).
+#### Values: numpy.ndarray
+A numpy array of values. One dimension should be length the number of
+samples, and the other dimension should be length the number of 
+values for each sample (e.g. the alt allele counts over 5 LOF loci for
+50 samples, a single cumulative value representing the effect of some gene
+for the 50 samples being simulated).
 
 This will also refer to the ValueDict, which is a Dict[str, Values or
 HaploypeValues] that gets passed between the simulation steps. The keys are
@@ -68,4 +68,23 @@ alias of the node the values are from.
 
 Nodes fall into three categories: input, function, and output.
 
+- Input nodes are the first nodes in the simulation. They read in genotype data
+  from files and convert them into HaplotypeValues or Values. They are all ran
+  by the run_input_step method of the PhenoSimulation class.
+
+- Function nodes apply some function to some values from the ValueDict and
+  return a Values/HaplotypeValues object of the result. These nodes are ran by
+  SimluationStep objects, which pass them the proper input from the ValuesDict
+  and add the output to the ValuesDict.
+
+- Output nodes are the last nodes in the simulation. They take some values from
+  the ValueDict and write them to files and/or return them in a dict.
+
+### Input Nodes
+
+TODO
+
+### Function Nodes
+
+#### BaseFunctionNode
 
