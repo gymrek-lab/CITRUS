@@ -86,5 +86,29 @@ TODO
 
 ### Function Nodes
 
-#### BaseFunctionNode
+Functions can be divided into combine functions (which combine values from
+the two haplotypes into a single np.array) and general functions which apply
+some function to one of the following:
+
+- A single Values object or multiple Values objects. Returns a single Values
+  object.
+
+- A single HaplotypeValues object or multiple HaplotypeValues objects. Returns
+  a single HaplotypeValues object.
+
+- One or more Values objects and one or more HaplotypeValues objects. Returns
+  a single HaplotypeValues object.
+
+#### AbstractBaseFunctionNode
+
+Abstract base class for all function nodes. Defines the interface for all
+function nodes.
+
+##### Attributes
+
+##### Methods
+
+methods
+
+
 
