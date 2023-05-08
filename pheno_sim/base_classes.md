@@ -132,26 +132,25 @@ alias: str
 - The alias of the node. This is used to refer to the node in the
 specification file and in the ValueDict.
 
-input_aliases: List[str]
-- The aliases of the nodes that are inputs to this node. These are used
-to refer to the input nodes in the ValueDict.
+input_mapping: Dict[str, str or List[str]]
+- Mapping from the name of the input args of the function to the alias(es) of the node(s) that comprise that input. This is used to get the input values from the ValueDict and pass them to the function.
 
 ##### Methods
 
 constructor(alias: str, **kwargs)
 - Constructs the AbstractBaseFunctionNode object.
 
-__call__(values: Dict[str, Values or HaplotypeValues]) -> Values or HaplotypeValues
+\_\_call\_\_(input_dict: Dict[str, Values or HaplotypeValues]) -> Values or HaplotypeValues
 - Runs the function node on the values passed from the ValueDict. Returns the resulting Values or HaplotypeValues object.
 
 #### AbstractBaseCombineFunctionNode
 
 Abstract base class for all combine function nodes. Differs in the type
-checking of the __call__ method.
+checking of the \_\_call\_\_ method.
 
 ##### Methods
 
-__call__(values: Dict[str, HaplotypeValues]) -> Values
+\_\_call\_\_(input_dict: Dict[str, HaplotypeValues]) -> Values
 - Runs the function node on the HaplotypeValues passed from the ValueDict.
 - Returns the resulting Values object.
 
@@ -191,14 +190,30 @@ a Dict of HaplotypeValues (and maybe also Values).
 
 ### SimulationStep
 
-Each SimulationStep contains a single function node.
+Each SimulationStep contains a single function node. SimulationStep objects execute the function node and add the output to the ValueDict with the following two steps:
+
+1. Call the function node with the proper input from the ValueDict. The input is determined by the input_mapping attribute of the function node.
+
+2. Add the output of the function node to the ValueDict with the alias of the function node as the key. If required_output attribute of the SimulationStep is not None, then the ValueDict is filtered to only contain the required_output keys. The ValueDict is then returned. The rquired_output attribute is set by the PhenoSimulation object.
+
+NOTE: The second step is not required and may be an unnecessary optimization. For now the plan is to keep it None for everything and not implement the setting of the required_output attribute by the PhenoSimulation object.
+
+#### Attributes
+
+function_node: FunctionNode
+
+required_output: List[str] or None
+
+#### Methods
+
+constructor(function_node: FunctionNode, required_output: List[str] or default None)
+
+from_spec(spec_dict: Dict) -> SimulationStep
+
+\_\_call\_\_(input_dict: Dict[str, Values or HaplotypeValues]) -> Dict[str, Values or HaplotypeValues]
+- Runs the function node on the values passed from the ValueDict. Returns the resulting Values or HaplotypeValues object.
 
 
+### OutputStep
 
-
-
-
-
-
-
-
+TODO
