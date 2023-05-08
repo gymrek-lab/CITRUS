@@ -188,17 +188,15 @@ The input nodes of the simulation.
 
 #### Methods
 
-- constructor(input_nodes: List[InputNode])
+constructor(input_nodes: List[InputNode])
+- Constructs the InputStep object.
 
-Constructs the InputStep object.
-
-- from_spec_dict(spec_dict: Dict)
-Constructs the InputStep object from a specification dictionary 'input'
+from_spec_dict(spec_dict: Dict)
+- Constructs the InputStep object from a specification dictionary 'input'
 key's value.
 
 __call__(input_files: str, List[str], or Dict[str, str]) -> Dict[str, HaplotypeValues or Values]
-
-Runs the input nodes. The input files can be a single file, a list of files,
+- Runs the input nodes. The input files can be a single file, a list of files,
 or a dictionary of files where the key is some alias for the path. Returns
 a Dict of HaplotypeValues (and maybe also Values).
 
