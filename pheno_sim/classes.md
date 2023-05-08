@@ -95,15 +95,18 @@ Abstract base class for all input nodes.
 ##### Attributes
 
 alias: str
+
 	The alias of the node. This is used to refer to the node in the
 	specification file and in the ValueDict.
 
 inputs: List[str]
+
 	The paths or alias of the file(s) that are inputs to this node.
 
 ##### Methods
 
 load_vals(input_files: Dict[str, str]) -> Values or HaplotypeValues
+
 	Loads the values from the input files. Returns a Values or HaplotypeValues
 	object.
 
@@ -131,19 +134,23 @@ function nodes.
 ##### Attributes
 
 alias: str
+
 	The alias of the node. This is used to refer to the node in the
 	specification file and in the ValueDict.
 
 input_aliases: List[str]
+
 	The aliases of the nodes that are inputs to this node. These are used
 	to refer to the input nodes in the ValueDict.
 
 ##### Methods
 
 constructor(alias: str, **kwargs)
+
 	Constructs the AbstractBaseFunctionNode object.
 
 __call__(values: Dict[str, Values or HaplotypeValues]) -> Values or HaplotypeValues
+
 	Runs the function node on the values passed from the ValueDict. Returns the
 	resulting Values or HaplotypeValues object.
 
@@ -155,6 +162,7 @@ checking of the __call__ method.
 ##### Methods
 
 __call__(values: Dict[str, HaplotypeValues]) -> Values
+
 	Runs the function node on the HaplotypeValues passed from the ValueDict.
 	Returns the resulting Values object.
 
@@ -175,9 +183,30 @@ Runs the input nodes. Returns a Dict of HaplotypeValues (and maybe also Values).
 #### Attributes
 
 input_nodes: List[InputNode]
+
 	The input nodes of the simulation.
 
+#### Methods
+
+constructor(input_nodes: List[InputNode])
+
+	Constructs the InputStep object.
+
+from_spec_dict(spec_dict: Dict)
+
+	Constructs the InputStep object from a specification dictionary 'input'
+	key's value.
+
+__call__(input_files: str, List[str], or Dict[str, str]) -> Dict[str, HaplotypeValues or Values]
+
+	Runs the input nodes. The input files can be a single file, a list of files,
+	or a dictionary of files where the key is some alias for the path. Returns
+	a Dict of HaplotypeValues (and maybe also Values).
+
+
 ### SimulationStep
+
+
 
 
 
