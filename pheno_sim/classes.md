@@ -82,7 +82,31 @@ Nodes fall into three categories: input, function, and output.
 
 ### Input Nodes
 
-TODO
+Input nodes read in genotype values from some file and convert them into
+HaplotypeValues or Values. They are all ran by the run_input_step method of
+the PhenoSimulation class.
+
+There may be some room for optimization by doing this all in a smarter way.
+
+#### AbstractBaseInputNode
+
+Abstract base class for all input nodes.
+
+##### Attributes
+
+alias: str
+	The alias of the node. This is used to refer to the node in the
+	specification file and in the ValueDict.
+
+inputs: List[str]
+	The paths or alias of the file(s) that are inputs to this node.
+
+##### Methods
+
+load_vals(input_files: Dict[str, str]) -> Values or HaplotypeValues
+	Loads the values from the input files. Returns a Values or HaplotypeValues
+	object.
+
 
 ### Function Nodes
 
@@ -106,9 +130,59 @@ function nodes.
 
 ##### Attributes
 
+alias: str
+	The alias of the node. This is used to refer to the node in the
+	specification file and in the ValueDict.
+
+input_aliases: List[str]
+	The aliases of the nodes that are inputs to this node. These are used
+	to refer to the input nodes in the ValueDict.
+
 ##### Methods
 
-methods
+constructor(alias: str, **kwargs)
+	Constructs the AbstractBaseFunctionNode object.
+
+__call__(values: Dict[str, Values or HaplotypeValues]) -> Values or HaplotypeValues
+	Runs the function node on the values passed from the ValueDict. Returns the
+	resulting Values or HaplotypeValues object.
+
+#### AbstractBaseCombineFunctionNode
+
+Abstract base class for all combine function nodes. Differs in the type
+checking of the __call__ method.
+
+##### Methods
+
+__call__(values: Dict[str, HaplotypeValues]) -> Values
+	Runs the function node on the HaplotypeValues passed from the ValueDict.
+	Returns the resulting Values object.
+
+
+### Output Nodes
+
+TODO
+
+
+## Steps
+
+Steps are the objects that run the nodes.
+
+### InputStep
+
+Runs the input nodes. Returns a Dict of HaplotypeValues (and maybe also Values).
+
+#### Attributes
+
+input_nodes: List[InputNode]
+	The input nodes of the simulation.
+
+### SimulationStep
+
+
+
+
+
 
 
 
