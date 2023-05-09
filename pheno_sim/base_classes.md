@@ -19,24 +19,21 @@ output_step: OutputStep
 ### Methods
 
 constructor(specification_dict: Dict)
-	Constructs the PhenoSimulation object from a specification dictionary.
+- Constructs the PhenoSimulation object from a specification dictionary.
 
 from_JSON_spec(JSON_path: str)
-	Constructs the PhenoSimulation object from a JSON specification file.
+- Constructs the PhenoSimulation object from a JSON specification file.
 
-run_input_step(input_files: str, List[str], or Dict[str, str])
-	Runs the input step of the simulation. The input files can be a single
-	file, a list of files, or a dictionary of files where the key is some alias
-	for the path. Returns a Dict of HaplotypeValues (and maybe also values)
-	that will be used as input for the simulation steps.
+run_input_step(input_file_map: None (default) or Dict[str, str])
+- Runs the input step of the simulation.
+- input_file_map can be None when all input nodes specify their input file paths in the specification file. If you want to use filename alias in the specification file instead, then input_file_map should be a Dict[str, str] where the keys are the aliases and the values are the paths to the files.
+- Returns a Dict of HaplotypeValues (and maybe also values) that will be used as input for the simulation steps.
 
 run_simulation_steps(input_values: Dict[str, HaplotypeValues or Values])
-	Runs the function node steps of the simulation. The input values are the
-	output Dict from the input step. The last simulation step should be an 
-	OutputStep, and it's output will be returned.
+- Runs the function node steps of the simulation. The input values are the output Dict from the input step. The last simulation step should be an OutputStep, and it's output will be returned.
 
-run_simulation(input_files: str, List[str], or Dict[str, str])
-	Runs the entire simulation (run_input_step then run_simulation_steps).
+run_simulation(input_file_map: None (default) or Dict[str, str])
+- Runs the entire simulation (run_input_step then run_simulation_steps).
 
 
 ## Data Types
@@ -48,7 +45,9 @@ A tuple of two numpy arrays, each representing one of the two copies of
 the chromosome. These values should be indexed such that for two
 HaplotypeValues on the same chromosome, which index corresponds to which
 copy of the chromosome is the same. 
+
 e.g.:
+
 	hap_val1 = (vals_from_chr9_copy1_loci1, vals_from_chr9_copy2_loci1)
 	hap_val2 = (vals_from_chr9_copy1_loci2, vals_from_chr9_copy2_loci2)
 
@@ -96,9 +95,6 @@ Abstract base class for all input nodes.
 
 alias: str
 - The alias of the node. This is used to refer to the node in the specification file and in the ValueDict.
-
-inputs: List[str]
-- The paths or alias of the file(s) that are inputs to this node.
 
 ##### Methods
 
