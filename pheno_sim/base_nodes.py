@@ -91,18 +91,15 @@ class AbstractBaseFunctionNode(ABC):
 			HaplotypeValues objects from the ValuesDict. This method should be
 			implemented in the child classes to perform the desired operation.
 	"""
-	def __init__(self, alias: str, **kwargs):
+	def __init__(self, alias: str, *args, **kwargs):
 		self.alias = alias
 		self.inputs = None
 
 	@abstractmethod
 	def __call__(
 		self, 
-		input: Union[
-			Values, HaplotypeValues,
-			List[Union[Values, HaplotypeValues]],
-			Dict[str, Union[Values, HaplotypeValues]]
-		]
+		*args: Union[Values, HaplotypeValues],
+		**kwargs: Union[Values, HaplotypeValues]
 	) -> Union[Values, HaplotypeValues]:
 		"""
 		This method should be implemented in the child classes to perform
@@ -113,23 +110,19 @@ class AbstractBaseFunctionNode(ABC):
 class AbstractBaseCombineFunctionNode(AbstractBaseFunctionNode):
 	""" Abstract base class for combine function nodes.
 	
-	Different from AbstractBaseFunctionNode in that the __call__ method takes
-	just HaplotypeValues objects as input and returns a single Values object.
+	Different from AbstractBaseFunctionNode in that the __call__ method
+	should takes just HaplotypeValues objects as input and returns a
+	single Values object.
 
 	see AbstractBaseFunctionNode for more details.
 	"""
 	@abstractmethod
 	def __call__(
-		self, 
-		input: Union[
-			HaplotypeValues,
-			List[HaplotypeValues],
-			Dict[str, HaplotypeValues]
-		]
+		self, *args: HaplotypeValues, **kwargs: HaplotypeValues
 	) -> Values:
 		"""
 		This method should be implemented in the child classes to perform
-		the desired haplotype combining operation.
+		the desired operation.
 		"""
 		pass
 		

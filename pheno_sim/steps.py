@@ -45,11 +45,11 @@ class InputStep:
 				steps.
 	"""
 	
-	def __init__(self, input_nodes: List[AbstractBaseInputNode]) -> None:
+	def __init__(self, input_nodes: List[AbstractBaseInputNode]):
 		self.input_nodes = input_nodes
 	
 	@classmethod
-	def from_spec_dict(cls, spec_dict: Dict) -> InputStep:
+	def from_spec_dict(cls, spec_dict: Dict):
 		""" Alternative constructor. Creates an InputStep from a simulation
 		specification dict. Class method.
 		
@@ -88,4 +88,21 @@ class InputStep:
 	
 
 class SimulationStep:
+	""" Each simulation step contains and runs a single function node.
 	
+	Performs the following steps:
+		1. Gets the input values from the ValuesDict.
+		2. Runs the function node on the input values.
+		3. Adds the output values to the ValuesDict under the alias of the
+			function node.
+		4. Output filtering (NOT IMPLEMENTED, may not be necessary).
+		5. Returns the ValuesDict.
+
+	Attributes:
+		function_node: The function node that will be ran by this step.
+		required_output: Default None. If None, output of function node
+			will be added to ValuesDict under the alias of the function node.
+			and the whole dict will be returned. If is instead a list of
+			strings, only the values with the specified aliases will be
+			returned.
+	"""
