@@ -2,9 +2,7 @@
 
 ## PhenoSimulation Class
 
-Object that runs the simulation. It is constructed from a JSON specification
-file. The specification file contains the inputs, the function nodes, and the
-output.
+Object that runs the simulation. It is constructed from a JSON specification file. The specification file contains the inputs, the function nodes, and the output.
 
 ### Attributes
 

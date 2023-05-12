@@ -6,3 +6,6 @@ from .base_nodes import (
     AbstractBaseCombineFunctionNode,
 )
 
+from .pheno_simulation import PhenoSimulation
+
+from . import func_nodes

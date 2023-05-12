@@ -3,7 +3,8 @@
 from abc import ABC, abstractmethod
 from typing import List, Dict, Union, TypedDict
 import numpy as np
-from .data_types import HaplotypeValues, Values, ValuesDict
+from pheno_sim.data_types import HaplotypeValues, Values, ValuesDict
+
 
 class AbstractBaseInputNode(ABC):
 	""" Abstract base class for input nodes.
@@ -23,7 +24,7 @@ class AbstractBaseInputNode(ABC):
 			This method should be implemented in the child classes to load the
 			appropriate values from the genotype files.
 	"""
-	def __init__(self, alias: str, **kwargs):
+	def __init__(self, alias: str, *args, **kwargs):
 		self.alias = alias
 
 	@abstractmethod
@@ -43,6 +44,8 @@ class AbstractBaseInputNode(ABC):
 				instead use aliases to refer to the files. In this case, the
 				specification file should have a key called "input_file_map"
 				whose value is this dict.
+
+		TODO Input is still all up in the air. Maybe make this __call__?
 		"""
 		pass
 
@@ -84,28 +87,98 @@ class AbstractBaseFunctionNode(ABC):
 			in the ValuesDict are returned as a list in that order.
 	
 	Methods:
-		__call__(input) -> Values or HaplotypeValues. Input is either a single
-			Values object, a single HaplotypeValues object, or a list of
-			Values and/or HaplotypeValues, or a dict where the keys are the
-			names of inputs to the function and the values are the Values or
-			HaplotypeValues objects from the ValuesDict. This method should be
-			implemented in the child classes to perform the desired operation.
+
+		__call__(self, *args, **kwargs) -> Union[Values, HaplotypeValues]
+			Runs the function on the input values and returns the result.
+			Does this by calling the run() method in the following way
+			based on the composition of the vals_dict
 	"""
 	def __init__(self, alias: str, *args, **kwargs):
 		self.alias = alias
 		self.inputs = None
 
 	@abstractmethod
+	def run(
+		self,
+		*args: Union[Values, HaplotypeValues],
+		**kwargs: Union[Values, HaplotypeValues]
+	) -> Values:
+		pass
+
 	def __call__(
-		self, 
+		self,
 		*args: Union[Values, HaplotypeValues],
 		**kwargs: Union[Values, HaplotypeValues]
 	) -> Union[Values, HaplotypeValues]:
 		"""
-		This method should be implemented in the child classes to perform
-		the desired operation.
+		When a function node is called, this method looks at the data types
+		of the input values and decides how to call the run() method (which
+		actually implements the function).
+		
+		The two possible cases are:
+
+		- All inputs are Values objects. In this case, the run() method is
+			called once with the Values objects as the arguments and returns
+			a single Values object.
+
+		- If any of the inputs are HaplotypeValues objects, then the run()
+			is called twice (once for each haplotype) and a single
+			HaplotypeValues object is returned. Any Values objects are
+			used as inputs to both calls.
+
 		"""
-		pass
+		
+		includes_haplotypes = False
+
+		for arg in args:
+			if isinstance(arg, tuple):
+				includes_haplotypes = True
+				break
+		
+		for arg in kwargs.values():
+			if isinstance(arg, tuple):
+				includes_haplotypes = True
+				break
+
+		if includes_haplotypes:
+			hap1_args = []
+			hap2_args = []
+			hap1_kwargs = {}
+			hap2_kwargs = {}
+
+			for arg in args:
+				if isinstance(arg, tuple):
+					hap1_args.append(arg[0])
+					hap2_args.append(arg[1])
+				elif isinstance(arg, np.ndarray):
+					hap1_args.append(arg)
+					hap2_args.append(arg)
+				else:
+					raise TypeError(
+						"Function node inputs must be Values (np.array) or "
+						"HaplotypeValues (tuple of np arrays) objects."
+					)
+				
+			for key, arg in kwargs.items():
+				if isinstance(arg, HaplotypeValues):
+					hap1_kwargs[key] = arg[0]
+					hap2_kwargs[key] = arg[1]
+				elif isinstance(arg, Values):
+					hap1_kwargs[key] = arg
+					hap2_kwargs[key] = arg
+				else:
+					raise TypeError(
+						"Function node inputs must be Values or "
+						"HaplotypeValues objects."
+					)
+				
+			return (
+				self.run(*hap1_args, **hap1_kwargs),
+				self.run(*hap2_args, **hap2_kwargs)
+			)
+		else:
+			return self.run(*args, **kwargs)
+
 
 class AbstractBaseCombineFunctionNode(AbstractBaseFunctionNode):
 	""" Abstract base class for combine function nodes.
@@ -116,13 +189,28 @@ class AbstractBaseCombineFunctionNode(AbstractBaseFunctionNode):
 
 	see AbstractBaseFunctionNode for more details.
 	"""
-	@abstractmethod
-	def __call__(
-		self, *args: HaplotypeValues, **kwargs: HaplotypeValues
+
+	def __call__(self,
+		*args: HaplotypeValues,
+		**kwargs: HaplotypeValues
 	) -> Values:
+		""" When a CombineFunctionNode is called, this method calls the run()
+		method on the input.
+
+		Does type checking that the inputs are all HaplotypeValues.
 		"""
-		This method should be implemented in the child classes to perform
-		the desired operation.
-		"""
-		pass
+
+		for arg in args:
+			if not isinstance(arg, tuple):
+				raise TypeError(
+					"CombineFunctionNode inputs must be HaplotypeValues objects."
+				)
+		
+		for arg in kwargs.values():
+			if not isinstance(arg, tuple):
+				raise TypeError(
+					"CombineFunctionNode inputs must be HaplotypeValues objects."
+				)
+
+		return self.run(*args, **kwargs)
 		
