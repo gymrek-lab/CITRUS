@@ -190,6 +190,14 @@ class AbstractBaseCombineFunctionNode(AbstractBaseFunctionNode):
 	see AbstractBaseFunctionNode for more details.
 	"""
 
+	@abstractmethod
+	def run(
+		self,
+		*args: HaplotypeValues,
+		**kwargs: HaplotypeValues
+	) -> Values:
+		pass
+
 	def __call__(self,
 		*args: HaplotypeValues,
 		**kwargs: HaplotypeValues

@@ -258,10 +258,9 @@ class PhenoSimulation:
 
 		return vals_dict
 
-	
 	def run_simulation_steps(
 			self, val_dict: ValuesDict, run_output_step=True
-	) -> ValuesDict:
+	):
 		""" Run the simulation steps and optionally the output step. Returns
 		whatever is returned by the last step run.
 		
@@ -281,4 +280,18 @@ class PhenoSimulation:
 		if run_output_step:
 			val_dict = self.run_output_step(val_dict)
 		
+		return val_dict
+	
+	def run_simulation(self):
+		""" Run phenotype simulation. """
+
+		# Run input step.
+		val_dict = self.run_input_step()
+
+		# Run simulation steps.
+		val_dict = self.run_simulation_steps(
+			val_dict,
+			run_output_step=self.output_spec is not None
+		)
+
 		return val_dict
