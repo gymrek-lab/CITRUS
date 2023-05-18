@@ -160,10 +160,10 @@ class AbstractBaseFunctionNode(ABC):
 					)
 				
 			for key, arg in kwargs.items():
-				if isinstance(arg, HaplotypeValues):
+				if isinstance(arg, tuple):
 					hap1_kwargs[key] = arg[0]
 					hap2_kwargs[key] = arg[1]
-				elif isinstance(arg, Values):
+				elif isinstance(arg, np.ndarray):
 					hap1_kwargs[key] = arg
 					hap2_kwargs[key] = arg
 				else:
