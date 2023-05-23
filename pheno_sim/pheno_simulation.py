@@ -245,8 +245,8 @@ class PhenoSimulation:
 		elif isinstance(function_node.inputs, dict):
 			# Run with keyword arguments
 			node_output = function_node(**{
-				input_alias: vals_dict[input_alias]
-				for input_alias in function_node.inputs
+				input_name: vals_dict[input_alias]
+				for input_name, input_alias in function_node.inputs.items()
 			})
 		else:
 			raise ValueError(
@@ -258,10 +258,9 @@ class PhenoSimulation:
 
 		return vals_dict
 
-	
 	def run_simulation_steps(
 			self, val_dict: ValuesDict, run_output_step=True
-	) -> ValuesDict:
+	):
 		""" Run the simulation steps and optionally the output step. Returns
 		whatever is returned by the last step run.
 		
@@ -282,3 +281,12 @@ class PhenoSimulation:
 			val_dict = self.run_output_step(val_dict)
 		
 		return val_dict
+	
+	def run_simulation(self):
+		""" Run phenotype simulation. """
+
+		# Run input step.
+		val_dict = self.run_input_step()
+
+		# Run simulation steps.
+		return self.run_simulation_steps(val_dict)

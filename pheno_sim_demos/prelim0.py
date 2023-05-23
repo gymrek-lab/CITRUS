@@ -1,8 +1,5 @@
 """ Preliminary testing """
 
-import os
-import inspect
-
 import numpy as np
 
 from pheno_sim import PhenoSimulation

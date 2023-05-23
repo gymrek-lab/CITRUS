@@ -110,6 +110,12 @@ class MeanCombine(AbstractBaseCombineFunctionNode):
 	
 	Mean is either arithmetic, geometric, or harmonic.
 
+	Args:
+		alias: The alias of the node.
+		input_alias: The alias of the input node.
+		mean_type: The type of mean to take. Can be "arithmetic" (default),
+			"geometric", or "harmonic".
+
 	Examples:
 		>>> hap = (np.array([1, 2, 3]), np.array([4, 5, 6]))
 		>>> MeanCombine("mean", "hap")(hap)
@@ -142,14 +148,6 @@ class MeanCombine(AbstractBaseCombineFunctionNode):
 		input_alias: str,
 		mean_type: str = "arithmetic"
 	):
-		""" Initialize the MeanCombine node.
-		
-		Args:
-			alias: The alias of the node.
-			input_alias: The alias of the input node.
-			mean_type: The type of mean to take. Can be "arithmetic",
-				"geometric", or "harmonic".
-		"""
 		super().__init__(alias)
 		self.inputs = input_alias
 		self.mean_type = mean_type
