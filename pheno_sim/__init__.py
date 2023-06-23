@@ -9,3 +9,5 @@ from .base_nodes import (
 from .pheno_simulation import PhenoSimulation
 
 from . import func_nodes
+
+from . import input_nodes
