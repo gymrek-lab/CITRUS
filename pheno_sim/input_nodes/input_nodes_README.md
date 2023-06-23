@@ -20,21 +20,27 @@ Example:
 
 	"input": [
 		{
-			"file": "data/1kg.vcf.bgz",
-			"engine": "hail",
+			"file": "1000_genomes_data/ALL.chr19.phase3_shapeit2_mvncall_integrated_v5b.20130502.genotypes.vcf.gz",
 			"file_format": "vcf",
+			"reference_genome": "GRCh37",
 			"input_nodes": [
 				{
-					"alias": "causal_gene_LOF",
-					"type": SNP,
-					"chr": "1",
-					"pos": [1234500, 1234508]
+					"alias": "LDLR_intron_variants",
+					"type": "SNP",
+					"chr": "19",
+					"pos": [11202306, 11206575]
 				},
 				{
-					"alias": "causal_gene_promoter",
-					"type": SNP,
-					"chr": "1",
-					"pos": 1234567
+					"alias": "LDLR_upstream_variant",
+					"type": "SNP",
+					"chr": "19",
+					"pos": 11197261
+				},
+				{
+					"alias": "LDLR_intron_variant",
+					"type": "SNP",
+					"chr": "19",
+					"pos": 11216561
 				}
 			]
 		}
