@@ -47,7 +47,7 @@ copy of the chromosome is the same.
 e.g.:
 
 	hap_val1 = (vals_from_chr9_copy1_loci1, vals_from_chr9_copy2_loci1)
-	hap_val2 = (vals_from_chr9_copy1_loci2, vals_from_chr9_copy2_loci2)
+	hap_val2 = (vals_from_chr9_copy1_loci2, vals_from_chr9_copy2_loci2) # but this would limit to two loci...?
 
 #### Values: numpy.ndarray
 A numpy array of values. One dimension should be length the number of

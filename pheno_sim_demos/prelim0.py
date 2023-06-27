@@ -5,6 +5,7 @@ import numpy as np
 from pheno_sim import PhenoSimulation
 from pheno_sim import func_nodes
 
+# define custom class and pass to PhenoSimulation 
 
 if __name__ == "__main__":
     
@@ -27,6 +28,8 @@ if __name__ == "__main__":
 			'SNP2_combine', 'identity_2', mean_type='arithmetic'
 		),
 	])
+
+	print(simulator.simulation_steps)
 
 	# Run the simulation
 	output_vals = simulator.run_simulation_steps(input_vals)
