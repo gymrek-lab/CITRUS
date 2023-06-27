@@ -123,16 +123,27 @@ if __name__ == "__main__":
 
 	df = pd.DataFrame(df_dict)
 
+	# Rename 'promoter_SNP' col to 'promoter_SNP_count'
+	# and 'gene_LOF' to 'gene LOF SNP count'
+	df.rename(columns={'promoter_SNP': 'promoter SNP count'}, inplace=True)
+	df.rename(columns={'gene_LOF': 'gene LOF SNP count'}, inplace=True)
+
 	# Do both of the above plots in one figure
 	fig, axes = plt.subplots(1, 2, figsize=(10, 5))
 	sns.kdeplot(ax=axes[0], data=df, x="phenotype")
-	sns.kdeplot(ax=axes[1], data=df, x="phenotype", hue="promoter_SNP")
+	axes[0].set_title("Phenotype distribution")
+	sns.kdeplot(ax=axes[1], data=df, x="phenotype", hue="promoter SNP count")
+	axes[1].set_title("Phenotype distribution by promoter SNP count")
+	plt.tight_layout()
 	plt.show()
 
 	# Do both of the above plots in one figure
 	fig, axes = plt.subplots(1, 2, figsize=(10, 5))
 	sns.kdeplot(ax=axes[0], data=df, x="phenotype")
-	sns.kdeplot(ax=axes[1], data=df, x="phenotype", hue="gene_LOF")
+	axes[0].set_title("Phenotype distribution")
+	sns.kdeplot(ax=axes[1], data=df, x="phenotype", hue="gene LOF SNP count")
+	axes[1].set_title("Phenotype distribution by gene LOF SNP count")
+	plt.tight_layout()
 	plt.show()
 
 	# Plot the underlying distributions for when
