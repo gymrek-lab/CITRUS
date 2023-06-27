@@ -17,7 +17,6 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 from pheno_sim import PhenoSimulation
-from pheno_sim import func_nodes
 
 
 if __name__ == "__main__":
