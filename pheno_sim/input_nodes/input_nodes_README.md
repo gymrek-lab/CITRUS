@@ -103,6 +103,8 @@ Arguments:
 * chr: The chromosome(s) of the SNP(s). May either be:
 	* A string representing a single chromosome all positions are on.
 	* A list of strings the same length as the number of positions, such that each position is on the corresponding chromosome.
+	NOTE: The string specifying the chromosome must be exactly what
+		is used in the source file (e.g. for GRCh37, '1' not 'chr1').
 * pos: The position(s) of the SNP(s). May either be:
 	* An integer representing a single position.
 	* A list of integers. Positions will either be all on the same chromosome or mapped to the corresponding chromosome in the 'chr' argument.

@@ -2,9 +2,11 @@
 
 Includes:
 
-	IdentityNode: A node that returns the input. Mainly for testing.
+	Identity: A node that returns the input. Mainly for testing.
 	
-	SumNode: A node that sums some inputs element-wise.
+	Sum: A node that sums some inputs element-wise.
+
+	Product: A node that multiplies some inputs element-wise.
 """
 
 import numpy as np
@@ -62,7 +64,7 @@ class Sum(AbstractBaseFunctionNode):
 			np.array([[7, 8, 9], [10, 11, 12]])
 		])
 		array([[ 8, 10, 12],
-		       [14, 16, 18]])
+			   [14, 16, 18]])
 		
 		>>> Sum("sum", ["arrs"])([
 			np.array([1, 2, 3]),
@@ -70,7 +72,7 @@ class Sum(AbstractBaseFunctionNode):
 			np.array([[1, 1, 1], [2, 2, 2]])
 		])
 		array([[3, 4, 5],
-		       [5, 6, 7]])			
+			   [5, 6, 7]])			
 	"""
 
 	def __init__(self, alias: str, input_aliases: list):
@@ -79,6 +81,56 @@ class Sum(AbstractBaseFunctionNode):
 
 	def run(self, input_vals):
 		return np.sum(np.array(input_vals, dtype=object), axis=0)
+	
+
+class Product(AbstractBaseFunctionNode):
+	""" A node that multiplies some inputs element-wise.
+
+	If all inputs are vectors (num_samples length arrays), then the output
+	is a vector that is the element-wise product of the inputs.
+
+	If all inputs are all matrices (num_feats x num_samples arrays), then
+	the output is a matrix (with the same dimensions) that is the
+	element-wise product.
+
+	If the input is a mix of vectors and matrices:
+		- All matrices must have the same dimensions.
+		- Matrices are multiplied element-wise.
+		- Vectors are multiplied element-wise over each of the num_feats of
+			the matrices.
+
+	Args:
+		alias: The alias of the node.
+		input_aliases (list): The aliases of the inputs to be multiplied.
+
+	Examples:
+		>>> Product("product", ["arrs"])(
+			[np.array([1, 2, 3]), np.array([4, 5, 6])]
+		)
+		array([ 4, 10, 18])
+
+		>>> Product("product", ["arrs"])([
+			np.array([[1, 2, 3], [4, 5, 6]]),
+			np.array([[7, 8, 9], [10, 11, 12]])
+		])
+		array([[ 7, 16, 27],
+			   [40, 55, 72]])
+		
+		>>> Product("product", ["arrs"])([
+			np.array([1, 2, 3]),
+			np.array([[1, 1, 1], [2, 2, 2]]),
+			np.array([[1, 1, 1], [2, 2, 2]])
+		])
+		array([[1, 2, 3],
+			   [4, 8, 12]])			
+	"""
+
+	def __init__(self, alias: str, input_aliases: list):
+		super().__init__(alias)
+		self.inputs = input_aliases
+
+	def run(self, *input_vals):
+		return np.prod(np.array(input_vals, dtype=object), axis=0)
 
 	
 if __name__ == "__main__":
@@ -117,3 +169,18 @@ if __name__ == "__main__":
 
 	print(sum_node(vals))
 	print(sum_node(hap_vals))
+
+
+	# Test Product
+	product_node = Product("product", ["arrs"])
+
+	print(product_node([np.array([1, 2, 3]), np.array([4, 5, 6])]))
+	print(product_node([
+		np.array([[1, 2, 3], [4, 5, 6]]),
+		np.array([[7, 8, 9], [10, 11, 12]])
+	]))
+	print(product_node([
+		np.array([1, 2, 3]),
+		np.array([[1, 1, 1], [2, 2, 2]]),
+		np.array([[1, 1, 1], [2, 2, 2]])
+	]))

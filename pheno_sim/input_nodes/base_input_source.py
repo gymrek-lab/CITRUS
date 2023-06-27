@@ -4,6 +4,8 @@ which will be used to create input nodes for the simulation.
 
 from abc import ABC, abstractmethod
 
+import numpy as np
+
 
 class BaseInputSource(ABC):
 	""" Abstract class for input sources (e.i. input data files like a VCF),
@@ -51,61 +53,49 @@ class BaseInputSource(ABC):
 		"""
 		pass
 	
-	@abstractmethod
-	def subset_and_order_samples(self, sample_ids):
+	def subset_and_order_samples(self, sample_ids, input_node_vals):
 		""" Subsets data in input_nodes and input_sample_ids to just the sample
 		ids in sample_ids and in the same order as sample_ids. Used to get
 		corresponding sample ids and data from multiple input sources.
 		
 		Args:
-			sample_ids: A list of sample ids to subset to.
+			sample_ids: A list of sample ids to subset to and match the
+				order of.
+			input_node_vals: Dict of input node values to subset. The last
+				dimension of each value should be the same length as
+				self.input_sample_ids with corresponding values.
+
+		Returns:
+			dict input_node_vals with the last dimension of each value subset
+			to just the sample ids in sample_ids and in the same order as
+			sample_ids.
 		"""
-		pass
-	
-	@classmethod
-	@abstractmethod
-	def get_input_source(cls, input_config):
-		""" Returns the appropriate input source class based on the dict from
-		the input config.
-		
-		Args:
-			input_config: The dictionary from the input section of the
-				simulation config file that defines this input source.
-		"""
-		pass
-
-
-if __name__ == '__main__':
-
-	# For testing
-	sim_config = {
-		"input": [
-			{
-				"file": "../../pheno_sim_demos/1000_genomes_data/ALL.chr19.phase3_shapeit2_mvncall_integrated_v5b.20130502.genotypes.vcf.gz",
-				"file_format": "vcf",
-				"reference_genome": "GRCh37",
-				"input_nodes": [
-					{
-						"alias": "LDLR_intron_variants",
-						"type": "SNP",
-						"chr": "19",
-						"pos": [11202306, 11206575]
-					},
-					{
-						"alias": "LDLR_upstream_variant",
-						"type": "SNP",
-						"chr": "19",
-						"pos": 11197261
-					},
-					{
-						"alias": "LDLR_intron_variant",
-						"type": "SNP",
-						"chr": "19",
-						"pos": 11216561
-					}
-				]
-			}
+		subset_idx = [
+			np.where(self.input_sample_ids == sid)[0][0] for sid in sample_ids
 		]
-	}
 
-	# Open data file with Hail
+		for key in input_node_vals.keys():
+			if isinstance(input_node_vals[key], np.ndarray):
+				if input_node_vals[key].ndim == 1:
+					input_node_vals[key] = input_node_vals[key][subset_idx]
+				else:
+					input_node_vals[key] = input_node_vals[key][:, subset_idx]
+			elif isinstance(input_node_vals[key], tuple):
+				original_vals = input_node_vals[key]
+
+				if original_vals[0].ndim == 1:
+					input_node_vals[key] = (
+						original_vals[0][subset_idx],
+						original_vals[1][subset_idx]
+					)
+				else:
+					input_node_vals[key] = (
+						original_vals[0][:, subset_idx],
+						original_vals[1][:, subset_idx]
+					)
+			else:
+				raise ValueError(
+					'Invalid input node value type: ' + str(type(input_node_vals[key]))
+				)
+			
+		return input_node_vals
