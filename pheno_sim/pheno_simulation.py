@@ -44,6 +44,7 @@ from typing import Dict, List
 from pheno_sim.data_types import ValuesDict
 from pheno_sim.base_nodes import AbstractBaseFunctionNode
 from pheno_sim.func_nodes import FunctionNodeBuilder
+from pheno_sim.input_nodes import InputRunner
 
 
 class PhenoSimulation:
@@ -127,14 +128,11 @@ class PhenoSimulation:
 			spec_dict: A dict containing the simulation specification.
 				See the documentation for the simulation specification
 				format.
-
-		TODO Actually decide how to handle input.
 		"""
 		
-		self.input_spec = None
+		self.input_spec = spec_dict['input']
 
-		if 'input' in spec_dict:
-			self.input_spec = spec_dict['input']
+		self.input_runner = InputRunner(self.input_spec)
 
 	def _setup_simulation_steps(
 		self,
@@ -179,24 +177,21 @@ class PhenoSimulation:
 		if 'output' in spec_dict:
 			self.output_spec = spec_dict['output']
 
-	
 	def run_input_step(self) -> ValuesDict:
 		""" Run the input step and return the ValuesDict to be passed to the
 		simulation steps.
 
+		Sets the sample_ids attribute to the sample IDs from the input step.
+
 		Returns:
 			A ValuesDict containing the input values.
-
-		TODO Implement input step. Psuedocode:
-			vals_dict = {}
-			for node in self.input_nodes:
-				vals_dict[node.alias] = node.load_vals(input_file_map)
-			return vals_dict
 		"""	
 		if self.input_spec is None:
+			self.sample_ids = None
 			return dict()
 		else:
-			raise NotImplementedError("Input step not implemented yet.")
+			self.sample_ids, input_node_vals = self.input_runner()
+			return input_node_vals
 		
 	def run_output_step(self, val_dict: ValuesDict) -> ValuesDict:
 		""" Save and/or return the output values ('pheno' and any any

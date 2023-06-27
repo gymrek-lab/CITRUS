@@ -23,6 +23,7 @@ from .hap_combine_func import (
 from .math_func import (
     Identity,
     Sum,
+    Product,
 )
 
 from .reduce_func import (
@@ -32,4 +33,8 @@ from .reduce_func import (
     MeanReduce,
     AnyReduce,
     AllReduce,
+)
+
+from .util_func import (
+    Concatenate,
 )
