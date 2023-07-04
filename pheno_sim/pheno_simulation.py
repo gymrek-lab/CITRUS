@@ -153,6 +153,7 @@ class PhenoSimulation:
 				node classes that can be used in the simulation.
 		"""
 		self.simulation_steps = []
+		self.sim_config = config_dict['simulation_steps'].copy()
 
 		if 'simulation_steps' in config_dict:
 			self.func_node_builder = FunctionNodeBuilder(custom_func_node_classes)
@@ -162,6 +163,10 @@ class PhenoSimulation:
 				self.simulation_steps.append(
 					self.func_node_builder.create_node(node_type, **step_config)
 				)
+
+		# Track whether the simulation has been run and self.sim_config has
+		# been updated.
+		self.sim_config_updated = False
 
 	def run_input_step(self) -> ValuesDict:
 		""" Run the input step and return the ValuesDict to be passed to the
@@ -245,6 +250,13 @@ class PhenoSimulation:
 		# Run simulation steps.
 		for step in self.simulation_steps:
 			val_dict = self.run_function_node(step, val_dict)
+
+		# Update self.sim_config if it has not been updated.
+		if not self.sim_config_updated:
+			for i in range(len(self.simulation_steps)):
+				self.sim_config['simulation_steps'][i].update(
+					self.simulation_steps[i].get_config_updates()
+				)
 		
 		return val_dict
 	
@@ -373,7 +385,7 @@ class PhenoSimulation:
 				json.dump(
 					{
 						"input": self.input_runner.get_config(),
-						"simulation_steps": self.input_config
+						"simulation_steps": self.sim_config
 					},
 					f,
 					indent=4
