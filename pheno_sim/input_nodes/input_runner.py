@@ -145,41 +145,41 @@ if __name__ == '__main__':
 
 	# For testing
 	sim_config = {
-			"input": [
-				{
-					"file": "../../pheno_sim_demos/1000_genomes_data/ALL.chr19.phase3_shapeit2_mvncall_integrated_v5b.20130502.genotypes.vcf.gz",
-					"file_format": "vcf",
-					"reference_genome": "GRCh37",
-					"force_bgz": True,
-					"input_nodes": [
-						{
-							"alias": "LDLR_upstream_variant",
-							"type": "SNP",
-							"chr": "19",
-							"pos": 11197261
-						},
-						{
-							"alias": "LDLR_intron_A_variants",
-							"type": "SNP",
-							"chr": "19",
-							"pos": [11202306, 11206575]
-						},
-						{
-							"alias": "LDLR_intron_B_variant",
-							"type": "SNP",
-							"chr": "19",
-							"pos": 11216561
-						},
-						{
-							"alias": "LDLR_missense_variants",
-							"type": "SNP",
-							"chr": "19",
-							"pos": [11242133, 11222300]
-						}
-					]
-				}
-			]
-		}
+		"input": [
+			{
+				"file": "../../pheno_sim_demos/1000_genomes_data/ALL.chr19.phase3_shapeit2_mvncall_integrated_v5b.20130502.genotypes.vcf.gz",
+				"file_format": "vcf",
+				"reference_genome": "GRCh37",
+				"force_bgz": True,
+				"input_nodes": [
+					{
+						"alias": "LDLR_upstream_variant",
+						"type": "SNP",
+						"chr": "19",
+						"pos": 11197261
+					},
+					{
+						"alias": "LDLR_intron_A_variants",
+						"type": "SNP",
+						"chr": "19",
+						"pos": [11202306, 11206575]
+					},
+					{
+						"alias": "LDLR_intron_B_variant",
+						"type": "SNP",
+						"chr": "19",
+						"pos": 11216561
+					},
+					{
+						"alias": "LDLR_missense_variants",
+						"type": "SNP",
+						"chr": "19",
+						"pos": [11242133, 11222300]
+					}
+				]
+			}
+		]
+	}
 	
 	input_runner = InputRunner(sim_config['input'])
 
