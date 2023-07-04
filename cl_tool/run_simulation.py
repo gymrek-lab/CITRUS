@@ -56,86 +56,6 @@ from pheno_sim import PhenoSimulation
 
 
 def main():
-	pass
-	
-	# # Parse arguments
-	# parser = argparse.ArgumentParser(
-	# 	description=__doc__,
-	# 	formatter_class=argparse.RawTextHelpFormatter,
-	# )
-
-	# parser.add_argument(
-	# 	"-c",
-	# 	"--config_file",
-	# 	required=True,
-	# 	help="Path to configuration file"
-	# )
-	# parser.add_argument(
-	# 	"-g",
-	# 	"--genotype_files",
-	# 	nargs="*",
-	# 	help="Paths to genotype files (optional)"
-	# )
-	# parser.add_argument(
-	# 	"-o",
-	# 	"--output_dir",
-	# 	default=".",
-	# 	help="Directory to save output to (default: current working directory)"
-	# )
-	# parser.add_argument(
-	# 	"-f",
-	# 	"--output_file_name",
-	# 	default="output.csv",
-	# 	help="Name of output file (default: output.csv)"
-	# )
-	# parser.add_argument(
-	# 	"-j",
-	# 	"--output_config_json",
-	# 	default="sim_config.json",
-	# 	help="Name for saved simulation configuration file (default: "
-	# 		"sim_config.json)"
-	# )
-	# parser.add_argument(
-	# 	"-t",
-	# 	"--tsv",
-	# 	action="store_true",
-	# 	help="Save output as tab seperated TSV file (default: CSV)"
-	# )
-
-	# args = parser.parse_args()
-	
-	# # Load configuration file
-	# with open(args.config_file, "r") as f:
-	# 	config = json.load(f)
-	
-	# # If genotype files were provided, replace paths in config file
-	# if args.genotype_files:
-	# 	assert len(args.genotype_files) == len(config["input"]), \
-	# 		"Number of genotype files provided does not match number of input " \
-	# 		"source files in configuration file"
-		
-	# 	for i, path in enumerate(args.genotype_files):
-	# 		config["input"][i]["file"] = path
-	
-	# # Create simulation
-	# sim = PhenoSimulation(config)
-	
-	# # Run simulation
-	# sim_vals = sim.run_simulation()
-
-	# # Save output
-	# sim.save_output(
-	# 	sim_vals,
-	# 	output_dir=args.output_dir,
-	# 	output_file_name=args.output_file_name,
-	# 	output_config_name=args.output_config_json,
-	# 	sep="\t" if args.tsv else ","
-	# )
-
-
-if __name__ == "__main__":
-	# main()
-
 	# Parse arguments
 	parser = argparse.ArgumentParser(
 		description=__doc__,
@@ -210,3 +130,7 @@ if __name__ == "__main__":
 		output_config_name=args.output_config_json,
 		sep="\t" if args.tsv else ","
 	)
+
+
+if __name__ == "__main__":
+	main()
