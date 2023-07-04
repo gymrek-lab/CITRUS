@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name="pheno_sim",
+    name="CITRUS",
     version="0.1.0",
     description="<Your package description>",
     author="Ross DeVito",
@@ -11,5 +11,9 @@ setup(
         "numpy",
         # Add any other dependencies here
     ],
-    # python_requires=">=3.6",
+    entry_points={
+        "console_scripts": [
+            "CITRUS_sim=CITRUS.cl_tools.run_simulation:main",
+        ],
+    },
 )
