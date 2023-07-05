@@ -185,6 +185,11 @@ class AbstractBaseFunctionNode(ABC):
 			return self.run(*args, **kwargs)
 		
 	def get_config_updates(self) -> dict:
+		""" Used to update the config dict with random selections made. 
+		
+		Allows for reproducability of the simulation (e.g. for determining
+		Shapley values).
+		"""
 		return dict()
 
 

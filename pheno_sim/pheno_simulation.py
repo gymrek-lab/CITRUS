@@ -153,12 +153,13 @@ class PhenoSimulation:
 				node classes that can be used in the simulation.
 		"""
 		self.simulation_steps = []
-		self.sim_config = config_dict['simulation_steps'].copy()
+		self.sim_config = config_dict['simulation_steps']
 
 		if 'simulation_steps' in config_dict:
 			self.func_node_builder = FunctionNodeBuilder(custom_func_node_classes)
 
 			for step_config in config_dict['simulation_steps']:
+				step_config = step_config.copy()
 				node_type = step_config.pop('type')
 				self.simulation_steps.append(
 					self.func_node_builder.create_node(node_type, **step_config)
@@ -254,9 +255,12 @@ class PhenoSimulation:
 		# Update self.sim_config if it has not been updated.
 		if not self.sim_config_updated:
 			for i in range(len(self.simulation_steps)):
-				self.sim_config['simulation_steps'][i].update(
+				self.sim_config[i].update(
 					self.simulation_steps[i].get_config_updates()
 				)
+
+			# Update self.sim_config_updated
+			self.sim_config_updated = True
 		
 		return val_dict
 	

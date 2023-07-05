@@ -55,7 +55,8 @@ import json
 from pheno_sim import PhenoSimulation
 
 
-def main():
+# def main():
+if __name__ == "__main__":
 	# Parse arguments
 	parser = argparse.ArgumentParser(
 		description=__doc__,
@@ -132,5 +133,5 @@ def main():
 	)
 
 
-if __name__ == "__main__":
-	main()
+# if __name__ == "__main__":
+# 	main()

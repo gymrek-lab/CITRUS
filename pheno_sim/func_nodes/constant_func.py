@@ -73,6 +73,12 @@ class RandomConstant(AbstractBaseFunctionNode):
 	from the distribution for each feature dim and broadcast to the shape of
 	the input.
 
+	get_config_updates() is implemented for this node to save the drawn
+	constant value(s) to the config file. This will save a list value for
+	the drawn_vals key in the config file. This list will have 1 value per
+	feature dim (number of rows) and will be expanded to the shape of the
+	input when the node is run.
+
 	Args:
 		alias: The alias of the node.
 		input_match_size: The alias of the input node for values used to
@@ -81,7 +87,15 @@ class RandomConstant(AbstractBaseFunctionNode):
 			used to determine the number of feature dimensions.
 		dist_name: The name of the distribution to draw from.
 		dist_kwargs: The keyword arguments for the distribution.
-		by_feat: Whether to draw a value for each feature dim. Default is False.
+		by_feat: Whether to draw a value for each feature dim. Default
+			is False.
+		drawn_vals: The drawn constant value(s). Default is None, otherwise
+			must be a list. If by_feat is False, this list must have 1 value.
+			If by_feat is True, this list must have the same number of values
+			as feature dims (number of rows in input_match_size). This is
+			typically loaded from a config file for reproducability. If this
+			node is constructed from a config file where drawn_vals is not
+			None, the drawn_vals will be used instead of drawing new values.
 	
 	Examples:
 		>>> match_size = np.array([[1, 2, 3], [4, 5, 6]])
@@ -105,13 +119,15 @@ class RandomConstant(AbstractBaseFunctionNode):
 		input_match_size: str,
 		dist_name: str,
 		dist_kwargs: dict,
-		by_feat: bool = False
+		by_feat: bool = False,
+		drawn_vals: list = None
 	):
 		super().__init__(alias)
 		self.inputs = input_match_size
 		self.dist_name = dist_name
 		self.dist_kwargs = dist_kwargs
 		self.by_feat = by_feat
+		self.drawn_vals = drawn_vals
 
 		self.constant = None
 
@@ -129,8 +145,13 @@ class RandomConstant(AbstractBaseFunctionNode):
 	def run(self, input_match):
 		""" Generate the constant value(s). """
 		if self.constant is None:
-			self.constant = self._draw_constant(input_match)
+			if self.drawn_vals is None:	# Draw new values
+				self.constant = self._draw_constant(input_match)
+				self.drawn_vals = self.constant.tolist()
 
+			else:	# Use drawn_vals from config file
+				self.constant = np.array(self.drawn_vals)
+				
 		if self.by_feat:
 			return np.broadcast_to(
 				self.constant[:, np.newaxis],
@@ -142,8 +163,9 @@ class RandomConstant(AbstractBaseFunctionNode):
 				input_match.shape
 			)
 
-		
-
+	def get_config_updates(self):
+		""" Return drawn_vals for saving to config file. """
+		return {"drawn_vals": self.drawn_vals}
 
 
 if __name__ == "__main__":
