@@ -92,6 +92,11 @@ class AbstractBaseFunctionNode(ABC):
 			Runs the function on the input values and returns the result.
 			Does this by calling the run() method in the following way
 			based on the composition of the vals_dict
+
+		get_config_updates(self) -> dict
+			Returns a dict of updates to the config dict that should be
+			made to reflect random selections made in the simulation for
+			reproducability.
 	"""
 	def __init__(self, alias: str, *args, **kwargs):
 		self.alias = alias
@@ -178,6 +183,14 @@ class AbstractBaseFunctionNode(ABC):
 			)
 		else:
 			return self.run(*args, **kwargs)
+		
+	def get_config_updates(self) -> dict:
+		""" Used to update the config dict with random selections made. 
+		
+		Allows for reproducability of the simulation (e.g. for determining
+		Shapley values).
+		"""
+		return dict()
 
 
 class AbstractBaseCombineFunctionNode(AbstractBaseFunctionNode):
