@@ -49,88 +49,94 @@ Example Usage:
 		-o sim_results/output_dir -t -f my_output.tsv -j my_sim_config.json
 """
 
-import argparse
+import click
 import json
 
 from pheno_sim import PhenoSimulation
 
+@click.command()
+@click.option('--count', default=1, help='number of greetings')
+@click.argument('name')
+def hello(count, name):
+    for x in range(count):
+        click.echo(f"Hello {name}!")
 
-# def main():
-if __name__ == "__main__":
-	# Parse arguments
-	parser = argparse.ArgumentParser(
-		description=__doc__,
-		formatter_class=argparse.RawTextHelpFormatter,
-	)
+# # def main():
+# if __name__ == "__main__":
+# 	# Parse arguments
+# 	parser = argparse.ArgumentParser(
+# 		description=__doc__,
+# 		formatter_class=argparse.RawTextHelpFormatter,
+# 	)
 
-	parser.add_argument(
-		"-c",
-		"--config_file",
-		required=True,
-		help="Path to configuration file"
-	)
-	parser.add_argument(
-		"-g",
-		"--genotype_files",
-		nargs="*",
-		help="Paths to genotype files (optional)"
-	)
-	parser.add_argument(
-		"-o",
-		"--output_dir",
-		default=".",
-		help="Directory to save output to (default: current working directory)."
-			" If directory does not exist it will be created."
-	)
-	parser.add_argument(
-		"-f",
-		"--output_file_name",
-		default="output.csv",
-		help="Name of output file (default: output.csv)"
-	)
-	parser.add_argument(
-		"-j",
-		"--output_config_json",
-		default="sim_config.json",
-		help="Name for saved simulation configuration file (default: "
-			"sim_config.json)"
-	)
-	parser.add_argument(
-		"-t",
-		"--tsv",
-		action="store_true",
-		help="Save output as tab seperated TSV file (default: CSV)"
-	)
+# 	parser.add_argument(
+# 		"-c",
+# 		"--config_file",
+# 		required=True,
+# 		help="Path to configuration file"
+# 	)
+# 	parser.add_argument(
+# 		"-g",
+# 		"--genotype_files",
+# 		nargs="*",
+# 		help="Paths to genotype files (optional)"
+# 	)
+# 	parser.add_argument(
+# 		"-o",
+# 		"--output_dir",
+# 		default=".",
+# 		help="Directory to save output to (default: current working directory)."
+# 			" If directory does not exist it will be created."
+# 	)
+# 	parser.add_argument(
+# 		"-f",
+# 		"--output_file_name",
+# 		default="output.csv",
+# 		help="Name of output file (default: output.csv)"
+# 	)
+# 	parser.add_argument(
+# 		"-j",
+# 		"--output_config_json",
+# 		default="sim_config.json",
+# 		help="Name for saved simulation configuration file (default: "
+# 			"sim_config.json)"
+# 	)
+# 	parser.add_argument(
+# 		"-t",
+# 		"--tsv",
+# 		action="store_true",
+# 		help="Save output as tab seperated TSV file (default: CSV)"
+# 	)
 
-	args = parser.parse_args()
+# 	args = parser.parse_args()
 	
-	# Load configuration file
-	with open(args.config_file, "r") as f:
-		config = json.load(f)
+# 	# Load configuration file
+# 	with open(args.config_file, "r") as f:
+# 		config = json.load(f)
 	
-	# If genotype files were provided, replace paths in config file
-	if args.genotype_files:
-		assert len(args.genotype_files) == len(config["input"]), \
-			"Number of genotype files provided does not match number of input " \
-			"source files in configuration file"
+# 	# If genotype files were provided, replace paths in config file
+# 	if args.genotype_files:
+# 		assert len(args.genotype_files) == len(config["input"]), \
+# 			"Number of genotype files provided does not match number of input " \
+# 			"source files in configuration file"
 		
-		for i, path in enumerate(args.genotype_files):
-			config["input"][i]["file"] = path
+# 		for i, path in enumerate(args.genotype_files):
+# 			config["input"][i]["file"] = path
 	
-	# Create simulation
-	sim = PhenoSimulation(config)
+# 	# Create simulation
+# 	sim = PhenoSimulation(config)
 	
-	# Run simulation
-	sim_vals = sim.run_simulation()
+# 	# Run simulation
+# 	sim_vals = sim.run_simulation()
 
-	# Save output
-	sim.save_output(
-		sim_vals,
-		output_dir=args.output_dir,
-		output_file_name=args.output_file_name,
-		output_config_name=args.output_config_json,
-		sep="\t" if args.tsv else ","
-	)
+# 	# Save output
+# 	sim.save_output(
+# 		sim_vals,
+# 		output_dir=args.output_dir,
+# 		output_file_name=args.output_file_name,
+# 		output_config_name=args.output_config_json,
+# 		sep="\t" if args.tsv else ","
+# 	)
 
 
 # if __name__ == "__main__":
