@@ -133,6 +133,6 @@ if __name__ == '__main__':
 	output = run_SHAP(
 		simulation,
 		phenotype_key,
-		save_path='test_shap.csv',
-		save_config_path='test_shap_config.json',
+		# save_path='test_shap.csv',
+		# save_config_path='test_shap_config.json',
 	)
