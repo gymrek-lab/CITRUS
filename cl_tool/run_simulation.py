@@ -65,18 +65,18 @@ def citrus():
 
 @citrus.command()
 @click.option(
-	'--config_file', 
+	'-c', '--config_file', 
 	type=str, 
 	required=True, 
 	help="File defining the location of input data and the simulation steps"
 )
 @click.option(
-	'--output_dir', 
+	'-o', '--output_dir', 
 	required=True, 
 	help="Path to store output file"
 )
 @click.option(
-    '--output_file_name', 
+    '-f', '--output_file_name', 
     help="Name of output file"  
 )
 @click.option(
