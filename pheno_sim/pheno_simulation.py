@@ -235,14 +235,13 @@ class PhenoSimulation:
 		return vals_dict
 
 	def run_simulation_steps(
-			self, val_dict: ValuesDict, run_output_step=True
+			self, val_dict: ValuesDict
 	):
 		""" Run the simulation steps and optionally the output step. Returns
 		whatever is returned by the last step run.
 		
 		Args:
 			val_dict: A ValuesDict containing the input values.
-			run_output_step: Whether to run the output step. Default is True.
 			
 		Returns:
 			Whatever is returned by the last step run.
@@ -284,15 +283,15 @@ class PhenoSimulation:
 				the column name.
 
 			2D numpy arrays: Converted to multiple columns with names that
-				are '{key}_{row_index}'.
+				are '{key}*-*{row_index}'.
 
 			Two length tuple of 1D arrays: Converted to two columns with
-				names that are '{key}_a' and '{key}_b'. 'a' will always
+				names that are '{key}*-*a' and '{key}*-*b'. 'a' will always
 				correspond to the first element in the tuple, and 'b' will
 				always correspond to the second element in the tuple.
 
 			Two length tuple of 2D arrays: Converted to 2*n_rows columns
-				with names that are '{key}_{row_index}_{col_index}'.
+				with names that are '{key}*-*{a/b}*-*{row_index}'.
 		"""
 		df_dict = dict()
 
@@ -303,7 +302,7 @@ class PhenoSimulation:
 					df_dict[key] = vals
 				elif vals.ndim == 2:
 					for i in range(vals.shape[0]):
-						df_dict[f'{key}_{i}'] = vals[i]
+						df_dict[f'{key}*-*{i}'] = vals[i]
 				else:
 					raise ValueError(
 						"Numpy arrays in ValuesDict must be 1D or 2D."
@@ -314,10 +313,10 @@ class PhenoSimulation:
 					idx_letter_pairs = [('a', 0), ('b', 1)]
 					for idx_letter, idx in idx_letter_pairs:
 						if vals[idx].ndim == 1:
-							df_dict[f'{key}_{idx_letter}'] = vals[idx]
+							df_dict[f'{key}*-*{idx_letter}'] = vals[idx]
 						elif vals[idx].ndim == 2:
 							for i in range(vals[idx].shape[0]):
-								df_dict[f'{key}_{idx_letter}_{i}'] = vals[idx][i]
+								df_dict[f'{key}*-*{idx_letter}*-*{i}'] = vals[idx][i]
 						else:
 							raise ValueError(
 								"Numpy arrays in ValuesDict must be 1D or 2D."
@@ -332,6 +331,110 @@ class PhenoSimulation:
 				)
 			
 		return pd.DataFrame(df_dict)
+	
+	@staticmethod
+	def dataframe_to_vals_dict(df: pd.DataFrame) -> ValuesDict:
+		""" Convert a pandas DataFrame to a ValuesDict. 
+
+		Values in Values dict are either 1D or 2D numpy arrays, or a two
+		length tuple of 1D or 2D numpy arrays. Column names in the dataframe
+		will must be named in one of the following formats and will become
+		values in the ValuesDict with the corresponding key:
+
+			* Single 1D array: '{key}'
+			* Single 2D array: '{key}*-*{row_index}'
+			* Two length tuple of 1D arrays: '{key}*-*a' and '{key}*-*b'
+			* Two length tuple of 2D arrays: '{key}*-*{a/b}*-*{row_index}'
+
+		NOTE: '*-*' is used as the delimiter and thus cannot be used in the key.
+
+		Args:
+			df: Pandas DataFrame to convert to ValuesDict.
+
+		Returns:
+			ValueDict reformed from values from the dataframe.
+		"""
+
+		vals_dict = dict()
+
+		# Map from all unique keys from dataframe to columns in dataframe
+		key_col_map = dict()
+
+		for col in df.columns:
+			key = col.split('*-*')[0]
+
+			if key not in key_col_map:
+				key_col_map[key] = list()
+
+			key_col_map[key].append(col)
+
+		# Create ValuesDict from dataframe
+		for col_name, col_vals in df.items():
+
+			col_name_parts = col_name.split('*-*')
+
+			# Single value 1D array
+			if len(col_name_parts) == 1:
+				vals_dict[col_name_parts[0]] = col_vals.values
+			elif len(col_name_parts) == 2:
+				# Single value 2D array is col_vals[1] is an integer
+				if col_name_parts[1].isdigit():
+					# Create 2D array if it doesn't exist
+					if col_name_parts[0] not in vals_dict:
+						vals_dict[col_name_parts[0]] = np.zeros(
+							(len(key_col_map[col_name_parts[0]]), df.shape[0])
+						)
+					# Add values to 2D array by row index
+					vals_dict[col_name_parts[0]][int(col_name_parts[1])] = col_vals.values
+				# Two length tuple of 1D arrays
+				elif col_name_parts[1] == 'a' or col_name_parts[1] == 'b':
+					# Create tuple if it doesn't exist
+					if col_name_parts[0] not in vals_dict:
+						vals_dict[col_name_parts[0]] = [None, None]
+					# Add values to tuple
+					vals_dict[col_name_parts[0]][
+						0 if col_name_parts[1] == 'a' else 1
+					] = col_vals.values
+				# Error
+				else:
+					raise ValueError(
+						'Invalid column name format: {}'.format(col_name)
+					)
+			elif len(col_name_parts) == 3:
+				# Two length tuple of 2D arrays
+				# Create tuple if it doesn't exist
+				if col_name_parts[0] not in vals_dict:
+					vals_dict[col_name_parts[0]] = [
+						np.zeros(
+							(len(key_col_map[col_name_parts[0]]) // 2, df.shape[0])
+						),
+						np.zeros(
+							(len(key_col_map[col_name_parts[0]]) // 2, df.shape[0])
+						)
+					]
+				
+				# Add values to tuple by row index
+				vals_dict[col_name_parts[0]][0 if col_name_parts[1] == 'a' else 1][
+					int(col_name_parts[2])
+				] = col_vals.values
+			else:
+				raise ValueError(
+					'Invalid column name format: {}'.format(col_name)
+				)
+					
+		# Cast lists vals in vals_dict to tuples
+		for key, val in vals_dict.items():
+			if isinstance(val, list):
+				vals_dict[key] = tuple(val)
+
+		return vals_dict
+	
+	def get_config(self) -> dict:
+		""" Get the simulation configuration. """
+		return {
+			"input": self.input_runner.get_config(),
+			"simulation_steps": self.sim_config
+		}
 
 	def save_output(
 		self,
@@ -387,10 +490,7 @@ class PhenoSimulation:
 		if include_config:
 			with open(os.path.join(output_dir, output_config_name), 'w') as f:
 				json.dump(
-					{
-						"input": self.input_runner.get_config(),
-						"simulation_steps": self.sim_config
-					},
+					self.get_config(),
 					f,
 					indent=4
 				)
