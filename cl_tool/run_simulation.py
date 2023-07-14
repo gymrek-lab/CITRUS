@@ -50,94 +50,129 @@ Example Usage:
 """
 
 import click
-import json
 
-from pheno_sim import PhenoSimulation
+# @click.command()
+# @click.option('--count', default=1, help='number of greetings')
+# @click.argument('name')
+# def hello(count, name):
+#     for x in range(count):
+#         click.echo(f"Hello {name}!")
+        
+@click.group()
+@click.version_option(message="%(version)s")
+def citrus():
+	pass
 
-@click.command()
-@click.option('--count', default=1, help='number of greetings')
-@click.argument('name')
-def hello(count, name):
-    for x in range(count):
-        click.echo(f"Hello {name}!")
+@citrus.command()
+@click.option(
+	'--config_file', 
+	type=str, 
+	required=True, 
+	help="File defining the location of input data and the simulation steps"
+)
+@click.option(
+	'--output_dir', 
+	required=True, 
+	help="Path to store output file"
+)
+@click.option(
+    '--output_file_name', 
+    help="Name of output file"  
+)
+@click.option(
+    '--output_config_json',
+    help="Name of output config file"
+)
+@click.option(
+    '--tsv', 
+    is_flag=True, 
+    show_default=True, 
+    default=False,
+    help="Set column separator to <TAB>"
+)
+def simulate(
+    config_file: str,  
+	output_dir: str, 
+	output_file_name: str, 
+	output_config_json: str,
+    tsv: bool
+):
+	"""
+	Simulates phenotypes by modeling cis, inheritance, and trans effects across the genome. 
+	Creates a set of phenotypes from a set of genotypes.
 
-# # def main():
-# if __name__ == "__main__":
-# 	# Parse arguments
-# 	parser = argparse.ArgumentParser(
-# 		description=__doc__,
-# 		formatter_class=argparse.RawTextHelpFormatter,
-# 	)
+	GENOTYPES can be formatted as a VCF or PGEN file.
 
-# 	parser.add_argument(
-# 		"-c",
-# 		"--config_file",
-# 		required=True,
-# 		help="Path to configuration file"
-# 	)
-# 	parser.add_argument(
-# 		"-g",
-# 		"--genotype_files",
-# 		nargs="*",
-# 		help="Paths to genotype files (optional)"
-# 	)
-# 	parser.add_argument(
-# 		"-o",
-# 		"--output_dir",
-# 		default=".",
-# 		help="Directory to save output to (default: current working directory)."
-# 			" If directory does not exist it will be created."
-# 	)
-# 	parser.add_argument(
-# 		"-f",
-# 		"--output_file_name",
-# 		default="output.csv",
-# 		help="Name of output file (default: output.csv)"
-# 	)
-# 	parser.add_argument(
-# 		"-j",
-# 		"--output_config_json",
-# 		default="sim_config.json",
-# 		help="Name for saved simulation configuration file (default: "
-# 			"sim_config.json)"
-# 	)
-# 	parser.add_argument(
-# 		"-t",
-# 		"--tsv",
-# 		action="store_true",
-# 		help="Save output as tab seperated TSV file (default: CSV)"
-# 	)
+	"""
+    
+	from json import load
+	from pheno_sim import PhenoSimulation
 
-# 	args = parser.parse_args()
-	
-# 	# Load configuration file
-# 	with open(args.config_file, "r") as f:
-# 		config = json.load(f)
-	
-# 	# If genotype files were provided, replace paths in config file
-# 	if args.genotype_files:
-# 		assert len(args.genotype_files) == len(config["input"]), \
-# 			"Number of genotype files provided does not match number of input " \
-# 			"source files in configuration file"
+	with open(config_file, "r") as f:
+		config = load(f)
+
+	# # If genotype files were provided, replace paths in config file
+	# if genotype_files:
+	# 	assert len(genotype_files) == len(config["input"]), \
+	# 		"Number of genotype files provided does not match number of input " \
+	# 		"source files in configuration file"
 		
-# 		for i, path in enumerate(args.genotype_files):
-# 			config["input"][i]["file"] = path
+	# 	for i, path in enumerate(genotype_files):
+	# 		config["input"][i]["file"] = path
+
+
+	# Create simulation
+	sim = PhenoSimulation(config)
 	
-# 	# Create simulation
-# 	sim = PhenoSimulation(config)
+	# Run simulation
+	sim_vals = sim.run_simulation()
+
 	
-# 	# Run simulation
-# 	sim_vals = sim.run_simulation()
+	# Save output
+	sim.save_output(
+		sim_vals,
+		output_dir=output_dir,
+		output_file_name=output_file_name,
+		output_config_name=output_config_json,
+		sep="\t" if tsv else ","
+	)
 
-# 	# Save output
-# 	sim.save_output(
-# 		sim_vals,
-# 		output_dir=args.output_dir,
-# 		output_file_name=args.output_file_name,
-# 		output_config_name=args.output_config_json,
-# 		sep="\t" if args.tsv else ","
-# 	)
+@citrus.command()
+@click.option(
+	'--visualize', 
+	help='Visualizes the simulation steps as a graphical model'
+)
+@click.option(
+	'--output_file_name',
+	
+)
+def plot():
+	"""
+	Visualizes the simulation steps as a graphical model.
 
+	Note: Colors correspond to cis-, inheritance, and trans- effects
+	"""
+	pass
 
-# if __name__ == "__main__":
-# 	main()
+@citrus.command()
+def shap():
+	"""
+	Computes the local and global shapley values of a model.
+
+	"""
+
+	pass
+
+@citrus.command()
+def generate():
+	"""
+	Generates a random graphical model given a set of parameters.
+
+	"""
+	pass
+
+# @click.option(
+# 	'--genotype_files', 
+# 	type=str,  
+# 	help="path to where genotype files are stored"	
+# )
