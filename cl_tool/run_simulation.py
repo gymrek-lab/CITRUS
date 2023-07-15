@@ -50,16 +50,9 @@ Example Usage:
 """
 
 import click
-
-# @click.command()
-# @click.option('--count', default=1, help='number of greetings')
-# @click.argument('name')
-# def hello(count, name):
-#     for x in range(count):
-#         click.echo(f"Hello {name}!")
         
 @click.group()
-@click.version_option(message="%(version)s")
+@click.version_option(package_name="citrus", message="%(version)s")
 def citrus():
 	pass
 
@@ -68,32 +61,47 @@ def citrus():
 	'-c', '--config_file', 
 	type=str, 
 	required=True, 
-	help="File defining the location of input data and the simulation steps"
+	help="Specify path to config file defining path(s) to input data and simulation steps."
 )
 @click.option(
-	'-o', '--output_dir', 
-	required=True, 
-	help="Path to store output file"
+	'--vcf', 
+	type=str,
+	multiple=True,
+	help=(
+		"Specify path to vcf file (overwrites path(s) in config file)."
+		"(ex: --vcf genotypes1.vcf --vcf genotypes2.vcf)"
+	)
 )
 @click.option(
-    '-f', '--output_file_name', 
-    help="Name of output file"  
+	'-o', '--output_dir',
+	default=".",
+	show_default=True,  
+	help="Specify path to store output file."
+)
+@click.option(
+    '-f', '--output_filename', 
+    default="output.csv",
+    show_default=True,
+    help="Set name of output file."  
 )
 @click.option(
     '--output_config_json',
-    help="Name of output config file"
+    default="config.json",
+    show_default=True,
+    help="Set name of output config file."
 )
 @click.option(
     '--tsv', 
     is_flag=True, 
     show_default=True, 
     default=False,
-    help="Set column separator to <TAB>"
+    help="Set column separator to <TAB>."
 )
 def simulate(
-    config_file: str,  
+    config_file: str, 
+    vcf: str,  
 	output_dir: str, 
-	output_file_name: str, 
+	output_filename: str, 
 	output_config_json: str,
     tsv: bool
 ):
@@ -111,14 +119,9 @@ def simulate(
 	with open(config_file, "r") as f:
 		config = load(f)
 
-	# # If genotype files were provided, replace paths in config file
-	# if genotype_files:
-	# 	assert len(genotype_files) == len(config["input"]), \
-	# 		"Number of genotype files provided does not match number of input " \
-	# 		"source files in configuration file"
-		
-	# 	for i, path in enumerate(genotype_files):
-	# 		config["input"][i]["file"] = path
+	if vcf: 
+		for i, path in enumerate(vcf):
+			config['input'][i]['file'] = path
 
 
 	# Create simulation
@@ -126,33 +129,53 @@ def simulate(
 	
 	# Run simulation
 	sim_vals = sim.run_simulation()
-
 	
 	# Save output
 	sim.save_output(
 		sim_vals,
 		output_dir=output_dir,
-		output_file_name=output_file_name,
+		output_file_name=output_filename,
 		output_config_name=output_config_json,
 		sep="\t" if tsv else ","
 	)
 
 @citrus.command()
 @click.option(
-	'--visualize', 
-	help='Visualizes the simulation steps as a graphical model'
+	'-c', '--config_file', 
+	type=str, 
+	required=True, 
+	help="Specify path to config file defining path(s) to input data and simulation steps."
 )
 @click.option(
-	'--output_file_name',
-	
+    '-o', '--out', 
+    default='plot',
+    show_default=True,
+    help="Set output file prefix."  
 )
-def plot():
+@click.option(
+	'-f', '--format',
+	type=click.Choice(['jpg', 'png', 'svg']),
+	default='png', 
+	show_default=True, 
+	help="Specify the file format of the output plot."
+)
+def plot(config_file: str, out: str, format: str):
 	"""
 	Visualizes the simulation steps as a graphical model.
 
-	Note: Colors correspond to cis-, inheritance, and trans- effects
+	Note: Colors correspond to cis, inheritance, and trans effects
 	"""
-	pass
+	
+	from pheno_sim import plot
+	from json import load
+
+	with open(config_file, "r") as f:
+		config = load(f)
+
+	out += "." + format
+	
+	# Create a plot of the model
+	plot.visualize(input_spec=config, filename=out, format=format)
 
 @citrus.command()
 def shap():

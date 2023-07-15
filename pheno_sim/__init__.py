@@ -1,3 +1,5 @@
+__version__ = "0.1.0"
+
 from .data_types import HaplotypeValues, Values, ValuesDict
 
 from .base_nodes import (
