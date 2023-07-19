@@ -34,8 +34,7 @@ CITRUS uses phased genetic data in one of several VCF-like file formats (VCF, TO
 					"type": "SNP",
 					"chr": "19",
 					"pos": [11242133, 11222300]
-				},
-				...
+				}
 			]
 		}
 	],
