@@ -59,11 +59,11 @@ Input nodes typically represent reference and alternate alleles as 0 and 1, resp
 
 ## Operator Nodes
 
-Operator nodes take as input the output from one or more nodes and apply some function to them to produce a new set of values. These nodes can be used to model thinks like weights, interactions, dominance relationships, and noise. Operator nodes fall into two classes based on how they handle input haplotype-level tuples of values.
+Operator nodes take as input the output from one or more nodes and apply some function to them to produce a new set of values. These nodes can be used to model things like weights, interactions, dominance relationships, and noise. Operator nodes fall into two classes based on how they handle input haplotype-level tuples of values.
 
 ### Haplotype Combine Operators
 
-Haplotype combine operators are used to model interactions between haplotypes to combine them into a single person-level matix. These operators model things like dominance, recessiveness, and additivity. They take as input only haplotype-level tuples of values and apply some function to the to produce a single `n x m` matrix of values. An example of the output from an AdditiveCombine haplotype combine operator is below.
+Haplotype combine operators are used to model interactions between haplotypes to combine them into a single person-level matrix. These operators model things like dominance, recessiveness, and additivity. They take as input only haplotype-level tuples of values and apply some function to the to produce a single `n x m` matrix of values. An example of the output from an AdditiveCombine haplotype combine operator is below.
 
 ```python
 # Input values
