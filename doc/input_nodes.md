@@ -4,7 +4,7 @@ The typical behavior of input nodes is to treat the reference allele as a 0 and 
 
 All dictionaries defining input nodes must have the following keys:
 
-* alias: The alias for the input node. This is used to refer to the node in the simulation configuration.
+* alias: The alias for the input node. This is used to refer to the node in the simulation configuration, when plotting, and when computing SHAP values.
 * type: The type of the input node. See [Input Node Types](#input-node-types) for more information. Values in that section's headers in parentheses are the values for the 'type' key (e.g. "snp" for single nucleotide polymorphism input nodes).
 
 They may also have additional arguments specific to the input node type.

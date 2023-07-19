@@ -177,7 +177,7 @@ The typical behavior of input nodes is to treat the reference allele as a 0 and 
 
 All dictionaries defining input nodes must have the following keys:
 
-* alias: The alias for the input node. This is used to refer to the node in the simulation configuration.
+* alias: The alias for the input node. This is used to refer to the node in the simulation configuration, when plotting, and when computing SHAP values.
 * type: The type of the input node. See [Input Node Types](input_nodes.md#input-node-types) for more information. Values in that section's headers in parentheses are the values for the 'type' key (e.g. "snp" for single nucleotide polymorphism input nodes).
 
 They may also have additional arguments specific to the input node type (e.g. to specify a locus). For more information, see the [Input Nodes documentation](input_nodes.md#input-node-types).
@@ -185,4 +185,70 @@ They may also have additional arguments specific to the input node type (e.g. to
 
 ## Simulation Steps
 
+The 'simulation_steps' section of the JSON config file is a list that defines the rest of the graph: the operator nodes and their in-edges. Each operator node is represented by a dictionary that must have the keys:
 
+* alias: The alias for the operator node. This is used to refer to the node in the simulation configuration and when plotting.
+* type: The type of the operator node. See TODO [Operator Node documentation](operator_nodes.md) for more information. Values for the 'type' key are class names of the operator nodes (e.g. "SumNode" for the SumNode operator node).
+
+Operator nodes will have additional arguments specific to the operator node type (see the TODO [Operator Nodes documentation](operator_nodes.md)). 
+
+At least one of these class specific arguments will define what other nodes are inputs to the operator node. This is done using the string aliases of any input nodes. Only nodes that are defined BEFORE a given operator node in the configuration file may be inputs. For example, the forth operator node defined in 'simulation_steps' list may have as input any of the input nodes and the first three operator nodes, but not the fifth operator node.
+
+The following example would work with the 'input' in the [Input Configuration](#input) example above. This implements a linear additive model.
+
+```json
+{
+	...,
+	"simulation_steps": [
+		{
+			"type": "Constant",
+			"alias": "LDLR_intron_variant_beta",
+			"input_match_size": "LDLR_upstream_variant",
+			"constant": 0.1
+		},
+		{
+			"type": "RandomConstant",
+			"alias": "LDLR_missense_variants_betas",
+			"input_match_size": "LDLR_missense_variants",
+			"dist_name": "normal",
+			"dist_kwargs": {
+				"loc": 0.25,
+				"scale": 0.2
+			},
+			"by_feat": true
+		},
+		{
+			"type": "Product",
+			"alias": "LDLR_intron_variant_effect",
+			"input_aliases": [
+				"LDLR_intron_variant_beta", "LDLR_intron_variant"
+			]
+		},
+		{
+			"type": "Product",
+			"alias": "LDLR_missense_variants_effects",
+			"input_aliases": [
+				"LDLR_missense_variants_betas", "LDLR_missense_variants"
+			]
+		},
+		{
+			"type": "Concatenate",
+			"alias": "LDLR_effects_by_haplotype",
+			"input_aliases": [
+				"LDLR_intron_variant_effect",
+				"LDLR_missense_variants_effects"
+			]
+		},
+		{
+			"type": "AdditiveCombine",
+			"alias": "LDLR_effects",
+			"input_alias": "LDLR_effects_by_haplotype"
+		},
+		{
+			"type": "SumReduce",
+			"alias": "phenotype",
+			"input_alias": "LDLR_effects"
+		}
+	]
+}
+```
