@@ -17,7 +17,20 @@ In additional to simulating phenotypes, CITRUS allows for caluculation of SHAP S
 This guide walks through how CITRUS simulations work, how to define and run them, and how to compute their SHAP values.
 
 
-# CITRUS Simulations
+## Table of Contents
+
+* [CITRUS Simulation Mechanics](#citrus-simulation-mechanics)
+	* [Values in Simulations](#values-in-simulations)
+	* [Input Nodes](#input-nodes)
+	* [Operator Nodes](#operator-nodes)
+* [Defining Simulations](#defining-simulations)
+	* [Input Configuration](#input)
+		* [Defining Input Sources](#defining-input-sources)
+		* [Defining Input Nodes](#defining-input-nodes)
+	* [Simulation Steps Configuration](#simulation-steps)
+
+
+# CITRUS Simulation Mechanics
 
 There are two node types in CITRUS simulations: input nodes and operator nodes. All nodes have a unique alias, which is used to refer to them in the simulation configuration. These nodes are used to define a numerical simulation of a phenotype based on the input genotype data.
 
@@ -106,7 +119,7 @@ SumNode(person_level_single_val, person_level_single_val, haplotype_level)
 TODO: Add operator documentation and link to it.
 
 
-# Defining a Simulation
+# Defining Simulations
 
 Users define a directed graph of the simulation in a configuration JSON file. Simulation configuration JSON files define a dictionary with keys 'input' and 'simulation_steps'. The 'input' key maps to a list of input sources and their resulting input nodes. The 'simulation_steps' key maps to a list of operator or nodes and their input edges, which defines the rest of the graph.
 
@@ -168,5 +181,8 @@ All dictionaries defining input nodes must have the following keys:
 * type: The type of the input node. See [Input Node Types](input_nodes.md#input-node-types) for more information. Values in that section's headers in parentheses are the values for the 'type' key (e.g. "snp" for single nucleotide polymorphism input nodes).
 
 They may also have additional arguments specific to the input node type (e.g. to specify a locus). For more information, see the [Input Nodes documentation](input_nodes.md#input-node-types).
+
+
+## Simulation Steps
 
 
