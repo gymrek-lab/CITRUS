@@ -32,7 +32,7 @@ This guide walks through how CITRUS simulations work, how to define and run them
 
 # CITRUS Simulation Mechanics
 
-CITRUS simulations are defined by a directed graph with two types of nodes: input nodes and operator nodes. These nodes are used to define a numerical simulation of a phenotype based on the input genotype data.
+CITRUS simulations are defined by a directed graph with two types of nodes: input nodes and operator nodes. The directed graph models the flow of values from the input nodes, which read values from a data file, through operator nodes, which apply some function to the values. Together these define a numerical simulation of a phenotype based on genotype data.
 
 ## Values in Simulations
 
