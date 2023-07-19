@@ -32,7 +32,7 @@ This guide walks through how CITRUS simulations work, how to define and run them
 
 # CITRUS Simulation Mechanics
 
-There are two node types in CITRUS simulations: input nodes and operator nodes. All nodes have a unique alias, which is used to refer to them in the simulation configuration. These nodes are used to define a numerical simulation of a phenotype based on the input genotype data.
+CITRUS simulations are defined by a directed graph with two types of nodes: input nodes and operator nodes. All nodes have a unique alias, which is used to refer to them in the simulation configuration. These nodes are used to define a numerical simulation of a phenotype based on the input genotype data.
 
 ## Values in Simulations
 
