@@ -32,7 +32,7 @@ This guide walks through how CITRUS simulations work, how to define and run them
 
 # CITRUS Simulation Mechanics
 
-CITRUS simulations are defined by a directed graph with two types of nodes: input nodes and operator nodes. All nodes have a unique alias, which is used to refer to them in the simulation configuration. These nodes are used to define a numerical simulation of a phenotype based on the input genotype data.
+CITRUS simulations are defined by a directed graph with two types of nodes: input nodes and operator nodes. These nodes are used to define a numerical simulation of a phenotype based on the input genotype data.
 
 ## Values in Simulations
 
@@ -121,7 +121,7 @@ TODO: Add operator documentation and link to it.
 
 # Defining Simulations
 
-Users define a directed graph of the simulation in a configuration JSON file. Simulation configuration JSON files define a dictionary with keys 'input' and 'simulation_steps'. The 'input' key maps to a list of input sources and their resulting input nodes. The 'simulation_steps' key maps to a list of operator or nodes and their input edges, which defines the rest of the graph.
+Users define a directed graph of the simulation in a configuration JSON file. Simulation configuration JSON files define a dictionary with keys 'input' and 'simulation_steps'. The 'input' key maps to a list of input sources and their resulting input nodes. The 'simulation_steps' key maps to a list of operator or nodes and their input edges, which defines the rest of the graph. All input nodes and operator nodes have a unique string alias.
 
 ## Input
 
