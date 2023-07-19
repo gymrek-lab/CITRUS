@@ -2,7 +2,7 @@
 
 ![Example GM](example_gm.png "Example Graphical Model")
 
-In CITRUS, simulations are defined by a directed tree-like graph. The directed graph is composed of input nodes, representing genetic variants, and operator nodes, which represent intermediate operations their resulting values. The edges represent the flow of values from the input nodes to the final operator node, who's resulting value represents the phenotype being simulated.
+In CITRUS, simulations are defined by a directed tree-like graph. The directed graph is composed of input nodes, representing genetic variants, and operator nodes, which represent intermediate operations and their resulting values. The edges represent the flow of values from the input nodes to the final operator node, who's resulting value represents the phenotype being simulated.
 
 This flexible framework allows users to design or generate simulations of phenotypes with more complex dynamics and interactions than previous tools. These include:
 
@@ -12,7 +12,7 @@ This flexible framework allows users to design or generate simulations of phenot
 * Sampling from distributions in place of fixed values
 * And more!
 
-In additional to simulating phenotypes, CITRUS allows for caluculation of SHAP Shapley values, which estimate the contribution of each variant to the phenotype. This allows for the generation of a ground truth for testing downstream models ability to detect relevant variants. 
+In additional to simulating phenotypes, CITRUS allows for calculation of SHAP Shapley values, which estimate the contribution of each variant to the phenotype. This allows for the generation of a ground truth for testing the ability of downstream models to detect relevant variants. 
 
 This guide walks through how CITRUS simulations work, how to define and run them, and how to compute their SHAP values.
 
