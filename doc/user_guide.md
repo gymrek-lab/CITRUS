@@ -53,7 +53,7 @@ Each input source is represented by a dictionary with the following keys:
 
 #### Engine and File Format Specific Keys
 
-Additional keys are used based on the engine being used to load the data and the file format. See the [Input Sources documentation](input_sources.md) for more information.
+Additional keys are used based on the engine used to load the data and the file format. See the [Input Sources documentation](input_sources.md) for more information.
 
 
 ### Defining Input Nodes

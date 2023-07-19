@@ -1,4 +1,4 @@
-# Input Nodes Guide
+# Input Nodes
 
 The typical behavior of input nodes is to treat the reference allele as a 0 and any alternate alleles as a 1. Nodes may specify other behavior to handle things like multi-allelic sites or other features like SNP copy number.
 
