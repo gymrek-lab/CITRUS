@@ -42,7 +42,7 @@ These values are either passed to other operator nodes which apply some function
 
 ## Input Nodes
 
-Input nodes read phased genetic data from a VCF-like files. They return a tuple of two `n x m` matrices, one per haploid genotype. The order of the matrices in the tuple is the same as the order of the haploid genotypes in the input file. 
+Input nodes read phased genetic data from VCF-like files. They return a tuple of two `n x m` matrices, one per haploid genotype. The order of the matrices in the tuple is the same as the order of the haploid genotypes in the input file. 
 
 Input nodes typically represent reference and alternate alleles as 0 and 1, respectively, but may have other behavior (TODO) for multi-allelic sites or other features like SNP copy number. An example of output from two input nodes with six samples is below, where the first is a node with a single SNP value per person and the second is a node with two SNPs per person.
 
