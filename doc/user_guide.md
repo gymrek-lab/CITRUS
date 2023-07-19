@@ -252,3 +252,19 @@ The following example would work with the 'input' in the [Input Configuration](#
 	]
 }
 ```
+
+# Running Simulations
+
+Simulations can be run either with the [command line interface](cli.md) or the Python API. To run a simulation with the CLI, use the following command if the 'file' key is specified for each input source in the configuration file:
+
+```bash
+citrus simulate -c <config_json_file>
+```
+
+This will output a CSV file with the simulated phenotypes and all intermediate simulation values and a JSON file with the simulation configuration updated with any random values drawn as variables in the simulation (for reproducibility and SHAP).
+
+# Running SHAP
+
+SHAP values are Shapley value estimates that say for each sample how much each input genotype impacted the phenotype. They can be used to establish some ground truth on how input variants impact a phenotype that can later be used to evaluate the performance of other methods designed to identify causal variants.
+
+TODO: Add CLI
