@@ -63,7 +63,7 @@ Operator nodes take as input the output from one or more nodes and apply some fu
 
 ### Haplotype Combine Operators
 
-Haplotype combine operators are used to model interactions between haplotypes to combine them into a single value. These operators model things like dominance, recessiveness, and additivity. They take as input only haplotype-level tuples of values and apply some function to the to produce a single `n x m` matrix of values. An example of the output from an AdditiveCombine haplotype combine operator is below.
+Haplotype combine operators are used to model interactions between haplotypes to combine them into a single person-level matix. These operators model things like dominance, recessiveness, and additivity. They take as input only haplotype-level tuples of values and apply some function to the to produce a single `n x m` matrix of values. An example of the output from an AdditiveCombine haplotype combine operator is below.
 
 ```python
 # Input values
