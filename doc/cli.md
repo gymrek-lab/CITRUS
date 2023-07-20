@@ -19,7 +19,7 @@ pip install CITRUS
 ```
 
 Confirm citrus was installed successfully:
-```
+
 ## From source
 
 Download the CITRUS repository from github, check out the branch you are interested in, and run the following commands from the base directory of the repo:
