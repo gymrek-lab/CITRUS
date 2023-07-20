@@ -192,7 +192,7 @@ The 'simulation_steps' section of the JSON config file is a list that defines th
 
 Operator nodes will have additional arguments specific to the operator node type (see the TODO [Operator Nodes documentation](operator_nodes.md)). 
 
-At least one of these class specific arguments will define what other nodes are inputs to the operator node. This is done using the string aliases of any input nodes. Only nodes that are defined BEFORE a given operator node in the configuration file may be inputs. For example, the forth operator node defined in 'simulation_steps' list may have as input any of the input nodes and the first three operator nodes, but not the fifth operator node.
+At least one of these class specific arguments will define what other nodes are inputs to the operator node. This is done using the string aliases of any input nodes. Only nodes that are defined BEFORE a given operator node in the configuration file may be inputs. For example, the fourth operator node defined in 'simulation_steps' list may have as input any of the input nodes and the first three operator nodes, but not the fifth operator node.
 
 The following example would work with the 'input' in the [Input Configuration](#input) example above. This implements a linear additive model.
 
