@@ -1,6 +1,7 @@
 # Installation 
 
 # With pip
+Tip: create a virtual environment prior to installing the packages below!
 
 First, upgrade setuptools and pip:
 ```
