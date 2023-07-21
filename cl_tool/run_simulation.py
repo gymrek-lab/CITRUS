@@ -178,13 +178,72 @@ def plot(config_file: str, out: str, format: str):
 	plot.visualize(input_spec=config, filename=out, format=format)
 
 @citrus.command()
-def shap():
+@click.option(
+	'-c', '--config_file', 
+	type=str, 
+	required=True, 
+	help="Specify path to config file defining path(s) to input data and simulation steps."
+)
+@click.option(
+	'--vcf', 
+	type=str,
+	multiple=True,
+	help=(
+		"Specify path to vcf file (overwrites path(s) in config file)."
+		"(ex: --vcf genotypes1.vcf --vcf genotypes2.vcf)"
+	)
+)
+@click.option(
+	'--save_path', 
+	type=str, 
+	default=".",
+	show_default=True, 
+	help=(
+		"Specify path to save the output file at. "
+	)
+)
+@click.option(
+	'--save_config_path',
+	type=str, 
+	default=".",
+	show_default=True,
+	help=(
+		"Specify path to save the configuration at. "
+	)
+)
+def shap(
+	config_file: str, 
+	vcf: str, 
+	save_path: str, 
+	save_config_path: str
+):
 	"""
 	Computes the local and global shapley values of a model.
 
 	"""
+	from pheno_sim import PhenoSimulation
+	from pheno_sim.shap import run_SHAP
+	from json import load
 
-	pass
+	phenotype_key = 'phenotype'
+
+	simulation = PhenoSimulation.from_JSON_file(config_file)
+	
+	with open(config_file, "r") as f:
+		config = load(f)
+
+	if vcf: 
+		for i, path in enumerate(vcf):
+			config['input'][i]['file'] = path
+
+	shap_values, explainer = run_SHAP(
+		simulation,
+		phenotype_key,
+		save_path,
+		save_config_path,
+	)
+	
+	#return shap_values
 
 @citrus.command()
 def generate():
@@ -192,7 +251,7 @@ def generate():
 	Generates a random graphical model given a set of parameters.
 
 	"""
-	pass
+	raise(NotImplementedError)
 
 # @click.option(
 # 	'--genotype_files', 
