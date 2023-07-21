@@ -61,6 +61,8 @@ Input nodes typically represent reference and alternate alleles as 0 and 1, resp
 
 Operator nodes take as input the output from one or more nodes and apply some function to them to produce a new set of values. These nodes can be used to model things like weights, interactions, dominance relationships, and noise. Operator nodes fall into two classes based on how they handle input haplotype-level tuples of values.
 
+Descriptions of available operators and links to the full documentation are [here](operator_nodes.md).
+
 ### Haplotype Combine Operators
 
 Haplotype combine operators are used to model interactions between haplotypes to combine them into a single person-level matrix. These operators model things like dominance, recessiveness, and additivity. They take as input only haplotype-level tuples of values and apply some function to the to produce a single `n x m` matrix of values. An example of the output from an AdditiveCombine haplotype combine operator is below.
@@ -81,7 +83,7 @@ array([[ 1. ,  0. ,  2. ,  1. ,  0. ],
 
 If any input values to general operators are haplotype-level, the operator will apply the function to each haplotype separately and return a tuple of two `n x m` matrices. The order of the matrices in the tuple is preserved. When there is a mix of person-level and haplotype-level values, the person-level values are applied to each haplotype seperately. When the input is all person-level values the output will be a single `n x m` matrix.
 
-A pseudocode example with the SumNode is below. It shows the operators ability to work with both haplotype-level and person-level values. See the SumNode documentation (TODO) for more details.
+A pseudocode example with the SumNode is below. It shows the operators ability to work with both haplotype-level and person-level values. See the [SumNode documentation](operator_nodes/math_func.md#class-sum) for more details.
 
 ```python
 # Input values
@@ -115,8 +117,6 @@ SumNode(person_level_single_val, person_level_single_val, haplotype_level)
 	 array([[0, 1, 2, 3, 4],
 			[1, 2, 3, 4, 5]]))
 ```
-
-TODO: Add operator documentation and link to it.
 
 
 # Defining Simulations
@@ -190,7 +190,7 @@ The 'simulation_steps' section of the JSON config file is a list that defines th
 * alias: The alias for the operator node. This is used to refer to the node in the simulation configuration and when plotting.
 * type: The type of the operator node. See TODO [Operator Node documentation](operator_nodes.md) for more information. Values for the 'type' key are class names of the operator nodes (e.g. "SumNode" for the SumNode operator node).
 
-Operator nodes will have additional arguments specific to the operator node type (see the TODO [Operator Nodes documentation](operator_nodes.md)). 
+Operator nodes will have additional keys specific to the operator node type. These additional keys will be the the the operator's `__init__` function. See the [Operator Nodes documentation](operator_nodes.md) for more information and links to the full documentation.
 
 At least one of these class specific arguments will define what other nodes are inputs to the operator node. This is done using the string aliases of any input nodes. Only nodes that are defined BEFORE a given operator node in the configuration file may be inputs. For example, the fourth operator node defined in 'simulation_steps' list may have as input any of the input nodes and the first three operator nodes, but not the fifth operator node.
 
