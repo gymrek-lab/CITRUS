@@ -2,7 +2,7 @@
 
 ![Example GM](example_gm.png "Example Graphical Model")
 
-In CITRUS, simulations are defined by a directed tree-like graph. The directed graph is composed of input nodes, representing genetic variants, and operator nodes, which represent intermediate operations their resulting values. The edges represent the flow of values from the input nodes to the final operator node, who's resulting value represents the phenotype being simulated.
+In CITRUS, simulations are defined by a directed tree-like graph. The directed graph is composed of input nodes, representing genetic variants, and operator nodes, which represent intermediate operations and their resulting values. The edges represent the flow of values from the input nodes to the final operator node, who's resulting value represents the phenotype being simulated.
 
 This flexible framework allows users to design or generate simulations of phenotypes with more complex dynamics and interactions than previous tools. These include:
 
@@ -12,7 +12,7 @@ This flexible framework allows users to design or generate simulations of phenot
 * Sampling from distributions in place of fixed values
 * And more!
 
-In additional to simulating phenotypes, CITRUS allows for caluculation of SHAP Shapley values, which estimate the contribution of each variant to the phenotype. This allows for the generation of a ground truth for testing downstream models ability to detect relevant variants. 
+In additional to simulating phenotypes, CITRUS allows for calculation of SHAP Shapley values, which estimate the contribution of each variant to the phenotype. This allows for the generation of a ground truth for testing the ability of downstream models to detect relevant variants. 
 
 This guide walks through how CITRUS simulations work, how to define and run them, and how to compute their SHAP values.
 
@@ -42,7 +42,7 @@ These values are either passed to other operator nodes which apply some function
 
 ## Input Nodes
 
-Input nodes read phased genetic data from a VCF-like files. They return a tuple of two `n x m` matrices, one per haploid genotype. The order of the matrices in the tuple is the same as the order of the haploid genotypes in the input file. 
+Input nodes read phased genetic data from VCF-like files. They return a tuple of two `n x m` matrices, one per haploid genotype. The order of the matrices in the tuple is the same as the order of the haploid genotypes in the input file. 
 
 Input nodes typically represent reference and alternate alleles as 0 and 1, respectively, but may have other behavior (TODO) for multi-allelic sites or other features like SNP copy number. An example of output from two input nodes with six samples is below, where the first is a node with a single SNP value per person and the second is a node with two SNPs per person.
 
@@ -59,11 +59,11 @@ Input nodes typically represent reference and alternate alleles as 0 and 1, resp
 
 ## Operator Nodes
 
-Operator nodes take as input the output from one or more nodes and apply some function to them to produce a new set of values. These nodes can be used to model thinks like weights, interactions, dominance relationships, and noise. Operator nodes fall into two classes based on how they handle input haplotype-level tuples of values.
+Operator nodes take as input the output from one or more nodes and apply some function to them to produce a new set of values. These nodes can be used to model things like weights, interactions, dominance relationships, and noise. Operator nodes fall into two classes based on how they handle input haplotype-level tuples of values.
 
 ### Haplotype Combine Operators
 
-Haplotype combine operators are used to model interactions between haplotypes to combine them into a single person-level matix. These operators model things like dominance, recessiveness, and additivity. They take as input only haplotype-level tuples of values and apply some function to the to produce a single `n x m` matrix of values. An example of the output from an AdditiveCombine haplotype combine operator is below.
+Haplotype combine operators are used to model interactions between haplotypes to combine them into a single person-level matrix. These operators model things like dominance, recessiveness, and additivity. They take as input only haplotype-level tuples of values and apply some function to the to produce a single `n x m` matrix of values. An example of the output from an AdditiveCombine haplotype combine operator is below.
 
 ```python
 # Input values
@@ -192,7 +192,7 @@ The 'simulation_steps' section of the JSON config file is a list that defines th
 
 Operator nodes will have additional arguments specific to the operator node type (see the TODO [Operator Nodes documentation](operator_nodes.md)). 
 
-At least one of these class specific arguments will define what other nodes are inputs to the operator node. This is done using the string aliases of any input nodes. Only nodes that are defined BEFORE a given operator node in the configuration file may be inputs. For example, the forth operator node defined in 'simulation_steps' list may have as input any of the input nodes and the first three operator nodes, but not the fifth operator node.
+At least one of these class specific arguments will define what other nodes are inputs to the operator node. This is done using the string aliases of any input nodes. Only nodes that are defined BEFORE a given operator node in the configuration file may be inputs. For example, the fourth operator node defined in 'simulation_steps' list may have as input any of the input nodes and the first three operator nodes, but not the fifth operator node.
 
 The following example would work with the 'input' in the [Input Configuration](#input) example above. This implements a linear additive model.
 
