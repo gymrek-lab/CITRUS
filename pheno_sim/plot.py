@@ -19,7 +19,7 @@ def visualize(input_spec: dict, filename: str, format: str):
         for input_node in input_spec['input'][0]['input_nodes']:
 
             alias = input_node['alias']
-            input_label= f'<input_node>\n{alias}'
+            input_label= f'{alias}\n<input_node>'
             # cluster_0.add_node(pydot.Node(alias, label=input_label, style='filled', fillcolor="blue"))
             graph.add_node(pydot.Node(alias, label=input_label, style='filled', fillcolor='bisque'))
 
@@ -28,7 +28,7 @@ def visualize(input_spec: dict, filename: str, format: str):
         for step in input_spec['simulation_steps']:
             step_type = step['type']
             alias = step['alias']
-            input_label = f'<{step_type}>\n{alias}'
+            input_label = f'{alias}\n<{step_type}>'
 
             if 'Combine' in step_type:  
                 graph.add_node(pydot.Node(alias, label=input_label, style='filled', fillcolor='lightskyblue'))
