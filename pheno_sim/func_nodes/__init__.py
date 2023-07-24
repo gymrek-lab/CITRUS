@@ -26,6 +26,11 @@ from .math_func import (
     Product,
 )
 
+from .noise import (
+    GaussianNoise,
+    Heritability,
+)
+
 from .reduce_func import (
     SumReduce,
     MinReduce,
@@ -33,6 +38,13 @@ from .reduce_func import (
     MeanReduce,
     AnyReduce,
     AllReduce,
+)
+
+from .scaling import (
+    Clip,
+    MinMaxScaler,
+    StandardScaler,
+    RobustScaler,
 )
 
 from .util_func import (
