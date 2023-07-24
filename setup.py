@@ -8,7 +8,18 @@ setup(
     author_email="rdevito@ucsd.edu",
     packages=find_packages(),
     install_requires=[
+        "click",
+        "hail",
+        "matplotlib",
         "numpy",
+        "pandas",
+        "pydot",
+        "seaborn",
+        "setuptools",
+        "shap",
+        "typeddict",
+        "typing",
+        "union",
         # Add any other dependencies here
     ],
     entry_points={
