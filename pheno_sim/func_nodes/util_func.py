@@ -2,7 +2,7 @@
 
 Includes:
 
-	Concatenate: A node that concatenates some inputs into a single array.
+- Concatenate: A node that concatenates some inputs into a single array.
 """
 
 import numpy as np
@@ -13,11 +13,10 @@ from pheno_sim.base_nodes import AbstractBaseFunctionNode
 class Concatenate(AbstractBaseFunctionNode):
 	""" A node that concatenates some inputs into a single array.
 
-	Args:
-		alias: The alias of the node.
-		input_aliases (list): The aliases of the inputs to be concatenated.
+	The inputs are concatenated in the order they are given in the input list.
 
 	Examples:
+	```python
 		>>> Concatenate("concat", ["arrs"])(
 			[np.array([1, 2, 3]), np.array([4, 5, 6])]
 		)
@@ -30,13 +29,21 @@ class Concatenate(AbstractBaseFunctionNode):
 		array([[1, 2, 3],
 			   [4, 5, 6],
 			   [7, 8, 9]])
+	```
 	"""
 
 	def __init__(self, alias: str, input_aliases: list):
+		"""Initialize Concatenate node.
+
+		Args:
+			alias: The alias of the node.
+			input_aliases (list): The aliases of the inputs to be concatenated.
+		"""
 		super().__init__(alias)
 		self.inputs = input_aliases
 
 	def run(self, *input_vals):
+		"""Return concatenated array of input values."""
 		return np.vstack(input_vals)
 	
 
