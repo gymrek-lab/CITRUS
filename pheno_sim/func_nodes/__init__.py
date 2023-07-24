@@ -40,6 +40,13 @@ from .reduce_func import (
     AllReduce,
 )
 
+from .scaling import (
+    Clip,
+    MinMaxScaler,
+    StandardScaler,
+    RobustScaler,
+)
+
 from .util_func import (
     Concatenate,
 )
