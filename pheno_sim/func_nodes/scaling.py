@@ -240,6 +240,9 @@ class StandardScaler(AbstractBaseFunctionNode):
 class RobustScaler(AbstractBaseFunctionNode):
 	"""Operator that scales input to have median 0 and interquartile range 1.
 
+	Output interquartile range can be changed by using the 'out_iqr' argument.
+	Output median can be changed by using the 'out_median' argument.
+
 	Scaling is either done by feature or among all features based on the
 	'by_feat' argument.
 
@@ -267,21 +270,43 @@ class RobustScaler(AbstractBaseFunctionNode):
 		)
 		>>> robust_by_feat(extreme_vals)
 		array([[-7.454e-01, -6.908e-01, ..., -1.848e+00, -7.676e+10]])
+
+		>>> vals = np.random.uniform(0, 10, size=(1000, 5))
+		>>> robust_scaled = RobustScaler(
+			"robust", "vals", out_iqr=.5, out_median=1
+		)
+		>>> scaled_vals = robust_scaled(vals)
+		>>> np.median(scaled_vals, axis=0)
+		array([1., 1., 1., 1., 1.])
+		>>> iqr(scaled_vals, axis=0)
+		array([0.608, 0.546, 0.528, 0.483, 0.571])
 	```
 	"""
 
-	def __init__(self, alias: str, input_alias: str, by_feat: bool = True):
+	def __init__(
+		self,
+		alias: str,
+		input_alias: str,
+		by_feat: bool = True,
+		out_iqr: float = 1.0,
+		out_median: float = 0.0
+	):
 		"""Initialize RobustScaler node.
 		
 		Args:
 			alias: The alias of the node.
 			input_alias: The alias of the input node.
 			by_feat (bool, default True): Whether to scale by feature or
-			among all features.
+				among all features.
+			out_iqr (float, default 1.0): The interquartile range of the
+				output.
+			out_median (float, default 0.0): The median of the output.
 		"""
 		super().__init__(alias)
 		self.inputs = input_alias
 		self.by_feat = by_feat
+		self.out_iqr = out_iqr
+		self.out_median = out_median
 
 	def run(self, input_vals):
 		"""Scale the input to have median 0 and interquartile range 1."""
@@ -299,8 +324,7 @@ class RobustScaler(AbstractBaseFunctionNode):
 		iqrs = np.where(iqrs == 0, 1, iqrs)
 
 		# Subtract the median and scale by the IQR
-		return (input_vals - medians) / iqrs
-
+		return (input_vals - medians) / iqrs * self.out_iqr + self.out_median
 
 
 if __name__ == "__main__":
@@ -337,6 +361,14 @@ if __name__ == "__main__":
 		np.random.normal(0, 10, 1000).tolist() + [-1000000000000]
 	)
 	extr_out = robust_by_feat(extreme_vals)
+
+	vals = np.random.uniform(0, 10, size=(1000, 5))
+	robust_scaled = RobustScaler(
+		"robust", "vals", out_iqr=.5, out_median=1
+	)
+	scaled_vals = robust_scaled(vals)
+	np.median(scaled_vals, axis=0)
+	iqr(scaled_vals, axis=0)
 
 
 	# Test Clip

@@ -47,6 +47,13 @@ from .scaling import (
     RobustScaler,
 )
 
+from .transformation_func import (
+    ReLU,
+    Sigmoid,
+    Softmax,
+    Tanh,
+)
+
 from .util_func import (
     Concatenate,
 )
