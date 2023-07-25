@@ -265,6 +265,8 @@ Scale the input to have mean 0 and standard deviation 1.
 ## <kbd>class</kbd> `RobustScaler`
 Operator that scales input to have median 0 and interquartile range 1. 
 
+Output interquartile range can be changed by using the 'out_iqr' argument. Output median can be changed by using the 'out_median' argument. 
+
 Scaling is either done by feature or among all features based on the 'by_feat' argument. 
 
 
@@ -293,14 +295,30 @@ Scaling is either done by feature or among all features based on the 'by_feat' a
          )
          >>> robust_by_feat(extreme_vals)
          array([[-7.454e-01, -6.908e-01, ..., -1.848e+00, -7.676e+10]])
+
+         >>> vals = np.random.uniform(0, 10, size=(1000, 5))
+         >>> robust_scaled = RobustScaler(
+                 "robust", "vals", out_iqr=.5, out_median=1
+         )
+         >>> scaled_vals = robust_scaled(vals)
+         >>> np.median(scaled_vals, axis=0)
+         array([1., 1., 1., 1., 1.])
+         >>> iqr(scaled_vals, axis=0)
+         array([0.608, 0.546, 0.528, 0.483, 0.571])
 ``` 
 
-<a href="../../pheno_sim/func_nodes/scaling.py#L273"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../pheno_sim/func_nodes/scaling.py#L286"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `__init__`
 
 ```python
-__init__(alias: str, input_alias: str, by_feat: bool = True)
+__init__(
+    alias: str,
+    input_alias: str,
+    by_feat: bool = True,
+    out_iqr: float = 1.0,
+    out_median: float = 0.0
+)
 ```
 
 Initialize RobustScaler node. 
@@ -311,14 +329,16 @@ Initialize RobustScaler node.
  
  - <b>`alias`</b>:  The alias of the node. 
  - <b>`input_alias`</b>:  The alias of the input node. 
- - <b>`by_feat`</b> (bool, default True):  Whether to scale by feature or among all features. 
+ - <b>`by_feat`</b> (bool, default True):  Whether to scale by feature or  among all features. 
+ - <b>`out_iqr`</b> (float, default 1.0):  The interquartile range of the  output. 
+ - <b>`out_median`</b> (float, default 0.0):  The median of the output. 
 
 
 
 
 ---
 
-<a href="../../pheno_sim/func_nodes/scaling.py#L286"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../pheno_sim/func_nodes/scaling.py#L311"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `run`
 

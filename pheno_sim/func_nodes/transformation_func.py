@@ -27,6 +27,7 @@ class ReLU(AbstractBaseFunctionNode):
 		- The threshold at which the slope changes.
 
 	Example:
+	
 	```python
 		>>> vals = np.array([-2, -1, 0, 1, 2])
 
@@ -123,6 +124,7 @@ class Softmax(AbstractBaseFunctionNode):
 	so the columns of the output matrix will sum to 1.
 
 	Example:
+
 	```python
 		>>> vals = np.array([
 			[-1, 0, 3, 2],
@@ -136,6 +138,7 @@ class Softmax(AbstractBaseFunctionNode):
 			[0.245, 0.245, 0.333, 0.047],
 			[0.665, 0.665, 0.333, 0.002]
 		])
+	```
 	"""
 
 	def __init__(self, alias: str, input_alias: str):
@@ -171,6 +174,7 @@ class Tanh(AbstractBaseFunctionNode):
 		>>> tanh = Tanh("tanh", "vals")
 		>>> tanh(vals)
 		array([-0.995, -0.964, -0.762,  0.   ,  0.762,  0.964,  0.995])
+	```
 	"""
 
 	def __init__(self, alias: str, input_alias: str):
