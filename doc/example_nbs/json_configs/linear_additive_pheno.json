@@ -1,0 +1,98 @@
+{
+    "input": [
+        {
+            "file": "1000_genomes_data/ALL.chr19.phase3_shapeit2_mvncall_integrated_v5b.20130502.genotypes.vcf.gz",
+            "file_format": "vcf",
+            "reference_genome": "GRCh37",
+            "force_bgz": true,
+            "input_nodes": [
+                {
+                    "alias": "rare_variants",
+                    "type": "SNP",
+                    "chr": "19",
+                    "pos": [
+                        13397324,
+                        52901080,
+                        16023111
+                    ]
+                },
+                {
+                    "alias": "common_variants",
+                    "type": "SNP",
+                    "chr": "19",
+                    "pos": [
+                        55555845,
+                        55261043,
+                        45857820,
+                        55442280,
+                        39369369
+                    ]
+                }
+            ]
+        }
+    ],
+    "simulation_steps": [
+        {
+            "type": "RandomConstant",
+            "alias": "rare_variants_betas",
+            "input_match_size": "rare_variants",
+            "dist_name": "normal",
+            "dist_kwargs": {
+                "loc": 0.0,
+                "scale": 0.5
+            },
+            "by_feat": true
+        },
+        {
+            "type": "RandomConstant",
+            "alias": "common_variants_betas",
+            "input_match_size": "common_variants",
+            "dist_name": "normal",
+            "dist_kwargs": {
+                "loc": 0.0,
+                "scale": 0.2
+            },
+            "by_feat": true
+        },
+        {
+            "type": "Product",
+            "alias": "rare_variant_effects",
+            "input_aliases": [
+                "rare_variants_betas",
+                "rare_variants"
+            ]
+        },
+        {
+            "type": "Product",
+            "alias": "common_variant_effects",
+            "input_aliases": [
+                "common_variants_betas",
+                "common_variants"
+            ]
+        },
+        {
+            "type": "Concatenate",
+            "alias": "variant_effects",
+            "input_aliases": [
+                "rare_variant_effects",
+                "common_variant_effects"
+            ]
+        },
+        {
+            "type": "AdditiveCombine",
+            "alias": "combined_variant_effects",
+            "input_alias": "variant_effects"
+        },
+        {
+            "type": "SumReduce",
+            "alias": "no_noise_phenotype",
+            "input_alias": "combined_variant_effects"
+        },
+        {
+            "type": "Heritability",
+            "alias": "phenotype",
+            "input_alias": "no_noise_phenotype",
+            "heritability": 0.8
+        }
+    ]
+}

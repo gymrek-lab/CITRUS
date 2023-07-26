@@ -11,7 +11,7 @@ They may also have additional arguments specific to the input node type.
 
 # Input Node Types
 
-## Single nucleotide polymorphisms (SNPs): "snp"
+## Single nucleotide polymorphisms (SNPs): "SNP"
 
 A single SNP (SNP, indel, deletion, or other feature with a single position defined with a single line of a VCF like file) or a list of SNPs.
 

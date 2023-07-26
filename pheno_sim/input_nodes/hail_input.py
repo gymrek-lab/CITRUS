@@ -256,6 +256,18 @@ class SNPInputNode(BaseHailInputNode):
 				& (geno_data.locus.position == locus[1])
 			)
 
+			# Assert only one row
+			row_count = row_data.count_rows()
+			if row_count > 1:
+				raise ValueError(
+					f"{locus[0]}:{locus[1]} has "
+					f"{row_data.count_rows()} rows. Can only have one row."
+				)
+			if row_count == 0:
+				raise ValueError(
+					f"{locus[0]}:{locus[1]} has no rows."
+				)
+
 			# Assert all calls are phased
 			assert np.all(
 				row_data.GT.phased.collect()
