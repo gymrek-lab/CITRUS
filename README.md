@@ -6,4 +6,6 @@ CITRUS, the CIs and Trans inteRaction nUmerical Simulator, is a tool for simulat
 
 [User Guide](doc/user_guide.md)
 
+[Designing Simulations](doc/designing_simulations.md)
+
 [Command Line Interface](doc/cli.md)
