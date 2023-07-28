@@ -38,6 +38,7 @@ Methods:
 		Run the simulation. Returns whatever is returned by the last step.
 """
 
+import copy
 import json
 import os
 from typing import Dict, List
@@ -494,3 +495,97 @@ class PhenoSimulation:
 					f,
 					indent=4
 				)
+
+
+	def estimate_heritability(
+		self,
+		input_vals=None,
+		n_replicates: int = 100,
+		n_samples=1.0,
+		phenotype_alias='phenotype'
+	):
+		"""Estimate broad-sense heritability (H^2) of the phenotype.
+
+		Args:
+			input_vals (default None): A ValuesDict containing the input
+				values. If None, will run the input step of the simulation.
+			n_replicates (default 100): The number of replicates of each
+				genotype to simulate.
+			n_samples (default 1.0): The fraction or number of samples to
+				use when estimating heritability. If value is less than or
+				equal to 1, will use that fraction of samples. If value is
+				greater than 1, will use that number of samples. Samples
+				will be randomly selected from the input samples.
+			phenotype_alias (default 'phenotype'): The alias of the
+				phenotype node to use when estimating heritability.
+		"""
+
+		assert n_replicates >= 2, "n_replicates must be greater than 1."
+
+		# Get input genotype values.
+		if input_vals is None:
+			input_vals = self.run_input_step()
+
+		if n_samples > 1:
+			selected_idx = np.random.choice(
+				len(self.sample_ids),
+				n_samples,
+				replace=False
+			)
+			
+			for key, val in input_vals.items():
+				if isinstance(val, tuple):
+					input_vals[key] = (
+						val[0][..., selected_idx], val[1][..., selected_idx]
+					)
+				else:
+					input_vals[key] = val[..., selected_idx]
+		elif n_samples < 1:
+			selected_idx = np.random.choice(
+				len(self.sample_ids),
+				int(n_samples * len(self.sample_ids)),
+				replace=False
+			)
+			
+			for key, val in input_vals.items():
+				if isinstance(val, tuple):
+					input_vals[key] = (
+						val[0][..., selected_idx], val[1][..., selected_idx]
+					)
+				else:
+					input_vals[key] = val[..., selected_idx]
+		
+		# Estimate heritability.
+
+		# Step 1: Run simulation n_replicates times.
+		pheno_vals = []
+
+		for i in range(n_replicates):
+			pheno_vals.append(
+				self.run_simulation_steps(
+					copy.deepcopy(input_vals)
+				)[phenotype_alias]
+			)
+
+		# Convert to matrix where rows are replicates and columns are samples.
+		pheno_vals = np.vstack(pheno_vals).astype(float)
+
+		# Step 2: Compute total variance.
+		total_var = np.var(pheno_vals)
+
+		# Step 3: Compute inter-genotype variance (the variance of the mean
+		# phenotype for each genotype).
+		inter_geno_var = np.var(np.mean(pheno_vals, axis=0))
+
+		# Step 4: Compute average intra-genotype variance
+		intra_geno_var = np.var(pheno_vals, axis=0).mean()
+
+		# Step 5: Compute genetic variance component
+		genetic_var = inter_geno_var - intra_geno_var
+
+		# Step 6: Compute heritability
+		heritability = genetic_var / total_var
+
+		return heritability
+
+
