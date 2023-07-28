@@ -18,7 +18,6 @@ setup(
         "setuptools",
         "shap",
         "typeddict",
-        "typing",
         "union",
         # Add any other dependencies here
     ],
