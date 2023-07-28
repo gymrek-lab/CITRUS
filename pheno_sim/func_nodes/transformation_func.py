@@ -24,6 +24,7 @@ class ReLU(AbstractBaseFunctionNode):
 	
 	User can specify:
 		- The slope of the negative values.
+		- The slope of the positive values.
 		- The threshold at which the slope changes.
 
 	Example:
@@ -47,9 +48,9 @@ class ReLU(AbstractBaseFunctionNode):
 		>>> relu(vals)
 		array([-1. , -0.5,  0. ,  0.5,  2. ])
 
-		>>> relu = ReLU("relu", "vals", neg_slope=-0.5)
+		>>> relu = ReLU("relu", "vals", neg_slope=-0.5, pos_slope=2.0)
 		>>> relu(vals)
-		array([ 1. ,  0.5, -0. ,  1. ,  2. ])
+		array([ 1. ,  0.5, -0. ,  2. ,  4. ])
 	```
 	"""
 	
@@ -58,6 +59,7 @@ class ReLU(AbstractBaseFunctionNode):
 		alias: str,
 		input_alias: str,
 		neg_slope: float = 0.0,
+		pos_slope: float = 1.0,
 		threshold: float = 0.0
 	):
 		"""Initialize ReLU node.
@@ -66,19 +68,21 @@ class ReLU(AbstractBaseFunctionNode):
 			alias: The alias of the node.
 			input_alias: The alias of the input node.
 			neg_slope (float, default 0.0): The slope of the negative values.
+			pos_slope (float, default 1.0): The slope of the positive values.
 			threshold (float, default 0.0): The threshold at which the slope
 				changes.
 		"""
 		super().__init__(alias)
 		self.inputs = input_alias
 		self.neg_slope = neg_slope
+		self.pos_slope = pos_slope
 		self.threshold = threshold
 		
 	def run(self, input_vals):
 		"""Return the input with ReLU applied."""
 		return np.where(
 			input_vals > self.threshold,
-			input_vals,
+			input_vals * self.pos_slope,
 			input_vals * self.neg_slope
 		)
 	
@@ -219,7 +223,7 @@ if __name__ == "__main__":
 	relu = ReLU("relu", "vals", neg_slope=0.5, threshold=1.5)
 	print(relu(vals))
 
-	relu = ReLU("relu", "vals", neg_slope=-0.5)
+	relu = ReLU("relu", "vals", neg_slope=-0.5, pos_slope=2.0)
 	print(relu(vals))
 
 
