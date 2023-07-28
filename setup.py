@@ -17,7 +17,6 @@ setup(
         "seaborn",
         "setuptools",
         "shap",
-        "union",
         # Add any other dependencies here
     ],
     entry_points={
