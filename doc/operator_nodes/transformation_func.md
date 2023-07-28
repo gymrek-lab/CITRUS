@@ -28,6 +28,7 @@ Operator node that applies the ReLU function to the input.
 
 User can specify: 
         - The slope of the negative values. 
+        - The slope of the positive values. 
         - The threshold at which the slope changes. 
 
 
@@ -54,12 +55,12 @@ User can specify:
          >>> relu(vals)
          array([-1. , -0.5,  0. ,  0.5,  2. ])
 
-         >>> relu = ReLU("relu", "vals", neg_slope=-0.5)
+         >>> relu = ReLU("relu", "vals", neg_slope=-0.5, pos_slope=2.0)
          >>> relu(vals)
-         array([ 1. ,  0.5, -0. ,  1. ,  2. ])
+         array([ 1. ,  0.5, -0. ,  2. ,  4. ])
 ``` 
 
-<a href="../../pheno_sim/func_nodes/transformation_func.py#L56"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../pheno_sim/func_nodes/transformation_func.py#L57"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `__init__`
 
@@ -68,6 +69,7 @@ __init__(
     alias: str,
     input_alias: str,
     neg_slope: float = 0.0,
+    pos_slope: float = 1.0,
     threshold: float = 0.0
 )
 ```
@@ -81,6 +83,7 @@ Initialize ReLU node.
  - <b>`alias`</b>:  The alias of the node. 
  - <b>`input_alias`</b>:  The alias of the input node. 
  - <b>`neg_slope`</b> (float, default 0.0):  The slope of the negative values. 
+ - <b>`pos_slope`</b> (float, default 1.0):  The slope of the positive values. 
  - <b>`threshold`</b> (float, default 0.0):  The threshold at which the slope  changes. 
 
 
@@ -88,7 +91,7 @@ Initialize ReLU node.
 
 ---
 
-<a href="../../pheno_sim/func_nodes/transformation_func.py#L77"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../pheno_sim/func_nodes/transformation_func.py#L81"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `run`
 
@@ -101,7 +104,7 @@ Return the input with ReLU applied.
 
 ---
 
-<a href="../../pheno_sim/func_nodes/transformation_func.py#L86"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../pheno_sim/func_nodes/transformation_func.py#L90"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `Sigmoid`
 Operator node that applies the sigmoid function to the input. 
@@ -118,7 +121,7 @@ Output is between 0 and 1.
          array([0.018, 0.047, 0.119, 0.269, 0.5  , 0.731, 0.881, 0.953, 0.982])
 ``` 
 
-<a href="../../pheno_sim/func_nodes/transformation_func.py#L100"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../pheno_sim/func_nodes/transformation_func.py#L104"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `__init__`
 
@@ -140,7 +143,7 @@ Initialize Sigmoid node.
 
 ---
 
-<a href="../../pheno_sim/func_nodes/transformation_func.py#L110"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../pheno_sim/func_nodes/transformation_func.py#L114"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `run`
 
@@ -153,7 +156,7 @@ Return the input with sigmoid applied.
 
 ---
 
-<a href="../../pheno_sim/func_nodes/transformation_func.py#L115"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../pheno_sim/func_nodes/transformation_func.py#L119"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `Softmax`
 Applies softmax to each sample's multiple values. 
@@ -182,7 +185,7 @@ The output will be a matrix with the same dimension as the input. The softmax fu
          ])
 ``` 
 
-<a href="../../pheno_sim/func_nodes/transformation_func.py#L144"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../pheno_sim/func_nodes/transformation_func.py#L148"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `__init__`
 
@@ -204,7 +207,7 @@ Initialize Softmax node.
 
 ---
 
-<a href="../../pheno_sim/func_nodes/transformation_func.py#L154"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../pheno_sim/func_nodes/transformation_func.py#L158"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `run`
 
@@ -217,7 +220,7 @@ Return the input with softmax applied.
 
 ---
 
-<a href="../../pheno_sim/func_nodes/transformation_func.py#L166"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../pheno_sim/func_nodes/transformation_func.py#L170"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `Tanh`
 Operator node that applies the tanh function to the input. 
@@ -234,7 +237,7 @@ Output is between -1 and 1.
          array([-0.995, -0.964, -0.762,  0.   ,  0.762,  0.964,  0.995])
 ``` 
 
-<a href="../../pheno_sim/func_nodes/transformation_func.py#L180"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../pheno_sim/func_nodes/transformation_func.py#L184"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `__init__`
 
@@ -256,7 +259,7 @@ Initialize Tanh node.
 
 ---
 
-<a href="../../pheno_sim/func_nodes/transformation_func.py#L190"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../pheno_sim/func_nodes/transformation_func.py#L194"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `run`
 
