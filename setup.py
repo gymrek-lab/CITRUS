@@ -15,7 +15,6 @@ setup(
         "pandas",
         "pydot",
         "seaborn",
-        "setuptools",
         "shap",
         # Add any other dependencies here
     ],
