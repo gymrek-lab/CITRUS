@@ -3,7 +3,7 @@
 Take some input values and apply some transformation function, like a
 sigmoid, tanh, ReLU, 
 
-Includes:
+Classes:
 
 	* ReLU
 	

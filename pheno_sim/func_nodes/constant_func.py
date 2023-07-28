@@ -1,4 +1,12 @@
-"""Generate values representing constants and broadcast to some shape."""
+"""Generate values representing constants and broadcast to some shape.
+
+Classes:
+
+    * Constant: A node that generates constant values.
+
+    * RandomConstant: A node that generates constant values, where values
+        are initially drawn from a distribution.
+"""
 
 from typing import Union
 

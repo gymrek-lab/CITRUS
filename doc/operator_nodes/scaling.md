@@ -5,7 +5,7 @@
 # <kbd>module</kbd> `scaling`
 Operators that scaling input distributions in the phenotype simulation. 
 
-Includes: 
+Classes: 
 
  * Clip: A node that clips the input to be greater than or equal to some  minimum value and/or less than or equal to some maximum value. 
 

@@ -3,13 +3,23 @@
 <a href="../../pheno_sim/func_nodes/hap_combine_func.py#L0"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 # <kbd>module</kbd> `hap_combine_func`
-Function nodes for combining HaplotypeValues into a single Value.  
+Function nodes for combining HaplotypeValues into a single Value. 
+
+Classes: 
+
+ * AdditiveCombine: A node that sums the two haplotypes element-wise  to simulate an additive inheritance effect. 
+
+ * MaxCombine: A node that takes the element-wise maximum of the two  haplotypes to simulate a dominant inheritance effect. 
+
+ * MinCombine: A node that takes the element-wise minimum of the two  haplotypes to simulate a recessive inheritance effect. 
+
+ * MeanCombine: A node that takes the element-wise mean of the two  haplotypes. Mean is either arithmetic, geometric, or harmonic. 
 
 
 
 ---
 
-<a href="../../pheno_sim/func_nodes/hap_combine_func.py#L9"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../pheno_sim/func_nodes/hap_combine_func.py#L24"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `AdditiveCombine`
 A node that sums the two haplotypes element-wise. 
@@ -33,7 +43,7 @@ A node that sums the two haplotypes element-wise.
                     [14, 16, 18]])
 ``` 
 
-<a href="../../pheno_sim/func_nodes/hap_combine_func.py#L30"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../pheno_sim/func_nodes/hap_combine_func.py#L45"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `__init__`
 
@@ -55,7 +65,7 @@ Initialize the node.
 
 ---
 
-<a href="../../pheno_sim/func_nodes/hap_combine_func.py#L40"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../pheno_sim/func_nodes/hap_combine_func.py#L55"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `run`
 
@@ -70,7 +80,7 @@ run(hap_vals: Tuple[ndarray, ndarray])
 
 ---
 
-<a href="../../pheno_sim/func_nodes/hap_combine_func.py#L44"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../pheno_sim/func_nodes/hap_combine_func.py#L59"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `MaxCombine`
 A node that takes the element-wise maximum of the two haplotypes.  
@@ -94,7 +104,7 @@ A node that takes the element-wise maximum of the two haplotypes.
                     [10, 11, 12]])
 ``` 
 
-<a href="../../pheno_sim/func_nodes/hap_combine_func.py#L65"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../pheno_sim/func_nodes/hap_combine_func.py#L80"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `__init__`
 
@@ -116,7 +126,7 @@ Initialize the node.
 
 ---
 
-<a href="../../pheno_sim/func_nodes/hap_combine_func.py#L75"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../pheno_sim/func_nodes/hap_combine_func.py#L90"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `run`
 
@@ -131,7 +141,7 @@ run(hap_vals: Tuple[ndarray, ndarray])
 
 ---
 
-<a href="../../pheno_sim/func_nodes/hap_combine_func.py#L79"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../pheno_sim/func_nodes/hap_combine_func.py#L94"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `MinCombine`
 A node that takes the element-wise minimum of the two haplotypes. 
@@ -155,7 +165,7 @@ A node that takes the element-wise minimum of the two haplotypes.
                     [4, 5, 6]])
 ``` 
 
-<a href="../../pheno_sim/func_nodes/hap_combine_func.py#L100"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../pheno_sim/func_nodes/hap_combine_func.py#L115"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `__init__`
 
@@ -177,7 +187,7 @@ Initialize the node.
 
 ---
 
-<a href="../../pheno_sim/func_nodes/hap_combine_func.py#L110"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../pheno_sim/func_nodes/hap_combine_func.py#L125"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `run`
 
@@ -192,7 +202,7 @@ run(hap_vals: Tuple[ndarray, ndarray])
 
 ---
 
-<a href="../../pheno_sim/func_nodes/hap_combine_func.py#L114"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../pheno_sim/func_nodes/hap_combine_func.py#L129"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `MeanCombine`
 A node that takes the element-wise mean of the two haplotypes. 
@@ -228,7 +238,7 @@ Mean is either arithmetic, geometric, or harmonic.
             [5.71428571, 6.875     , 8.        ]])
 ``` 
 
-<a href="../../pheno_sim/func_nodes/hap_combine_func.py#L147"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../pheno_sim/func_nodes/hap_combine_func.py#L162"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `__init__`
 
@@ -251,7 +261,7 @@ Initialize the node.
 
 ---
 
-<a href="../../pheno_sim/func_nodes/hap_combine_func.py#L165"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../pheno_sim/func_nodes/hap_combine_func.py#L180"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `run`
 

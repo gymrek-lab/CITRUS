@@ -1,4 +1,9 @@
-"""Function nodes that draw values from a distribution."""
+"""Function nodes that draw values from a distribution.
+
+Classes:
+
+    * Distribution: Draw values from a distribution.
+"""
 
 import numpy as np
 
