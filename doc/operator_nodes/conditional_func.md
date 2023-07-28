@@ -5,13 +5,15 @@
 # <kbd>module</kbd> `conditional_func`
 Conditional functions. 
 
-Includes:  IfElse 
+Classes: 
+
+ * IfElse 
 
 
 
 ---
 
-<a href="../../pheno_sim/func_nodes/conditional_func.py#L12"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../pheno_sim/func_nodes/conditional_func.py#L13"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `IfElse`
 Implements an If-Else conditional statement. 
@@ -50,7 +52,7 @@ Comparison function may be greater that (gt), greater than or equal (ge), less t
  - <b>`threshold`</b>:  The threshold to use for the condition. Default is 1. 
  - <b>`comparison`</b>:  The comparison operator to use. One of 'ge' (default),  'le', 'gt', 'lt', 'eq', or 'ne'. 
 
-<a href="../../pheno_sim/func_nodes/conditional_func.py#L54"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../pheno_sim/func_nodes/conditional_func.py#L55"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `__init__`
 
@@ -72,7 +74,7 @@ Initialize IfElse node.
 
 ---
 
-<a href="../../pheno_sim/func_nodes/conditional_func.py#L73"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../pheno_sim/func_nodes/conditional_func.py#L74"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `run`
 

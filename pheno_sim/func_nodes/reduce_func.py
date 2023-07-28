@@ -1,13 +1,25 @@
 """Reduce a Values matrix to one value per sample using some operation.
 
-Includes:
-	
-- SumReduce
-- MinReduce
-- MaxReduce
-- MeanReduce
-- AnyReduce
-- AllReduce
+Classes:
+
+	* SumReduce: Sum each sample's feature values into a single value
+		per sample.
+
+	* MinReduce: Return the minimum of each sample's feature values as
+		the sample's value.
+
+	* MaxReduce: Return the maximum of each sample's feature values as
+		the sample's value.
+
+	* MeanReduce: Return the mean of each sample's feature values as
+		the sample's value. Mean is either arithmetic (default),
+		geometric, or harmonic.
+
+	* AnyReduce: Return 1 if any feature value is past a threshold, 0
+		otherwise.
+
+	* AllReduce: Return 1 if all feature values are past a threshold, 0
+		otherwise.
 """
 
 import numpy as np

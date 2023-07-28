@@ -5,11 +5,15 @@
 # <kbd>module</kbd> `distribution_func`
 Function nodes that draw values from a distribution. 
 
+Classes: 
+
+ * Distribution: Draw values from a distribution. 
+
 
 
 ---
 
-<a href="../../pheno_sim/func_nodes/distribution_func.py#L8"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../pheno_sim/func_nodes/distribution_func.py#L13"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `Distribution`
 Class that draws values from a distribution. 
@@ -40,7 +44,7 @@ Note that the distribution is sampled every time the node is called. There is no
  - <b>`dist_name`</b>:  The name of the distribution to sample from. 
  - <b>`dist_kwargs`</b>:  The keyword arguments for the distribution. 
 
-<a href="../../pheno_sim/func_nodes/distribution_func.py#L40"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../pheno_sim/func_nodes/distribution_func.py#L45"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `__init__`
 
@@ -55,7 +59,7 @@ Initialize Distribution node.
 
 ---
 
-<a href="../../pheno_sim/func_nodes/distribution_func.py#L53"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../pheno_sim/func_nodes/distribution_func.py#L58"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `run`
 

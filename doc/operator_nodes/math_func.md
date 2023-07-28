@@ -5,7 +5,7 @@
 # <kbd>module</kbd> `math_func`
 General math function nodes for the simulation. 
 
-Includes: 
+Classes: 
 
  * Identity: A node that returns the input. Mainly for testing.  
 

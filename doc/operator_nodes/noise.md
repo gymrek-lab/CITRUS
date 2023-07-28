@@ -5,7 +5,7 @@
 # <kbd>module</kbd> `noise`
 Operators that add noise in the phenotype simulation. 
 
-Includes: 
+Classes: 
 
  * GaussianNoise: A node that adds Gaussian noise to the input. 
 

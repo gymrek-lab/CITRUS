@@ -1,8 +1,8 @@
 """ Utility functions for simulations.
 
-Includes:
+Classes:
 
-- Concatenate: A node that concatenates some inputs into a single array.
+	* Concatenate: A node that concatenates some inputs into a single array.
 """
 
 import numpy as np

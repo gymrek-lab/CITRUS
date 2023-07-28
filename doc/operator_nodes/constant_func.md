@@ -5,11 +5,17 @@
 # <kbd>module</kbd> `constant_func`
 Generate values representing constants and broadcast to some shape. 
 
+Classes: 
+
+ * Constant: A node that generates constant values. 
+
+ * RandomConstant: A node that generates constant values, where values  are initially drawn from a distribution. 
+
 
 
 ---
 
-<a href="../../pheno_sim/func_nodes/constant_func.py#L10"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../pheno_sim/func_nodes/constant_func.py#L18"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `Constant`
 Class that generates constant values. 
@@ -39,7 +45,7 @@ The constant for this function is either:
  - <b>`input_match_size`</b>:  The alias of the input node for values used to  determine the size of the output array. Output will be the same  size as this input. 
  - <b>`constant`</b>:  The constant value(s) to generate. 
 
-<a href="../../pheno_sim/func_nodes/constant_func.py#L37"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../pheno_sim/func_nodes/constant_func.py#L45"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `__init__`
 
@@ -54,7 +60,7 @@ Initialize Constant node.
 
 ---
 
-<a href="../../pheno_sim/func_nodes/constant_func.py#L48"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../pheno_sim/func_nodes/constant_func.py#L56"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `run`
 
@@ -73,7 +79,7 @@ Generate the constant value(s).
 
 ---
 
-<a href="../../pheno_sim/func_nodes/constant_func.py#L67"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../pheno_sim/func_nodes/constant_func.py#L75"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `RandomConstant`
 Generates constant values, where values are drawn from a distribution. 
@@ -115,7 +121,7 @@ get_config_updates() is implemented for this node to save the drawn constant val
  - <b>`by_feat`</b>:  Whether to draw a value for each feature dim. Default  is False. 
  - <b>`drawn_vals`</b>:  The drawn constant value(s). Default is None, otherwise  must be a list. If by_feat is False, this list must have 1 value.  If by_feat is True, this list must have the same number of values  as feature dims (number of rows in input_match_size). This is  typically loaded from a config file for reproducability. If this  node is constructed from a config file where drawn_vals is not  None, the drawn_vals will be used instead of drawing new values. 
 
-<a href="../../pheno_sim/func_nodes/constant_func.py#L124"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../pheno_sim/func_nodes/constant_func.py#L132"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `__init__`
 
@@ -137,7 +143,7 @@ Initialize RandomConstant node.
 
 ---
 
-<a href="../../pheno_sim/func_nodes/constant_func.py#L180"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../pheno_sim/func_nodes/constant_func.py#L188"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `get_config_updates`
 
@@ -149,7 +155,7 @@ Return drawn_vals for saving to config file.
 
 ---
 
-<a href="../../pheno_sim/func_nodes/constant_func.py#L154"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../pheno_sim/func_nodes/constant_func.py#L162"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `run`
 

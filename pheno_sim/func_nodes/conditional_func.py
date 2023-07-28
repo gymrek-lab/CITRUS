@@ -1,7 +1,8 @@
 """Conditional functions.
 
-Includes:
-    IfElse
+Classes:
+
+    * IfElse
 """
 
 import numpy as np

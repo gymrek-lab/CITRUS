@@ -1,4 +1,19 @@
-""" Function nodes for combining HaplotypeValues into a single Value. """
+"""Function nodes for combining HaplotypeValues into a single Value.
+
+Classes:
+
+	* AdditiveCombine: A node that sums the two haplotypes element-wise
+		to simulate an additive inheritance effect.
+
+	* MaxCombine: A node that takes the element-wise maximum of the two
+		haplotypes to simulate a dominant inheritance effect.
+
+	* MinCombine: A node that takes the element-wise minimum of the two
+		haplotypes to simulate a recessive inheritance effect.
+
+	* MeanCombine: A node that takes the element-wise mean of the two
+		haplotypes. Mean is either arithmetic, geometric, or harmonic.
+"""
 
 import numpy as np
 
