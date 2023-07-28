@@ -123,6 +123,8 @@ SumNode(person_level_single_val, person_level_single_val, haplotype_level)
 
 Users define a directed graph of the simulation in a configuration JSON file. Simulation configuration JSON files define a dictionary with keys 'input' and 'simulation_steps'. The 'input' key maps to a list of input sources and their resulting input nodes. The 'simulation_steps' key maps to a list of operator or nodes and their input edges, which defines the rest of the graph. All input nodes and operator nodes have a unique string alias.
 
+For examples and walkthroughs of designing and configuring simulations, see [Designing Simulations](designing_simulations.md).
+
 ## Input
 
 CITRUS uses phased genetic data in one of several VCF-like file formats (VCF, TODO BGEN, GEN) as input. The 'input' section of the JSON config file defines a list of input sources represented by dictionaries. Each input source represents a file or multiple files and defines the input nodes who's values are derived from that data. An example input section defining a single input source with two input nodes is below. All input sources must include sample IDs, and phenotypes will only be simulated for samples in all input sources.
