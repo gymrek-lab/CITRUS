@@ -89,12 +89,12 @@ A pseudocode example with the SumNode is below. It shows the operators ability t
 # Input values
 person_level_single_val = array([1, 2, 3, 4, 5])
 person_level_two_vals = array([[1, 1, 1, 1, 1],
-							   [2, 2, 2, 2, 2]])
+                               [2, 2, 2, 2, 2]])
 haplotype_level = (
 	array([[-1, -1, -1, -1, -1],
-		   [-1, -1, -1, -1, -1]]),
+	       [-1, -1, -1, -1, -1]]),
 	array([[-2, -2, -2, -2, -2],
-		   [-2, -2, -2, -2, -2]])
+	       [-2, -2, -2, -2, -2]])
 )
 
 # Node output
@@ -103,19 +103,19 @@ SumNode(person_level_single_val, person_level_single_val)
 
 SumNode(person_level_single_val, person_level_two_vals)
 >>> array([[2, 3, 4, 5, 6],
-		   [3, 4, 5, 6, 7]])
+           [3, 4, 5, 6, 7]])
 
 SumNode(person_level_single_val, haplotype_level)
 >>> (array([[0, 1, 2, 3, 4],
-			[0, 1, 2, 3, 4]]),
-	 array([[-1, 0, 1, 2, 3],
-			[-1, 0, 1, 2, 3]]))
+            [0, 1, 2, 3, 4]]),
+     array([[-1, 0, 1, 2, 3],
+            [-1, 0, 1, 2, 3]]))
 
 SumNode(person_level_single_val, person_level_single_val, haplotype_level)
 >>> (array([[1, 2, 3, 4, 5],
-       		[2, 3, 4, 5, 6]]),
-	 array([[0, 1, 2, 3, 4],
-			[1, 2, 3, 4, 5]]))
+            [2, 3, 4, 5, 6]]),
+     array([[0, 1, 2, 3, 4],
+            [1, 2, 3, 4, 5]]))
 ```
 
 
