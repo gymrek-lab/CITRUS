@@ -17,7 +17,6 @@ setup(
         "seaborn",
         "setuptools",
         "shap",
-        "typeddict",
         "union",
         # Add any other dependencies here
     ],
