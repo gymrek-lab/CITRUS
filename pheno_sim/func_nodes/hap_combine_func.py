@@ -1,4 +1,19 @@
-""" Function nodes for combining HaplotypeValues into a single Value. """
+"""Function nodes for combining HaplotypeValues into a single Value.
+
+Classes:
+
+	* AdditiveCombine: A node that sums the two haplotypes element-wise
+		to simulate an additive inheritance effect.
+
+	* MaxCombine: A node that takes the element-wise maximum of the two
+		haplotypes to simulate a dominant inheritance effect.
+
+	* MinCombine: A node that takes the element-wise minimum of the two
+		haplotypes to simulate a recessive inheritance effect.
+
+	* MeanCombine: A node that takes the element-wise mean of the two
+		haplotypes. Mean is either arithmetic, geometric, or harmonic.
+"""
 
 import numpy as np
 
@@ -9,7 +24,8 @@ from pheno_sim.base_nodes import AbstractBaseCombineFunctionNode
 class AdditiveCombine(AbstractBaseCombineFunctionNode):
 	""" A node that sums the two haplotypes element-wise.
 	
-	Examples:
+	Example:
+	```python
 		>>> hap = (np.array([1, 2, 3]), np.array([4, 5, 6]))
 		>>> AdditiveCombine("add", "hap")(hap)
 		array([5, 7, 9])
@@ -23,6 +39,7 @@ class AdditiveCombine(AbstractBaseCombineFunctionNode):
 		>>> AdditiveCombine("add", "hap")(hap)
 		array([[ 8, 10, 12],
 			   [14, 16, 18]])
+	```
 	"""
 
 	def __init__(self, alias: str, input_alias: str):
@@ -43,6 +60,7 @@ class MaxCombine(AbstractBaseCombineFunctionNode):
 	""" A node that takes the element-wise maximum of the two haplotypes. 
 	
 	Examples:
+	```python
 		>>> hap = (np.array([1, 2, 3]), np.array([4, 5, 6]))
 		>>> MaxCombine("max", "hap")(hap)
 		array([4, 5, 6])
@@ -56,6 +74,7 @@ class MaxCombine(AbstractBaseCombineFunctionNode):
 		>>> MaxCombine("max", "hap")(hap)
 		array([[ 7,  8,  9],
 			   [10, 11, 12]])
+	```
 	"""
 
 	def __init__(self, alias: str, input_alias: str):
@@ -76,6 +95,7 @@ class MinCombine(AbstractBaseCombineFunctionNode):
 	""" A node that takes the element-wise minimum of the two haplotypes.
 	
 	Examples:
+	```python
 		>>> hap = (np.array([1, 2, 3]), np.array([4, 5, 6]))
 		>>> MinCombine("min", "hap")(hap)
 		array([1, 2, 3])
@@ -89,6 +109,7 @@ class MinCombine(AbstractBaseCombineFunctionNode):
 		>>> MinCombine("min", "hap")(hap)
 		array([[1, 2, 3],
 			   [4, 5, 6]])
+	```
 	"""
 
 	def __init__(self, alias: str, input_alias: str):
@@ -110,13 +131,8 @@ class MeanCombine(AbstractBaseCombineFunctionNode):
 	
 	Mean is either arithmetic, geometric, or harmonic.
 
-	Args:
-		alias: The alias of the node.
-		input_alias: The alias of the input node.
-		mean_type: The type of mean to take. Can be "arithmetic" (default),
-			"geometric", or "harmonic".
-
 	Examples:
+	```python
 		>>> hap = (np.array([1, 2, 3]), np.array([4, 5, 6]))
 		>>> MeanCombine("mean", "hap")(hap)
 		array([2.5, 3.5, 4.5])
@@ -140,6 +156,7 @@ class MeanCombine(AbstractBaseCombineFunctionNode):
 		>>> MeanCombine("mean", "hap", mean_type="harmonic")(hap)
 		array([[1.75      , 3.2       , 4.5       ],
        		   [5.71428571, 6.875     , 8.        ]])
+	```
 	"""
 
 	def __init__(
@@ -148,11 +165,24 @@ class MeanCombine(AbstractBaseCombineFunctionNode):
 		input_alias: str,
 		mean_type: str = "arithmetic"
 	):
+		""" Initialize the node.
+
+		Args:
+			alias: The alias of the node.
+			input_alias: The alias of the input node.
+			mean_type: The type of mean to take. Can be "arithmetic" (default),
+				"geometric", or "harmonic".
+		"""
 		super().__init__(alias)
 		self.inputs = input_alias
 		self.mean_type = mean_type
 
 	def run(self, hap_vals: HaplotypeValues):
+		"""Run the node.
+		
+		Args:
+			hap_vals: The haplotype values to combine.
+		"""
 		if self.mean_type == "arithmetic":
 			return np.mean(hap_vals, axis=0)
 		elif self.mean_type == "geometric":

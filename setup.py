@@ -9,7 +9,14 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     install_requires=[
+        "click",
+        "hail",
+        "matplotlib",
         "numpy",
+        "pandas",
+        "pydot",
+        "seaborn",
+        "shap",
         # Add any other dependencies here
     ],
     entry_points={
