@@ -1,11 +1,10 @@
-### simulate
-~~~
-===
-Simulates a complex trait by computing the phenotypes from a set of genotypes over a network. The user defines the network and 
-the set of genotypes as the input in a JSON file as described in the ![User Guide](https://github.com/gymrek-lab/CITRUS/blob/main/doc/user_guide.md#citrus-simulation-mechanics).
+# simulate
 
-### Usage
----
+Simulates a complex trait by computing the phenotypes from a set of genotypes over a network. The user defines the network and 
+the set of genotypes as the input in a JSON file as described in the [user guide](https://github.com/gymrek-lab/CITRUS/blob/main/doc/user_guide.md#citrus-simulation-mechanics).
+
+## Usage
+
 ```
 citrus simulate \
 --config_file STR \
@@ -16,14 +15,21 @@ citrus simulate \
 --tsv BOOL
 ```
 
-### Input 
----
+## Input 
 
-### Output
----
+The user specifies the input sources and network consisting of input and operator nodes in a JSON configuration file. 
 
-### Examples
----
+Note that the input sources defined in the JSON configuration file can be overriden by using the `--input_file` option.
+
+## Output
+
+The output of the command consists of two files: 
+- a CSV file with the phenotypes for all samples
+- a JSON configuration file with the exact parameters used in the simulation. 
+
+Note that although the network in the JSON configuration file is defined by the user, it can contain nodes that draw values for certain simulation parameters from a distribution. Therefore, the drawn values are saved in a configuration file for reproducability. 
+
+## Examples
 
 The simplest usage is as follows:
 
