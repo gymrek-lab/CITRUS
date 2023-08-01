@@ -269,4 +269,4 @@ This will output a CSV file with the simulated phenotypes and all intermediate s
 
 SHAP values are Shapley value estimates that say for each sample how much each input genotype impacted the phenotype. They can be used to establish some ground truth on how input variants impact a phenotype that can later be used to evaluate the performance of other methods designed to identify causal variants.
 
-TODO: Add CLI
+TODO: Add SHAP documentation
