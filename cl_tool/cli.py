@@ -1,9 +1,7 @@
-"""CL interface for running CITRUS phenotype simulations.
+"""CITRUS command line interface.
 
-The simulation to be ran is defined by a configuration JSON file. 
-TODO: Give complete description of the configuration file or 
-	point to documentation.
-	
+See CITRUS/doc/CLI.md for more information.
+
 This tool can be used to run the simulation based on either:
 
 	1. A single configuration JSON file that specifies paths to genotype
@@ -61,43 +59,51 @@ def citrus():
 	'-c', '--config_file', 
 	type=str, 
 	required=True, 
-	help="Specify path to config file defining path(s) to input data and simulation steps."
+	help="Path to JSON simulation config file."
 )
 @click.option(
 	'-g', '--genotype_files',
 	type=str,
 	multiple=True,
 	help=(
-		"Specify path to genotype file. Adds 'file' key to input source "
-		"configs if not present, overwriting paths in the config if present. "
+		"Optional path(s) to genotype file(s). Adds 'file' key to input source "
+		"configs, overwriting existing 'file' values if present. "
 		"The genotype_files arguments will be assigned to input sources in "
-		"the order they are provided. (ex: -g genotypes1.vcf -g genotypes2.vcf)"
+		"the order they are provided. (ex: -g genotypes1.vcf -g genotypes2.vcf"
+		" would assign genotypes1.vcf to the first input source in the config's"
+		" 'input' list and genotypes2.vcf to the second input source)."
 	)
 )
 @click.option(
 	'-o', '--output_dir',
 	default=".",
 	show_default=True,  
-	help="Specify path to store output file."
+	help="Path to directory to save output files in."
 )
 @click.option(
     '-f', '--output_filename', 
     default="output.csv",
     show_default=True,
-    help="Set name of output file."  
+    help="Filename for saving output file containing simulation values, "
+	"including the final phenotype values. Also includes sample IDs. Will be "
+	"saved as a CSV file unless the -t or --tsv flag is used, in which case "
+	"it will be saved as a TSV file."
 )
 @click.option(
-    '--output_config_json',
+    '--output_config_filename',
     default="config.json",
     show_default=True,
-    help="Set name of output config file."
+    help="Filename for saving configuration file of the run simulation. "
+    "For configurations with random selections, this file will be updated "
+    "to include the random selections made by nodes. Will be saved as a JSON "
+    "file."
 )
 @click.option(
-    '--tsv', 
+    '-t', '--tsv', 
     is_flag=True, 
     show_default=True, 
     default=False,
-    help="Set column separator to <TAB>."
+    help="Change output file from comma seperated CSV to tab seperated TSV."
 )
 def simulate(
     config_file: str, 
@@ -108,11 +114,11 @@ def simulate(
     tsv: bool
 ):
 	"""
-	Simulates phenotypes by modeling cis, inheritance, and trans effects across the genome. 
-	Creates a set of phenotypes from a set of genotypes.
+	Simulates phenotypes by modeling cis, inheritance, and trans
+	effects across the genome. Creates a set of phenotypes from a
+	set of genotypes.
 
-	GENOTYPES can be formatted as a VCF or PGEN file.
-
+	genotype_files must be VCF files or compressed VCF files.
 	"""
     
 	from json import load
@@ -146,24 +152,24 @@ def simulate(
 	'-c', '--config_file', 
 	type=str, 
 	required=True, 
-	help="Specify path to config file defining path(s) to input data and simulation steps."
+	help="Path to JSON simulation config file."
 )
 @click.option(
     '-o', '--out', 
     default='plot',
     show_default=True,
-    help="Set output file prefix."  
+    help="Output filename (without extension) for saving plot."
 )
 @click.option(
 	'-f', '--format',
 	type=click.Choice(['jpg', 'png', 'svg']),
 	default='png', 
 	show_default=True, 
-	help="Specify the file format of the output plot."
+	help="File format and extension for the output plot."
 )
 def plot(config_file: str, out: str, format: str):
 	"""
-	Visualizes the simulation steps as a graphical model.
+	Save a plot of the network defined by the simulation config file.
 
 	Note: Colors correspond to cis, inheritance, and trans effects
 	"""
@@ -184,48 +190,45 @@ def plot(config_file: str, out: str, format: str):
 	'-c', '--config_file', 
 	type=str, 
 	required=True, 
-	help="Specify path to config file defining path(s) to input data and simulation steps."
+	help="Path to JSON simulation config file."
 )
 @click.option(
 	'-g', '--genotype_files',
 	type=str,
 	multiple=True,
 	help=(
-		"Specify path to genotype file. Adds 'file' key to input source "
-		"configs if not present, overwriting paths in the config if present. "
+		"Optional path(s) to genotype file(s). Adds 'file' key to input source "
+		"configs, overwriting existing 'file' values if present. "
 		"The genotype_files arguments will be assigned to input sources in "
-		"the order they are provided. (ex: -g genotypes1.vcf -g genotypes2.vcf)"
+		"the order they are provided. (ex: -g genotypes1.vcf -g genotypes2.vcf"
+		" would assign genotypes1.vcf to the first input source in the config's"
+		" 'input' list and genotypes2.vcf to the second input source)."
 	)
 )
 @click.option(
-	'--collapse_haplotypes', 
-	is_flag=True, 
-    show_default=True, 
-    default=False,
-    help="Set collapse haplotypes to true. "
-)
-@click.option(
-	'--save_path', 
+	'-s', '--save_path', 
 	type=str, 
-	default="output.csv",
+	default="shap_vals.csv",
 	show_default=True, 
 	help=(
-		"Specify path to save the output file at. "
+		"File path for saving SHAP values."
 	)
 )
 @click.option(
 	'--save_config_path',
 	type=str, 
-	default="config.json",
+	default=None,
 	show_default=True,
 	help=(
-		"Specify path to save the configuration at. "
+		"Filename for saving configuration file of the run simulation. For "
+		" configurations with random selections, this file will be updated to "
+		" include the random selections made by nodes. Will be saved as a JSON "
+		"file. If not provided, the config file will not be saved."
 	)
 )
 def shap(
 	config_file: str, 
 	genotype_files: str, 
-	collapse_haplotypes: bool, 
 	save_path: str, 
 	save_config_path: str
 ):
@@ -250,18 +253,6 @@ def shap(
 	run_SHAP(
 		simulation,
 		phenotype_key,
-		collapse_haplotypes, 
 		save_path,
 		save_config_path,
 	)
-	
-	#return shap_values
-
-@citrus.command(no_args_is_help=False)
-def generate():
-	"""
-	Generates a random graphical model given a set of parameters.
-
-	"""
-	raise NotImplementedError
-
