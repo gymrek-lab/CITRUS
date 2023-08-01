@@ -194,9 +194,16 @@ def plot(config_file: str, out: str, format: str):
 	)
 )
 @click.option(
+	'--collapse_haplotypes', 
+	is_flag=True, 
+    show_default=True, 
+    default=False,
+    help="Set collapse haplotypes to true. "
+)
+@click.option(
 	'--save_path', 
 	type=str, 
-	default=".",
+	default="output.csv",
 	show_default=True, 
 	help=(
 		"Specify path to save the output file at. "
@@ -205,7 +212,7 @@ def plot(config_file: str, out: str, format: str):
 @click.option(
 	'--save_config_path',
 	type=str, 
-	default=".",
+	default="config.json",
 	show_default=True,
 	help=(
 		"Specify path to save the configuration at. "
@@ -214,12 +221,12 @@ def plot(config_file: str, out: str, format: str):
 def shap(
 	config_file: str, 
 	vcf: str, 
+	collapse_haplotypes: bool, 
 	save_path: str, 
 	save_config_path: str
 ):
 	"""
 	Computes the local and global shapley values of a model.
-
 	"""
 	from pheno_sim import PhenoSimulation
 	from pheno_sim.shap import run_SHAP
@@ -236,9 +243,10 @@ def shap(
 		for i, path in enumerate(vcf):
 			config['input'][i]['file'] = path
 
-	shap_values, explainer = run_SHAP(
+	run_SHAP(
 		simulation,
 		phenotype_key,
+		collapse_haplotypes, 
 		save_path,
 		save_config_path,
 	)

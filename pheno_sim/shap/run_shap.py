@@ -115,7 +115,7 @@ def run_SHAP(
 		with open(save_config_path, 'w') as f:
 			json.dump(simulation.get_config(), f, indent=4)
 		
-	return shap_values, explainer
+	# return shap_values, explainer
 
 
 if __name__ == '__main__':
