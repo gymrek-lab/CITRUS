@@ -32,4 +32,10 @@ pip install -e .
 
 ## Usage
 
+Please refer to examples of each command in the following links:
+
+- [simulate](commands/simulate.md)
+- [plot](commands/plot.md)
+- [shap](commands/shap.md)
+- [generate](commands/generate.md)
 

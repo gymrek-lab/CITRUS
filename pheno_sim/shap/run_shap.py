@@ -115,7 +115,7 @@ def run_SHAP(
 		with open(save_config_path, 'w') as f:
 			json.dump(simulation.get_config(), f, indent=4)
 		
-	return shap_values
+	# return shap_values, explainer
 
 
 if __name__ == '__main__':
@@ -133,6 +133,16 @@ if __name__ == '__main__':
 	output = run_SHAP(
 		simulation,
 		phenotype_key,
-		# save_path='test_shap.csv',
-		# save_config_path='test_shap_config.json',
+		save_path='test_shap.csv',
+		save_config_path='test_shap_config.json',
 	)
+
+	print(output)
+	print(type(output))
+
+
+	# shap.summary_plot(output)
+	print(output.shape)
+
+	
+
