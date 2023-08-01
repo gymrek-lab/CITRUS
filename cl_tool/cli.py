@@ -56,7 +56,7 @@ import click
 def citrus():
 	pass
 
-@citrus.command()
+@citrus.command(no_args_is_help=True)
 @click.option(
 	'-c', '--config_file', 
 	type=str, 
@@ -64,12 +64,14 @@ def citrus():
 	help="Specify path to config file defining path(s) to input data and simulation steps."
 )
 @click.option(
-	'--vcf', 
+	'-g', '--genotype_files',
 	type=str,
 	multiple=True,
 	help=(
-		"Specify path to vcf file (overwrites path(s) in config file)."
-		"(ex: --vcf genotypes1.vcf --vcf genotypes2.vcf)"
+		"Specify path to genotype file. Adds 'file' key to input source "
+		"configs if not present, overwriting paths in the config if present. "
+		"The genotype_files arguments will be assigned to input sources in "
+		"the order they are provided. (ex: -g genotypes1.vcf -g genotypes2.vcf)"
 	)
 )
 @click.option(
@@ -99,7 +101,7 @@ def citrus():
 )
 def simulate(
     config_file: str, 
-    vcf: str,  
+    genotype_files: str,  
 	output_dir: str, 
 	output_filename: str, 
 	output_config_json: str,
@@ -119,8 +121,8 @@ def simulate(
 	with open(config_file, "r") as f:
 		config = load(f)
 
-	if vcf: 
-		for i, path in enumerate(vcf):
+	if genotype_files: 
+		for i, path in enumerate(genotype_files):
 			config['input'][i]['file'] = path
 
 
@@ -139,7 +141,7 @@ def simulate(
 		sep="\t" if tsv else ","
 	)
 
-@citrus.command()
+@citrus.command(no_args_is_help=True)
 @click.option(
 	'-c', '--config_file', 
 	type=str, 
@@ -177,7 +179,7 @@ def plot(config_file: str, out: str, format: str):
 	# Create a plot of the model
 	plot.visualize(input_spec=config, filename=out, format=format)
 
-@citrus.command()
+@citrus.command(no_args_is_help=True)
 @click.option(
 	'-c', '--config_file', 
 	type=str, 
@@ -185,12 +187,14 @@ def plot(config_file: str, out: str, format: str):
 	help="Specify path to config file defining path(s) to input data and simulation steps."
 )
 @click.option(
-	'--vcf', 
+	'-g', '--genotype_files',
 	type=str,
 	multiple=True,
 	help=(
-		"Specify path to vcf file (overwrites path(s) in config file)."
-		"(ex: --vcf genotypes1.vcf --vcf genotypes2.vcf)"
+		"Specify path to genotype file. Adds 'file' key to input source "
+		"configs if not present, overwriting paths in the config if present. "
+		"The genotype_files arguments will be assigned to input sources in "
+		"the order they are provided. (ex: -g genotypes1.vcf -g genotypes2.vcf)"
 	)
 )
 @click.option(
@@ -220,7 +224,7 @@ def plot(config_file: str, out: str, format: str):
 )
 def shap(
 	config_file: str, 
-	vcf: str, 
+	genotype_files: str, 
 	collapse_haplotypes: bool, 
 	save_path: str, 
 	save_config_path: str
@@ -239,8 +243,8 @@ def shap(
 	with open(config_file, "r") as f:
 		config = load(f)
 
-	if vcf: 
-		for i, path in enumerate(vcf):
+	if genotype_files: 
+		for i, path in enumerate(genotype_files):
 			config['input'][i]['file'] = path
 
 	run_SHAP(
@@ -253,16 +257,11 @@ def shap(
 	
 	#return shap_values
 
-@citrus.command()
+@citrus.command(no_args_is_help=False)
 def generate():
 	"""
 	Generates a random graphical model given a set of parameters.
 
 	"""
-	raise(NotImplementedError)
+	raise NotImplementedError
 
-# @click.option(
-# 	'--genotype_files', 
-# 	type=str,  
-# 	help="path to where genotype files are stored"	
-# )

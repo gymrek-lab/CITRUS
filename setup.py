@@ -21,7 +21,7 @@ setup(
     ],
     entry_points={
         "console_scripts": [
-            "citrus = cl_tool.run_simulation:citrus"
+            "citrus = cl_tool.cli:citrus"
         ],
     },
 )
