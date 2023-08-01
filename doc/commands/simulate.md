@@ -1,4 +1,6 @@
-### <ins>simulate</ins> 
+### simulate
+
+---
 
 Simulates a complex trait by computing the phenotypes from a set of genotypes over a network. The user defines the network and 
 the set of genotypes as the input in a JSON file as described in the ![User Guide](https://github.com/gymrek-lab/CITRUS/blob/main/doc/user_guide.md#citrus-simulation-mechanics).
