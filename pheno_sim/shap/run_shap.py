@@ -12,8 +12,7 @@ from pheno_sim.shap import SHAPWrapper
 
 def run_SHAP(
 	simulation,
-	phenotype: str,
-	collapse_haplotypes=False,
+	phenotype: str='phenotype',
 	save_path=None,
 	save_config_path=None,
 ):
@@ -28,9 +27,8 @@ def run_SHAP(
 
 	Args:
 		simulation (PhenoSimulation): PhenoSimulation object.
-		phenotype (str): Phenotype key to use for SHAP values.
-		collapse_haplotypes (bool, optional): Whether to collapse haplotypes
-			into a single value. Defaults to True.
+		phenotype (str, default 'phenotype'): Phenotype key to use
+			for SHAP values.
 		save_path (str, optional): Path to save DataFrame to. Defaults to None.
 			If None, DataFrame is not saved.
 		save_config_path (str, optional): Path to save simulation config to.
@@ -45,7 +43,7 @@ def run_SHAP(
 	)
 
 	# Create SHAP wrapper
-	shap_wrapper = SHAPWrapper(simulation, 'phenotype', input_df.columns)
+	shap_wrapper = SHAPWrapper(simulation, phenotype, input_df.columns)
 
 	# Create SHAP explainer
 	explainer = shap.Explainer(
@@ -63,45 +61,6 @@ def run_SHAP(
 		shap_values.values,
 		columns=input_df.columns,
 	)
-
-	# Collapse haplotypes if desired
-	if collapse_haplotypes:
-		collapsed_name_map = {}
-		for col in shap_values.columns:
-			col_name_parts = col.split('*-*')
-			key = col_name_parts[0]
-
-			if len(col_name_parts) == 1:				
-				collapsed_name_map[key] = [col]
-			elif len(col_name_parts) == 2:
-				if col_name_parts[1] == 'a' or col_name_parts[1] == 'b':
-					if key not in collapsed_name_map:
-						collapsed_name_map[key] = [col]
-					collapsed_name_map[key].append(col)
-				else:
-					key = col
-					collapsed_name_map[key] = [col]
-			elif len(col_name_parts) == 3:
-				if col_name_parts[1] == 'a' or col_name_parts[1] == 'b':
-					key = col_name_parts[0] + '*-*' + col_name_parts[2]
-					if key not in collapsed_name_map:
-						collapsed_name_map[key] = [col]
-					collapsed_name_map[key].append(col)
-				else:
-					raise ValueError(
-						'Invalid column name: {}'.format(col)
-					)
-			else:
-				raise ValueError(
-					'Invalid column name: {}'.format(col)
-				)
-
-		# Collapse haplotypes
-		for key, cols in collapsed_name_map.items():
-			if len(cols) > 1:
-				shap_values[key] = shap_values[cols].sum(axis=1)
-				output = shap_values.drop(columns=cols)
-
 
 	# Add sample IDs
 	shap_values['sample_id'] = simulation.sample_ids

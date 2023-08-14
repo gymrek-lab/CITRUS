@@ -13,3 +13,5 @@ from .pheno_simulation import PhenoSimulation
 from . import func_nodes
 
 from . import input_nodes
+
+from . import heritability_estimation
