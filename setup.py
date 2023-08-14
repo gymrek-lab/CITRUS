@@ -15,9 +15,11 @@ setup(
         "numpy",
         "pandas",
         "pydot",
+        "scikit-learn",
+        "scipy",
         "seaborn",
         "shap",
-        # Add any other dependencies here
+        "tqdm",
     ],
     entry_points={
         "console_scripts": [

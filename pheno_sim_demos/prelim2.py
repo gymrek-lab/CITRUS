@@ -170,13 +170,19 @@ if __name__ == "__main__":
 	simulator = PhenoSimulation(sim_spec)
 
 	# Run in two steps
-	input_node_vals = simulator.run_input_step()
-	print(input_node_vals)
-	output_vals = simulator.run_simulation_steps(input_node_vals)
+	import copy
+
+	input_vals = simulator.run_input_step()
+	print(input_vals)
+	output_vals = simulator.run_simulation_steps(copy.deepcopy(input_vals))
 
 	# Plot phenotype distribution with Seaborn
 	sns.displot(output_vals["phenotype"], kde=True)
 	plt.show()
+
+	# Estimate heritability
+	heritability = simulator.estimate_heritability(input_vals)
+
 
 	# # Run sim with nodes from spec
 	# output_vals = simulator.run_simulation_steps(input_vals)
