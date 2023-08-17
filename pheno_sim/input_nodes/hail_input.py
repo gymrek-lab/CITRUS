@@ -8,6 +8,7 @@ Combatibile with the following file formats:
 """
 
 from abc import ABC
+import inspect
 
 import numpy as np
 import hail as hl
@@ -59,35 +60,60 @@ class HailInputSource(BaseInputSource):
 				BaseHailInputNode.create_input_node(input_node_config)
 			)
 
-	def load_inputs(self):
-		""" Loads the input data from the source file and sets the input_nodes
-		and input_sample_ids attributes.
+	@staticmethod
+	def load_matrix_table(input_config):
+		"""Load file as a hail MatrixTable object.
+
+		Defines following defaults for loading:
+
+		- 'file_format': 'vcf'
+		- 'reference_genome': 'GRCh38'
+
+		VCF specifc defaults:
+
+		- 'force_bgz': False
+		
+		Args:
+			input_config: The dictionary from the input section of the
+				simulation config file that defines this input source.
+		
+		Returns:
+			A hail MatrixTable object.
 		"""
-		# Load input data
-		loading_defaults = {
-			'force_bgz': False,
-			'reference_genome': 'GRCh38',
-			'file_format': 'vcf',
-			'sample_id_field': 's'
-		}
 
-		for key, default in loading_defaults.items():
-			if key not in self.input_config:
-				self.input_config[key] = default
+		# Set overall defaults
+		if 'file_format' not in input_config:
+			input_config['file_format'] = 'vcf'
+		if 'reference_genome' not in input_config:
+			input_config['reference_genome'] = 'GRCh38'
 
-		if self.input_config['file_format'] == 'vcf':
-			# Load VCF file(s)
-			geno_data = hl.import_vcf(
-				self.input_config['file'],
-				force_bgz=self.input_config['force_bgz'],
-				reference_genome=self.input_config['reference_genome']
+		# Set filetype specific defaults
+		if input_config['file_format'].lower() == 'vcf':
+			if 'force_bgz' not in input_config:
+				input_config['force_bgz'] = False
+
+		# Load and retrun data as a MatrixTable
+		if input_config['file_format'].lower() == 'vcf':
+			possible_kwargs = set(
+				inspect.signature(hl.import_vcf).parameters.keys()
+			).difference('path')
+			return hl.import_vcf(
+				input_config['file'],
+				**{k: v for k, v in input_config.items() if k in possible_kwargs}
 			)
 		else:
 			raise ValueError(
-				'Invalid file format: {}'.format(
-					self.input_config['file_format']
-				)
+				'Invalid file format: {}'.format(input_config['file_format'])
 			)
+
+	def load_inputs(self):
+		"""Loads the input data from the source file and sets the input_nodes
+		and input_sample_ids attributes.
+		"""
+		geno_data = self.load_matrix_table(self.input_config)
+
+		if 'sample_id_field' not in self.input_config:
+			self.input_config['sample_id_field'] = 's'
 		
 		# Subset to loci required by input nodes
 		required_loci = []

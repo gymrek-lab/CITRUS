@@ -15,3 +15,5 @@ from . import func_nodes
 from . import input_nodes
 
 from . import heritability_estimation
+
+from . import design_utils
