@@ -2,7 +2,7 @@
 
 CITRUS, the CIs and Trans inteRaction nUmerical Simulator, is a tool for simulating phenotypes with complex genetic archetectures that go beyond simple models that assume linear, additive contributions of individual SNPs. The goal of this tool is to provide better simulations for benchmarking GWAS/PRS models.
 
-In CITRUS, simulations are defined by a directed tree-like graph. The directed graph is composed of input nodes, representing genetic variants, and operator nodes, which represent intermediate operations and their resulting values. The edges represent the flow of values from the input nodes to the final operator node, who's resulting value represents the phenotype being simulated.
+In CITRUS, simulations are defined by a directed tree-like graph. The directed graph is composed of input nodes, representing genetic variants, and operator nodes, which represent intermediate operations and their resulting values. The edges represent the flow of values from the input nodes to the final operator node, whose resulting value represents the phenotype being simulated.
 
 This flexible framework allows users to design or generate simulations of phenotypes with more complex dynamics and interactions than previous tools. These include:
 
@@ -12,7 +12,7 @@ This flexible framework allows users to design or generate simulations of phenot
 * Sampling from distributions in place of fixed values
 * And more!
 
-In additional to simulating phenotypes, CITRUS allows for calculation of SHAP Shapley values, which estimate the contribution of each variant to the phenotype. This allows for the generation of a ground truth for testing the ability of downstream models to detect relevant variants. 
+In additional to simulating phenotypes, CITRUS allows for calculation of [SHAP](https://shap.readthedocs.io/en/latest/) Shapley values, which estimate the contribution of each variant to the phenotype. This allows for the generation of a ground truth for testing the ability of downstream models to detect relevant variants. 
 
 This guide walks through how CITRUS simulations work, how to define and run them, and how to compute their SHAP values.
 
@@ -128,7 +128,7 @@ For examples and walkthroughs of designing and configuring simulations, see [Des
 
 ## Input
 
-CITRUS uses phased genetic data in one of several VCF-like file formats (VCF, TODO BGEN, GEN) as input. The 'input' section of the JSON config file defines a list of input sources represented by dictionaries. Each input source represents a file or multiple files and defines the input nodes who's values are derived from that data. An example input section defining a single input source with two input nodes is below. All input sources must include sample IDs, and phenotypes will only be simulated for samples in all input sources.
+CITRUS uses phased genetic data in one of several VCF-like file formats (VCF, TODO BGEN, GEN) as input. The 'input' section of the JSON config file defines a list of input sources represented by dictionaries. Each input source represents a file or multiple files and defines the input nodes whose values are derived from that data. An example input section defining a single input source with two input nodes is below. All input sources must include sample IDs, and phenotypes will only be simulated for samples in all input sources.
 
 ```json
 {
