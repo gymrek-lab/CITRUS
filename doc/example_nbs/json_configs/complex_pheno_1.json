@@ -1,0 +1,493 @@
+{
+    "input": [
+        {
+            "file": "1000_genomes_data/ALL.chr19.phase3_shapeit2_mvncall_integrated_v5b.20130502.genotypes.vcf.gz",
+            "file_format": "vcf",
+            "reference_genome": "GRCh37",
+            "force_bgz": true,
+            "input_nodes": [
+                {
+                    "alias": "ENSG00000267443_transcribed",
+                    "type": "SNP",
+                    "chr": "19",
+                    "pos": [
+                        397597,
+                        397680,
+                        397687,
+                        397765,
+                        397772,
+                        397776,
+                        397828,
+                        397854,
+                        397896,
+                        398145,
+                        398291,
+                        398339,
+                        398367,
+                        398414,
+                        398469,
+                        398476,
+                        398477,
+                        398505,
+                        398513,
+                        398514,
+                        398518,
+                        398545,
+                        398547,
+                        398590,
+                        398595,
+                        398597,
+                        398601,
+                        398636,
+                        398675,
+                        398719,
+                        398763,
+                        398859,
+                        398901,
+                        398958,
+                        398960,
+                        398969,
+                        399039,
+                        399132
+                    ]
+                },
+                {
+                    "alias": "ENSG00000267443_promoter",
+                    "type": "SNP",
+                    "chr": "19",
+                    "pos": 399170
+                },
+                {
+                    "alias": "CYP4F12_common",
+                    "type": "SNP",
+                    "chr": "19",
+                    "pos": [
+                        15796801,
+                        15789282,
+                        15799177,
+                        15790265,
+                        15804820,
+                        15791132,
+                        15799799,
+                        15789140,
+                        15797781,
+                        15789098,
+                        15800238,
+                        15798711,
+                        15798462,
+                        15798394,
+                        15792566,
+                        15802314,
+                        15805106,
+                        15807175,
+                        15802504,
+                        15805295,
+                        15804644,
+                        15802148,
+                        15805862,
+                        15799276,
+                        15804595,
+                        15804328,
+                        15804417,
+                        15804577,
+                        15796662,
+                        15795566,
+                        15793062,
+                        15805874,
+                        15798869,
+                        15801333,
+                        15791617,
+                        15807062,
+                        15799571,
+                        15806703,
+                        15802595,
+                        15799711
+                    ]
+                },
+                {
+                    "alias": "CYP4F12_rare",
+                    "type": "SNP",
+                    "chr": "19",
+                    "pos": [
+                        15791809,
+                        15791532,
+                        15793494,
+                        15792081,
+                        15787164,
+                        15800196,
+                        15802807,
+                        15784437,
+                        15797843,
+                        15805893,
+                        15793865,
+                        15797643,
+                        15806564,
+                        15800613,
+                        15807651,
+                        15792966,
+                        15788084,
+                        15793178,
+                        15806357,
+                        15792185,
+                        15787939,
+                        15800744,
+                        15790242,
+                        15791043,
+                        15787157,
+                        15795451,
+                        15783911,
+                        15792985,
+                        15784779,
+                        15785479,
+                        15790752,
+                        15792430,
+                        15785776,
+                        15804797,
+                        15788743,
+                        15797854,
+                        15788442,
+                        15798209,
+                        15794910,
+                        15799190
+                    ]
+                },
+                {
+                    "alias": "EID2B_common",
+                    "type": "SNP",
+                    "chr": "19",
+                    "pos": [
+                        40021718,
+                        40021759,
+                        40021803,
+                        40021823,
+                        40021880,
+                        40023088,
+                        40023308
+                    ]
+                },
+                {
+                    "alias": "EID2B_deleterious",
+                    "type": "SNP",
+                    "chr": "19",
+                    "pos": [
+                        40021816,
+                        40022489,
+                        40022530,
+                        40022659,
+                        40022949,
+                        40023202
+                    ]
+                }
+            ],
+            "sample_id_field": "s"
+        }
+    ],
+    "simulation_steps": [
+        {
+            "type": "RandomConstant",
+            "alias": "ENSG00000267443_betas",
+            "input_match_size": "ENSG00000267443_transcribed",
+            "dist_name": "normal",
+            "dist_kwargs": {
+                "loc": 0.0,
+                "scale": 0.5
+            },
+            "by_feat": true
+        },
+        {
+            "type": "Product",
+            "alias": "ENSG00000267443_effects",
+            "input_aliases": [
+                "ENSG00000267443_betas",
+                "ENSG00000267443_transcribed"
+            ]
+        },
+        {
+            "type": "SumReduce",
+            "alias": "ENSG00000267443_effect_sum",
+            "input_alias": "ENSG00000267443_effects"
+        },
+        {
+            "type": "StandardScaler",
+            "alias": "ENSG00000267443_scaled",
+            "input_alias": "ENSG00000267443_effect_sum"
+        },
+        {
+            "type": "Sigmoid",
+            "alias": "ENSG00000267443_damped_effect",
+            "input_alias": "ENSG00000267443_scaled"
+        },
+        {
+            "type": "Distribution",
+            "alias": "ENSG00000267443_promoter_multiplier",
+            "input_match_size": "ENSG00000267443_damped_effect",
+            "dist_name": "normal",
+            "dist_kwargs": {
+                "loc": 0.8,
+                "scale": 0.025
+            }
+        },
+        {
+            "type": "Product",
+            "alias": "ENSG00000267443_effect_with_promoter",
+            "input_aliases": [
+                "ENSG00000267443_damped_effect",
+                "ENSG00000267443_promoter_multiplier"
+            ]
+        },
+        {
+            "type": "IfElse",
+            "alias": "ENSG00000267443_haplotype_values",
+            "input_cond_vals": "ENSG00000267443_promoter",
+            "input_if_vals": "ENSG00000267443_effect_with_promoter",
+            "input_else_vals": "ENSG00000267443_damped_effect"
+        },
+        {
+            "type": "MeanCombine",
+            "alias": "ENSG00000267443",
+            "input_alias": "ENSG00000267443_haplotype_values",
+            "mean_type": "geometric"
+        },
+        {
+            "type": "RandomConstant",
+            "alias": "CYP4F12_common_betas",
+            "input_match_size": "CYP4F12_common",
+            "dist_name": "normal",
+            "dist_kwargs": {
+                "loc": 0.0,
+                "scale": 0.2
+            },
+            "by_feat": true
+        },
+        {
+            "type": "RandomConstant",
+            "alias": "CYP4F12_rare_betas",
+            "input_match_size": "CYP4F12_rare",
+            "dist_name": "normal",
+            "dist_kwargs": {
+                "loc": 0.0,
+                "scale": 0.4
+            },
+            "by_feat": true
+        },
+        {
+            "type": "ReLU",
+            "alias": "CYP4F12_rare_betas_pos",
+            "input_alias": "CYP4F12_rare_betas",
+            "neg_slope": -1.0
+        },
+        {
+            "type": "Product",
+            "alias": "CYP4F12_common_effects",
+            "input_aliases": [
+                "CYP4F12_common_betas",
+                "CYP4F12_common"
+            ]
+        },
+        {
+            "type": "Product",
+            "alias": "CYP4F12_rare_effects",
+            "input_aliases": [
+                "CYP4F12_rare_betas_pos",
+                "CYP4F12_rare"
+            ]
+        },
+        {
+            "type": "Concatenate",
+            "alias": "CYP4F12_effects",
+            "input_aliases": [
+                "CYP4F12_common_effects",
+                "CYP4F12_rare_effects"
+            ]
+        },
+        {
+            "type": "SumReduce",
+            "alias": "CYP4F12_hap_val",
+            "input_alias": "CYP4F12_effects"
+        },
+        {
+            "type": "Tanh",
+            "alias": "CYP4F12_hap_val_damped",
+            "input_alias": "CYP4F12_hap_val"
+        },
+        {
+            "type": "MaxCombine",
+            "alias": "CYP4F12_max",
+            "input_alias": "CYP4F12_hap_val_damped"
+        },
+        {
+            "type": "MeanCombine",
+            "alias": "CYP4F12_mean",
+            "input_alias": "CYP4F12_hap_val_damped"
+        },
+        {
+            "type": "Concatenate",
+            "alias": "CYP4F12_comb_vals",
+            "input_aliases": [
+                "CYP4F12_max",
+                "CYP4F12_mean"
+            ]
+        },
+        {
+            "type": "Constant",
+            "alias": "CYP4F12_comb_weights",
+            "constant": [
+                0.8,
+                0.2
+            ],
+            "input_match_size": "CYP4F12_comb_vals"
+        },
+        {
+            "type": "Product",
+            "alias": "CYP4F12_comb_vals_weighted",
+            "input_aliases": [
+                "CYP4F12_comb_vals",
+                "CYP4F12_comb_weights"
+            ]
+        },
+        {
+            "type": "MeanReduce",
+            "alias": "CYP4F12",
+            "input_alias": "CYP4F12_comb_vals_weighted"
+        },
+        {
+            "type": "RandomConstant",
+            "alias": "EID2B_common_betas",
+            "input_match_size": "EID2B_common",
+            "dist_name": "uniform",
+            "dist_kwargs": {
+                "low": 0.01,
+                "high": 0.25
+            },
+            "by_feat": true
+        },
+        {
+            "type": "Product",
+            "alias": "EID2B_common_effects",
+            "input_aliases": [
+                "EID2B_common_betas",
+                "EID2B_common"
+            ]
+        },
+        {
+            "type": "SumReduce",
+            "alias": "EID2B_common_effects_sum",
+            "input_alias": "EID2B_common_effects"
+        },
+        {
+            "type": "GaussianNoise",
+            "alias": "EID2B_common_effects_sum_w_noise_unbounded",
+            "input_alias": "EID2B_common_effects_sum",
+            "noise_std": 0.025
+        },
+        {
+            "type": "Clip",
+            "alias": "EID2B_common_effects_sum_w_noise",
+            "input_alias": "EID2B_common_effects_sum_w_noise_unbounded",
+            "min_val": 0
+        },
+        {
+            "type": "RandomConstant",
+            "alias": "EID2B_deleterious_multiplier",
+            "input_match_size": "EID2B_deleterious",
+            "dist_name": "normal",
+            "dist_kwargs": {
+                "loc": 0.3,
+                "scale": 0.05
+            },
+            "by_feat": true
+        },
+        {
+            "type": "Constant",
+            "alias": "constant_1",
+            "input_match_size": "EID2B_deleterious",
+            "constant": 1.0
+        },
+        {
+            "type": "IfElse",
+            "alias": "EID2B_multiplier_by_variant",
+            "input_cond_vals": "EID2B_deleterious",
+            "input_if_vals": "EID2B_deleterious_multiplier",
+            "input_else_vals": "constant_1"
+        },
+        {
+            "type": "MinReduce",
+            "alias": "EID2B_deleterious_multiplier",
+            "input_alias": "EID2B_multiplier_by_variant"
+        },
+        {
+            "type": "Product",
+            "alias": "EID2B_hap_val",
+            "input_aliases": [
+                "EID2B_deleterious_multiplier",
+                "EID2B_common_effects_sum_w_noise"
+            ]
+        },
+        {
+            "type": "MeanCombine",
+            "alias": "EID2B",
+            "input_alias": "EID2B_hap_val"
+        },
+        {
+            "type": "ReLU",
+            "alias": "ReLU_EID2B",
+            "input_alias": "EID2B",
+            "threshold": 0.2,
+            "neg_slope": 1.0,
+            "pos_slope": 1.2
+        },
+        {
+            "type": "Product",
+            "alias": "EID2B_ENSG00000267443_interaction",
+            "input_aliases": [
+                "ReLU_EID2B",
+                "ENSG00000267443"
+            ]
+        },
+        {
+            "type": "StandardScaler",
+            "alias": "zscore_ENSG00000267443",
+            "input_alias": "ENSG00000267443"
+        },
+        {
+            "type": "StandardScaler",
+            "alias": "zscore_CYP4F12",
+            "input_alias": "CYP4F12"
+        },
+        {
+            "type": "Concatenate",
+            "alias": "concat_zscores",
+            "input_aliases": [
+                "zscore_ENSG00000267443",
+                "zscore_CYP4F12"
+            ]
+        },
+        {
+            "type": "Softmax",
+            "alias": "softmax_zscores",
+            "input_alias": "concat_zscores"
+        },
+        {
+            "type": "MinReduce",
+            "alias": "min_softmax",
+            "input_alias": "softmax_zscores"
+        },
+        {
+            "type": "Product",
+            "alias": "EID2B_relative_abundance_interaction",
+            "input_aliases": [
+                "min_softmax",
+                "EID2B"
+            ]
+        },
+        {
+            "type": "Sum",
+            "alias": "phenotype",
+            "input_aliases": [
+                "CYP4F12",
+                "EID2B_ENSG00000267443_interaction",
+                "EID2B_relative_abundance_interaction"
+            ]
+        }
+    ]
+}

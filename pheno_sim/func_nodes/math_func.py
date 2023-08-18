@@ -92,7 +92,7 @@ class Sum(AbstractBaseFunctionNode):
         super().__init__(alias)
         self.inputs = input_aliases
 
-    def run(self, input_vals):
+    def run(self, *input_vals):
         """Return the sum of the inputs."""
         return np.sum(np.array(input_vals, dtype=object), axis=0).astype(float)
     
