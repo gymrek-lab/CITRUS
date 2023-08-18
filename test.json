@@ -1,0 +1,146 @@
+{
+    "input": [
+        {
+            "file": "pheno_sim_demos/1000_genomes_data/ALL.chr19.phase3_shapeit2_mvncall_integrated_v5b.20130502.genotypes.vcf.gz",
+            "file_format": "vcf",
+            "reference_genome": "GRCh37",
+            "force_bgz": true,
+            "input_nodes": [
+                {
+                    "alias": "LDLR_upstream_variant",
+                    "type": "SNP",
+                    "chr": "19",
+                    "pos": 11197261
+                },
+                {
+                    "alias": "LDLR_intron_A_variants",
+                    "type": "SNP",
+                    "chr": "19",
+                    "pos": [
+                        11202306,
+                        11206575
+                    ]
+                },
+                {
+                    "alias": "LDLR_intron_B_variant",
+                    "type": "SNP",
+                    "chr": "19",
+                    "pos": 11216561
+                },
+                {
+                    "alias": "LDLR_missense_variants",
+                    "type": "SNP",
+                    "chr": "19",
+                    "pos": [
+                        11242133,
+                        11222300
+                    ]
+                }
+            ],
+            "sample_id_field": "s"
+        }
+    ],
+    "simulation_steps": [
+        {
+            "type": "Constant",
+            "alias": "LDLR_upstream_variant_beta",
+            "input_match_size": "LDLR_upstream_variant",
+            "constant": 0.1
+        },
+        {
+            "type": "RandomConstant",
+            "alias": "LDLR_intron_A_variants_betas",
+            "input_match_size": "LDLR_intron_A_variants",
+            "dist_name": "normal",
+            "dist_kwargs": {
+                "loc": 0.0,
+                "scale": 0.25
+            },
+            "by_feat": true,
+            "drawn_vals": [
+                -0.03364975897206091,
+                -0.33260865041343407
+            ]
+        },
+        {
+            "type": "RandomConstant",
+            "alias": "LDLR_intron_B_variant_beta",
+            "input_match_size": "LDLR_intron_B_variant",
+            "dist_name": "normal",
+            "dist_kwargs": {
+                "loc": -0.05,
+                "scale": 0.1
+            },
+            "drawn_vals": [
+                -0.03172137791618268
+            ]
+        },
+        {
+            "type": "RandomConstant",
+            "alias": "LDLR_missense_variants_betas",
+            "input_match_size": "LDLR_missense_variants",
+            "dist_name": "normal",
+            "dist_kwargs": {
+                "loc": 0.25,
+                "scale": 0.2
+            },
+            "by_feat": true,
+            "drawn_vals": [
+                0.0681840888410819,
+                0.4188610511438322
+            ]
+        },
+        {
+            "type": "Product",
+            "alias": "LDLR_upstream_variant_effect",
+            "input_aliases": [
+                "LDLR_upstream_variant_beta",
+                "LDLR_upstream_variant"
+            ]
+        },
+        {
+            "type": "Product",
+            "alias": "LDLR_intron_A_variants_effects",
+            "input_aliases": [
+                "LDLR_intron_A_variants_betas",
+                "LDLR_intron_A_variants"
+            ]
+        },
+        {
+            "type": "Product",
+            "alias": "LDLR_intron_B_variant_effect",
+            "input_aliases": [
+                "LDLR_intron_B_variant_beta",
+                "LDLR_intron_B_variant"
+            ]
+        },
+        {
+            "type": "Product",
+            "alias": "LDLR_missense_variants_effects",
+            "input_aliases": [
+                "LDLR_missense_variants_betas",
+                "LDLR_missense_variants"
+            ]
+        },
+        {
+            "type": "Concatenate",
+            "alias": "LDLR_effects_by_haplotype",
+            "input_aliases": [
+                "LDLR_upstream_variant_effect",
+                "LDLR_intron_A_variants_effects",
+                "LDLR_intron_B_variant_effect",
+                "LDLR_missense_variants_effects"
+            ]
+        },
+        {
+            "type": "AdditiveCombine",
+            "alias": "LDLR_effects",
+            "input_alias": "LDLR_effects_by_haplotype"
+        },
+        {
+            "type": "SumReduce",
+            "alias": "phenotype",
+            "input_alias": "LDLR_effects"
+        }
+    ]
+}

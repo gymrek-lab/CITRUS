@@ -38,7 +38,6 @@ Methods:
 		Run the simulation. Returns whatever is returned by the last step.
 """
 
-import copy
 import json
 import os
 from typing import Dict, List
@@ -236,13 +235,14 @@ class PhenoSimulation:
 		return vals_dict
 
 	def run_simulation_steps(
-			self, val_dict: ValuesDict
+			self, val_dict: ValuesDict, run_output_step=True
 	):
 		""" Run the simulation steps and optionally the output step. Returns
 		whatever is returned by the last step run.
 		
 		Args:
 			val_dict: A ValuesDict containing the input values.
+			run_output_step: Whether to run the output step. Default is True.
 			
 		Returns:
 			Whatever is returned by the last step run.
@@ -251,6 +251,7 @@ class PhenoSimulation:
 		# Run simulation steps.
 		for step in self.simulation_steps:
 			val_dict = self.run_function_node(step, val_dict)
+			#print(val_dict)
 
 		# Update self.sim_config if it has not been updated.
 		if not self.sim_config_updated:
@@ -284,15 +285,15 @@ class PhenoSimulation:
 				the column name.
 
 			2D numpy arrays: Converted to multiple columns with names that
-				are '{key}*-*{row_index}'.
+				are '{key}_{row_index}'.
 
 			Two length tuple of 1D arrays: Converted to two columns with
-				names that are '{key}*-*a' and '{key}*-*b'. 'a' will always
+				names that are '{key}_a' and '{key}_b'. 'a' will always
 				correspond to the first element in the tuple, and 'b' will
 				always correspond to the second element in the tuple.
 
 			Two length tuple of 2D arrays: Converted to 2*n_rows columns
-				with names that are '{key}*-*{a/b}*-*{row_index}'.
+				with names that are '{key}_{row_index}_{col_index}'.
 		"""
 		df_dict = dict()
 
@@ -303,7 +304,7 @@ class PhenoSimulation:
 					df_dict[key] = vals
 				elif vals.ndim == 2:
 					for i in range(vals.shape[0]):
-						df_dict[f'{key}*-*{i}'] = vals[i]
+						df_dict[f'{key}_{i}'] = vals[i]
 				else:
 					raise ValueError(
 						"Numpy arrays in ValuesDict must be 1D or 2D."
@@ -314,10 +315,10 @@ class PhenoSimulation:
 					idx_letter_pairs = [('a', 0), ('b', 1)]
 					for idx_letter, idx in idx_letter_pairs:
 						if vals[idx].ndim == 1:
-							df_dict[f'{key}*-*{idx_letter}'] = vals[idx]
+							df_dict[f'{key}_{idx_letter}'] = vals[idx]
 						elif vals[idx].ndim == 2:
 							for i in range(vals[idx].shape[0]):
-								df_dict[f'{key}*-*{idx_letter}*-*{i}'] = vals[idx][i]
+								df_dict[f'{key}_{idx_letter}_{i}'] = vals[idx][i]
 						else:
 							raise ValueError(
 								"Numpy arrays in ValuesDict must be 1D or 2D."
@@ -332,110 +333,6 @@ class PhenoSimulation:
 				)
 			
 		return pd.DataFrame(df_dict)
-	
-	@staticmethod
-	def dataframe_to_vals_dict(df: pd.DataFrame) -> ValuesDict:
-		""" Convert a pandas DataFrame to a ValuesDict. 
-
-		Values in Values dict are either 1D or 2D numpy arrays, or a two
-		length tuple of 1D or 2D numpy arrays. Column names in the dataframe
-		will must be named in one of the following formats and will become
-		values in the ValuesDict with the corresponding key:
-
-			* Single 1D array: '{key}'
-			* Single 2D array: '{key}*-*{row_index}'
-			* Two length tuple of 1D arrays: '{key}*-*a' and '{key}*-*b'
-			* Two length tuple of 2D arrays: '{key}*-*{a/b}*-*{row_index}'
-
-		NOTE: '*-*' is used as the delimiter and thus cannot be used in the key.
-
-		Args:
-			df: Pandas DataFrame to convert to ValuesDict.
-
-		Returns:
-			ValueDict reformed from values from the dataframe.
-		"""
-
-		vals_dict = dict()
-
-		# Map from all unique keys from dataframe to columns in dataframe
-		key_col_map = dict()
-
-		for col in df.columns:
-			key = col.split('*-*')[0]
-
-			if key not in key_col_map:
-				key_col_map[key] = list()
-
-			key_col_map[key].append(col)
-
-		# Create ValuesDict from dataframe
-		for col_name, col_vals in df.items():
-
-			col_name_parts = col_name.split('*-*')
-
-			# Single value 1D array
-			if len(col_name_parts) == 1:
-				vals_dict[col_name_parts[0]] = col_vals.values
-			elif len(col_name_parts) == 2:
-				# Single value 2D array is col_vals[1] is an integer
-				if col_name_parts[1].isdigit():
-					# Create 2D array if it doesn't exist
-					if col_name_parts[0] not in vals_dict:
-						vals_dict[col_name_parts[0]] = np.zeros(
-							(len(key_col_map[col_name_parts[0]]), df.shape[0])
-						)
-					# Add values to 2D array by row index
-					vals_dict[col_name_parts[0]][int(col_name_parts[1])] = col_vals.values
-				# Two length tuple of 1D arrays
-				elif col_name_parts[1] == 'a' or col_name_parts[1] == 'b':
-					# Create tuple if it doesn't exist
-					if col_name_parts[0] not in vals_dict:
-						vals_dict[col_name_parts[0]] = [None, None]
-					# Add values to tuple
-					vals_dict[col_name_parts[0]][
-						0 if col_name_parts[1] == 'a' else 1
-					] = col_vals.values
-				# Error
-				else:
-					raise ValueError(
-						'Invalid column name format: {}'.format(col_name)
-					)
-			elif len(col_name_parts) == 3:
-				# Two length tuple of 2D arrays
-				# Create tuple if it doesn't exist
-				if col_name_parts[0] not in vals_dict:
-					vals_dict[col_name_parts[0]] = [
-						np.zeros(
-							(len(key_col_map[col_name_parts[0]]) // 2, df.shape[0])
-						),
-						np.zeros(
-							(len(key_col_map[col_name_parts[0]]) // 2, df.shape[0])
-						)
-					]
-				
-				# Add values to tuple by row index
-				vals_dict[col_name_parts[0]][0 if col_name_parts[1] == 'a' else 1][
-					int(col_name_parts[2])
-				] = col_vals.values
-			else:
-				raise ValueError(
-					'Invalid column name format: {}'.format(col_name)
-				)
-					
-		# Cast lists vals in vals_dict to tuples
-		for key, val in vals_dict.items():
-			if isinstance(val, list):
-				vals_dict[key] = tuple(val)
-
-		return vals_dict
-	
-	def get_config(self) -> dict:
-		""" Get the simulation configuration. """
-		return {
-			"input": self.input_runner.get_config(),
-			"simulation_steps": self.sim_config
-		}
 
 	def save_output(
 		self,
@@ -491,101 +388,12 @@ class PhenoSimulation:
 		if include_config:
 			with open(os.path.join(output_dir, output_config_name), 'w') as f:
 				json.dump(
-					self.get_config(),
+					{
+						"input": self.input_runner.get_config(),
+						"simulation_steps": self.sim_config
+					},
 					f,
 					indent=4
 				)
 
-
-	def estimate_heritability(
-		self,
-		input_vals=None,
-		n_replicates: int = 100,
-		n_samples=1.0,
-		phenotype_alias='phenotype'
-	):
-		"""Estimate broad-sense heritability (H^2) of the phenotype.
-
-		Args:
-			input_vals (default None): A ValuesDict containing the input
-				values. If None, will run the input step of the simulation.
-			n_replicates (default 100): The number of replicates of each
-				genotype to simulate.
-			n_samples (default 1.0): The fraction or number of samples to
-				use when estimating heritability. If value is less than or
-				equal to 1, will use that fraction of samples. If value is
-				greater than 1, will use that number of samples. Samples
-				will be randomly selected from the input samples.
-			phenotype_alias (default 'phenotype'): The alias of the
-				phenotype node to use when estimating heritability.
-		"""
-
-		assert n_replicates >= 2, "n_replicates must be greater than 1."
-
-		# Get input genotype values.
-		if input_vals is None:
-			input_vals = self.run_input_step()
-
-		if n_samples > 1:
-			selected_idx = np.random.choice(
-				len(self.sample_ids),
-				n_samples,
-				replace=False
-			)
-			
-			for key, val in input_vals.items():
-				if isinstance(val, tuple):
-					input_vals[key] = (
-						val[0][..., selected_idx], val[1][..., selected_idx]
-					)
-				else:
-					input_vals[key] = val[..., selected_idx]
-		elif n_samples < 1:
-			selected_idx = np.random.choice(
-				len(self.sample_ids),
-				int(n_samples * len(self.sample_ids)),
-				replace=False
-			)
-			
-			for key, val in input_vals.items():
-				if isinstance(val, tuple):
-					input_vals[key] = (
-						val[0][..., selected_idx], val[1][..., selected_idx]
-					)
-				else:
-					input_vals[key] = val[..., selected_idx]
-		
-		# Estimate heritability.
-
-		# Step 1: Run simulation n_replicates times.
-		pheno_vals = []
-
-		for i in range(n_replicates):
-			pheno_vals.append(
-				self.run_simulation_steps(
-					copy.deepcopy(input_vals)
-				)[phenotype_alias]
-			)
-
-		# Convert to matrix where rows are replicates and columns are samples.
-		pheno_vals = np.vstack(pheno_vals).astype(float)
-
-		# Step 2: Compute total variance.
-		total_var = np.var(pheno_vals)
-
-		# Step 3: Compute inter-genotype variance (the variance of the mean
-		# phenotype for each genotype).
-		inter_geno_var = np.var(np.mean(pheno_vals, axis=0))
-
-		# Step 4: Compute average intra-genotype variance
-		intra_geno_var = np.var(pheno_vals, axis=0).mean()
-
-		# Step 5: Compute genetic variance component
-		genetic_var = inter_geno_var - intra_geno_var
-
-		# Step 6: Compute heritability
-		heritability = genetic_var / total_var
-
-		return heritability
-
-
+	
