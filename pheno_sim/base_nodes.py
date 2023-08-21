@@ -177,12 +177,25 @@ class AbstractBaseFunctionNode(ABC):
 						"HaplotypeValues objects."
 					)
 				
-			return (
+			# Get return value
+			ret_vals = [
 				self.run(*hap1_args, **hap1_kwargs),
 				self.run(*hap2_args, **hap2_kwargs)
-			)
+			]
+
+			for i in range(len(ret_vals)):
+				# if is 1 x n matrix, convert to vector
+				if len(ret_vals[i].shape) == 2 and ret_vals[i].shape[0] == 1:
+					ret_vals[i] = ret_vals[i][0]
+
+			return tuple(ret_vals)
 		else:
-			return self.run(*args, **kwargs)
+			ret_val = self.run(*args, **kwargs)
+			# if is 1 x n matrix, convert to vector
+			if len(ret_val.shape) == 2 and ret_val.shape[0] == 1:
+				return ret_val[0]
+			else:
+				return ret_val
 		
 	def get_config_updates(self) -> dict:
 		""" Used to update the config dict with random selections made. 

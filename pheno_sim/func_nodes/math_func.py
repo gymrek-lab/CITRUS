@@ -92,9 +92,9 @@ class Sum(AbstractBaseFunctionNode):
         super().__init__(alias)
         self.inputs = input_aliases
 
-    def run(self, input_vals):
+    def run(self, *input_vals):
         """Return the sum of the inputs."""
-        return np.sum(np.array(input_vals, dtype=object), axis=0)
+        return np.sum(np.array(input_vals, dtype=object), axis=0).astype(float)
     
 
 class Product(AbstractBaseFunctionNode):
@@ -149,7 +149,7 @@ class Product(AbstractBaseFunctionNode):
 
     def run(self, *input_vals):
         """Return the product of the inputs."""
-        return np.prod(np.array(input_vals, dtype=object), axis=0)
+        return np.prod(np.array(input_vals, dtype=object), axis=0).astype(float)
 
     
 if __name__ == "__main__":

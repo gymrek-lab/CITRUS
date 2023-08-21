@@ -1,0 +1,3 @@
+# Downloading gene bed files from UCSC
+
+[This](https://genome.ucsc.edu/cgi-bin/hgTables?hgsid=1676047372_XHxl4oqqI5Slm3CzXyAphO0K5RMf&clade=mammal&org=Human&db=hg19&hgta_group=genes&hgta_track=wgEncodeGencodeV43lift37&hgta_table=wgEncodeGencodeBasicV43lift37&hgta_regionType=range&position=chr19:1-59,128,983&hgta_outputType=primaryTable&hgta_outFileName=chr19_GENCODE_V43_GRCh37.tsv) can be used to download the included TSV file.
