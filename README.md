@@ -17,6 +17,6 @@ CITRUS, the CIs and Trans inteRaction nUmerical Simulator, is a tool for simulat
 
 ```bash
 git clone https://github.com/gymrek-lab/CITRUS.git
-cd CITRUS/
+cd CITRUS
 pip install .
 ```
