@@ -110,7 +110,7 @@ def simulate(
     genotype_files: str,  
 	output_dir: str, 
 	output_filename: str, 
-	output_config_json: str,
+	output_config_filename: str,
     tsv: bool
 ):
 	"""
@@ -143,7 +143,7 @@ def simulate(
 		sim_vals,
 		output_dir=output_dir,
 		output_file_name=output_filename,
-		output_config_name=output_config_json,
+		output_config_name=output_config_filename,
 		sep="\t" if tsv else ","
 	)
 

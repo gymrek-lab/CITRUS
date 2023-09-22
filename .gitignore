@@ -1,3 +1,22 @@
+# Benchmarking data
+# benchmarking/data/citrus_output/
+# benchmarking/data/citrus_phenos/
+# benchmarking/data/splits/
+# benchmarking/data/ukb/*
+# !benchmarking/data/ukb/
+# !benchmarking/data/ukb/*.py
+
+# benchmarking/prs/plink_output/*
+# !benchmarking/prs/plink_output/
+# !benchmarking/prs/plink_output/*.py
+# benchmarking/prs/prsice2_output/
+benchmarking*/
+
+# Tools
+benchmarking/PRSice2/
+benchmarking/QCTOOL/
+
+
 # Data files
 *.tbi
 *.vcf.gz
