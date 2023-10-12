@@ -179,11 +179,9 @@ def plot(config_file: str, out: str, format: str):
 
 	with open(config_file, "r") as f:
 		config = load(f)
-
-	out += "." + format
 	
 	# Create a plot of the model
-	plot.visualize(input_spec=config, filename=out, format=format)
+	plot.visualize(input_spec=config, filename=out, img_format=format)
 
 @citrus.command(no_args_is_help=True)
 @click.option(

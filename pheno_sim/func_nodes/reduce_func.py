@@ -31,7 +31,8 @@ class SumReduce(AbstractBaseFunctionNode):
 	"""Sum each sample's feature values into a single value per sample.
 	
 	For a Values matrix (num_feats, num_samples), returns a vector of
-	the sum of the feature values for each sample (a num_samples length array).
+	the sum of the feature values for each sample (a num_samples length
+	array).
 	
 	Example:
 	```python
@@ -53,6 +54,35 @@ class SumReduce(AbstractBaseFunctionNode):
 	def run(self, input_vals):
 		"""Return sum of each sample's feature values as the sample's value."""
 		return np.sum(input_vals, axis=0)
+
+
+class ProductReduce(AbstractBaseFunctionNode):
+	"""Product of sample's feature values into a single value per sample.
+	
+	For a Values matrix (num_feats, num_samples), returns a vector of
+	the product of the feature values for each sample (a num_samples
+	length array).
+	
+	Example:
+	```python
+		>>> ProductReduce("prod_reduce", "vals")(np.array([[1, 2, 3], [4, 5, 6]]))
+		array([ 4,  10,  18])
+	```
+	"""
+
+	def __init__(self, alias: str, input_alias: str):
+		"""Initialize ProductReduce node.
+		
+		Args:
+			alias: The alias of the node.
+			input_alias: The alias of the input node.
+		"""
+		super().__init__(alias)
+		self.inputs = input_alias
+
+	def run(self, input_vals):
+		"""Return sum of each sample's feature values as the sample's value."""
+		return np.prod(input_vals, axis=0)
 	
 
 class MinReduce(AbstractBaseFunctionNode):

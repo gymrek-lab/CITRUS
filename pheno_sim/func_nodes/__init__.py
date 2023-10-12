@@ -33,6 +33,7 @@ from .noise import (
 
 from .reduce_func import (
     SumReduce,
+	ProductReduce,
     MinReduce,
     MaxReduce,
     MeanReduce,
