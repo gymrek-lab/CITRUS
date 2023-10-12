@@ -133,7 +133,7 @@ Initialize Sum node.
 ### <kbd>method</kbd> `run`
 
 ```python
-run(input_vals)
+run(*input_vals)
 ```
 
 Return the sum of the inputs. 

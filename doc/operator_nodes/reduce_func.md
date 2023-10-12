@@ -38,7 +38,7 @@ For a Values matrix (num_feats, num_samples), returns a vector of the sum of the
          array([ 5,  7,  9])
 ``` 
 
-<a href="../../pheno_sim/func_nodes/reduce_func.py#L43"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../pheno_sim/func_nodes/reduce_func.py#L44"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `__init__`
 
@@ -60,7 +60,7 @@ Initialize SumReduce node.
 
 ---
 
-<a href="../../pheno_sim/func_nodes/reduce_func.py#L53"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../pheno_sim/func_nodes/reduce_func.py#L54"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `run`
 
@@ -73,7 +73,57 @@ Return sum of each sample's feature values as the sample's value.
 
 ---
 
-<a href="../../pheno_sim/func_nodes/reduce_func.py#L58"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../pheno_sim/func_nodes/reduce_func.py#L59"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+## <kbd>class</kbd> `ProductReduce`
+Product of sample's feature values into a single value per sample. 
+
+For a Values matrix (num_feats, num_samples), returns a vector of the product of the feature values for each sample (a num_samples length array). 
+
+
+
+**Example:**
+ ```python
+         >>> ProductReduce("prod_reduce", "vals")(np.array([[1, 2, 3], [4, 5, 6]]))
+         array([ 4,  10,  18])
+``` 
+
+<a href="../../pheno_sim/func_nodes/reduce_func.py#L73"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+### <kbd>method</kbd> `__init__`
+
+```python
+__init__(alias: str, input_alias: str)
+```
+
+Initialize ProductReduce node. 
+
+
+
+**Args:**
+ 
+ - <b>`alias`</b>:  The alias of the node. 
+ - <b>`input_alias`</b>:  The alias of the input node. 
+
+
+
+
+---
+
+<a href="../../pheno_sim/func_nodes/reduce_func.py#L83"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+### <kbd>method</kbd> `run`
+
+```python
+run(input_vals)
+```
+
+Return sum of each sample's feature values as the sample's value. 
+
+
+---
+
+<a href="../../pheno_sim/func_nodes/reduce_func.py#L88"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `MinReduce`
 Return the minimum of each sample's feature values as the sample's value. 
@@ -88,7 +138,7 @@ For a Values matrix (num_feats, num_samples), returns a vector of the minimum of
          array([1, 2, 3])
 ``` 
 
-<a href="../../pheno_sim/func_nodes/reduce_func.py#L72"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../pheno_sim/func_nodes/reduce_func.py#L102"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `__init__`
 
@@ -110,7 +160,7 @@ Initialize MinReduce node.
 
 ---
 
-<a href="../../pheno_sim/func_nodes/reduce_func.py#L82"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../pheno_sim/func_nodes/reduce_func.py#L112"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `run`
 
@@ -123,7 +173,7 @@ Return min of each sample's feature values as the sample's value.
 
 ---
 
-<a href="../../pheno_sim/func_nodes/reduce_func.py#L87"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../pheno_sim/func_nodes/reduce_func.py#L117"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `MaxReduce`
 Return the maximum of each sample's feature values as the sample's value. 
@@ -138,7 +188,7 @@ For a Values matrix (num_feats, num_samples), returns a vector of the maximum of
          array([4, 5, 6])
 ``` 
 
-<a href="../../pheno_sim/func_nodes/reduce_func.py#L101"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../pheno_sim/func_nodes/reduce_func.py#L131"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `__init__`
 
@@ -160,7 +210,7 @@ Initialize MaxReduce node.
 
 ---
 
-<a href="../../pheno_sim/func_nodes/reduce_func.py#L111"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../pheno_sim/func_nodes/reduce_func.py#L141"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `run`
 
@@ -173,7 +223,7 @@ Return max of each sample's feature values as the sample's value.
 
 ---
 
-<a href="../../pheno_sim/func_nodes/reduce_func.py#L116"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../pheno_sim/func_nodes/reduce_func.py#L146"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `MeanReduce`
 Return the mean of each sample's feature values as the sample's value. 
@@ -198,7 +248,7 @@ Mean is either arithmetic (default), geometric, or harmonic.
          array([1.6, 2.85714286, 4])
 ``` 
 
-<a href="../../pheno_sim/func_nodes/reduce_func.py#L140"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../pheno_sim/func_nodes/reduce_func.py#L170"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `__init__`
 
@@ -221,7 +271,7 @@ Initialize MeanReduce node.
 
 ---
 
-<a href="../../pheno_sim/func_nodes/reduce_func.py#L158"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../pheno_sim/func_nodes/reduce_func.py#L188"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `run`
 
@@ -234,7 +284,7 @@ Return mean of each sample's feature values as the sample's value.
 
 ---
 
-<a href="../../pheno_sim/func_nodes/reduce_func.py#L172"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../pheno_sim/func_nodes/reduce_func.py#L202"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `AnyReduce`
 Return 1 if any feature value is past a threshold, 0 otherwise. 
@@ -254,7 +304,7 @@ Comparison function may be greater that (gt), greater than or equal (ge), less t
          array([0, 1, 0])
 ``` 
 
-<a href="../../pheno_sim/func_nodes/reduce_func.py#L192"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../pheno_sim/func_nodes/reduce_func.py#L222"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `__init__`
 
@@ -283,7 +333,7 @@ Initialize AnyReduce node.
 
 ---
 
-<a href="../../pheno_sim/func_nodes/reduce_func.py#L214"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../pheno_sim/func_nodes/reduce_func.py#L244"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `run`
 
@@ -296,7 +346,7 @@ Return 1 if any feature value is past a threshold, 0 otherwise.
 
 ---
 
-<a href="../../pheno_sim/func_nodes/reduce_func.py#L234"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../pheno_sim/func_nodes/reduce_func.py#L264"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>class</kbd> `AllReduce`
 Return 1 if all feature values are past a threshold, 0 otherwise. 
@@ -316,7 +366,7 @@ Comparison function may be greater that (gt), greater than or equal (ge), less t
          array([0, 0, 0])
 ``` 
 
-<a href="../../pheno_sim/func_nodes/reduce_func.py#L254"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../pheno_sim/func_nodes/reduce_func.py#L284"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `__init__`
 
@@ -345,7 +395,7 @@ Initialize AllReduce node.
 
 ---
 
-<a href="../../pheno_sim/func_nodes/reduce_func.py#L276"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../../pheno_sim/func_nodes/reduce_func.py#L306"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ### <kbd>method</kbd> `run`
 
