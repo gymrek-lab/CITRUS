@@ -104,17 +104,11 @@ def get_ancestor_nodes(node, sim_nodes):
 
 def plot_graph_with_legend(sim_nodes, filename, img_format):
 	# Define a dictionary for colors based on node_type
-	# node_colors = {
-	# 	'input': 'lightblue',
-	# 	'cis': 'yellow',
-	# 	'trans': 'green',
-	# 	'combine': 'red'
-	# }
 	node_colors = {
-		'input': '#ADD8E6',   # lightblue
-		'cis': '#FFFF00',     # yellow
-		'trans': '#00FF00',   # green
-		'combine': '#FF0000'  # red
+		'input': '#FF8C00',    # dark orange
+		'cis': '#90EE90',      # light green 
+		'trans': '#DEB887',    # burly wood (light brown)
+		'combine': '#FFF44F'   # lemon yellow
 	}
 
 	# Create a new graph
