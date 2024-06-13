@@ -204,6 +204,16 @@ def plot(config_file: str, out: str, format: str):
 	)
 )
 @click.option(
+	'-i', '--included_samples',
+	type=str,
+	default=None,
+	show_default=True,
+	help=(
+		"Path to file containing sample IDs to include in the SHAP analysis. "
+		"File should contain one sample ID per line."
+	)
+)
+@click.option(
 	'-s', '--save_path', 
 	type=str, 
 	default="shap_vals.csv",
@@ -226,7 +236,8 @@ def plot(config_file: str, out: str, format: str):
 )
 def shap(
 	config_file: str, 
-	genotype_files: str, 
+	genotype_files: str,
+	included_samples: str,
 	save_path: str, 
 	save_config_path: str
 ):
@@ -247,6 +258,11 @@ def shap(
 	if genotype_files: 
 		for i, path in enumerate(genotype_files):
 			config['input'][i]['file'] = path
+
+	# Load optional sample IDs
+	if included_samples:
+		with open(included_samples, "r") as f:
+			included_samples = [line.strip() for line in f]	# type: ignore
 
 	run_SHAP(
 		simulation,

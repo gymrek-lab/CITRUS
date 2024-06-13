@@ -13,6 +13,7 @@ from pheno_sim.shap import SHAPWrapper
 def run_SHAP(
 	simulation,
 	phenotype: str='phenotype',
+	included_samples=None,
 	save_path=None,
 	save_config_path=None,
 ):
@@ -29,6 +30,9 @@ def run_SHAP(
 		simulation (PhenoSimulation): PhenoSimulation object.
 		phenotype (str, default 'phenotype'): Phenotype key to use
 			for SHAP values.
+		included_samples (list, optional): List of sample IDs to compute local
+			SHAP values for. If None, all samples are included. Defaults
+			to None.
 		save_path (str, optional): Path to save DataFrame to. Defaults to None.
 			If None, DataFrame is not saved.
 		save_config_path (str, optional): Path to save simulation config to.
@@ -42,7 +46,11 @@ def run_SHAP(
 		simulation.run_input_step()
 	)
 
-	print(input_df.head())
+	# Create binary mask of columns to keep in included_samples is not None
+	if included_samples is not None:
+		mask = [sample in included_samples for sample in simulation.sample_ids]
+		input_df = input_df.loc[mask]
+		simulation.sample_ids = simulation.sample_ids[mask]
 
 	# Create SHAP wrapper
 	shap_wrapper = SHAPWrapper(simulation, phenotype, input_df.columns)
@@ -52,7 +60,6 @@ def run_SHAP(
 		shap_wrapper,
 		input_df,
 		algorithm='permutation',
-		# algorithm='partition',
 	)
 
 	# Calculate SHAP values
@@ -76,7 +83,7 @@ def run_SHAP(
 		with open(save_config_path, 'w') as f:
 			json.dump(simulation.get_config(), f, indent=4)
 		
-	# return shap_values, explainer
+	return shap_values, explainer, input_df
 
 
 if __name__ == '__main__':
@@ -91,19 +98,25 @@ if __name__ == '__main__':
 	# genotype files as args. See run_simulation.py for example.
 	simulation = PhenoSimulation.from_JSON_file(sim_config_path)
 
+	included = [
+		'HG00099',
+		'NA21142'
+	]
+
 	output = run_SHAP(
 		simulation,
 		phenotype_key,
+		included_samples=included,
 		save_path='test_shap.csv',
 		save_config_path='test_shap_config.json',
 	)
 
-	print(output)
-	print(type(output))
+	# print(output)
+	# print(type(output))
 
 
-	# shap.summary_plot(output)
-	print(output.shape)
+	# # shap.summary_plot(output)
+	# print(output.shape)
 
 	
 
