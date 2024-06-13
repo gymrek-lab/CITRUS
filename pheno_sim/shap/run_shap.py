@@ -42,6 +42,8 @@ def run_SHAP(
 		simulation.run_input_step()
 	)
 
+	print(input_df.head())
+
 	# Create SHAP wrapper
 	shap_wrapper = SHAPWrapper(simulation, phenotype, input_df.columns)
 

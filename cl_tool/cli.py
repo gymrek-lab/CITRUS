@@ -231,7 +231,7 @@ def shap(
 	save_config_path: str
 ):
 	"""
-	Computes the local and global shapley values of a model.
+	Computes the local shapley values of a model.
 	"""
 	from pheno_sim import PhenoSimulation
 	from pheno_sim.shap import run_SHAP
