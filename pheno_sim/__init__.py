@@ -17,3 +17,5 @@ from . import input_nodes
 from . import heritability_estimation
 
 from . import design_utils
+
+from . import shap
