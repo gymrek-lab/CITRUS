@@ -263,7 +263,6 @@ def shap(
 	if included_samples:
 		with open(included_samples, "r") as f:
 			included_samples = [line.strip() for line in f]	# type: ignore
-		print(included_samples)
 		run_SHAP(
 			simulation,
 			phenotype_key,
