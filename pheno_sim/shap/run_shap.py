@@ -48,9 +48,16 @@ def run_SHAP(
 
 	# Create binary mask of columns to keep in included_samples is not None
 	if included_samples is not None:
+		original_n_samples = len(simulation.sample_ids)
 		mask = [sample in included_samples for sample in simulation.sample_ids]
 		input_df = input_df.loc[mask]
 		simulation.sample_ids = simulation.sample_ids[mask]
+
+		# Print number of samples included
+		print(f"Included {len(simulation.sample_ids)} samples out of {original_n_samples}.")
+
+		if len(simulation.sample_ids) == 0:
+			raise ValueError("No samples included in SHAP analysis.")
 
 	# Create SHAP wrapper
 	shap_wrapper = SHAPWrapper(simulation, phenotype, input_df.columns)
