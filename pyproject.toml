@@ -38,7 +38,7 @@ citrus = "citrus.cli:citrus"
 
 [tool.pytest.ini_options]
 addopts = """
---ignore noxfile.py --doctest-modules
+--ignore noxfile.py
 """
 
 [tool.coverage.run]
