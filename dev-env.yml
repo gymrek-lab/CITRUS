@@ -8,7 +8,7 @@ dependencies:
   - conda-forge::poetry==1.8.3 # keep in sync with release.yml
   - conda-forge::nox==2024.4.15
   - conda-forge::poetry-plugin-export==1.8.0
-  - anaconda::graphviz==12.1.0
+  - anaconda::graphviz==2.50.0
   - pip:
     - nox-poetry==1.0.3
     - poetry-conda==0.1.1
