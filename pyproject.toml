@@ -19,6 +19,7 @@ hail = "^0.2.132"
 tqdm = "^4.66.5"
 pydot = "^3.0.1"
 scikit-learn = "^1.5.2"
+importlib-metadata = "^3.0.0"
 
 [build-system]
 requires = ["poetry-core"]

@@ -55,7 +55,7 @@ if os.getenv("CONDA_EXE"):
         session.run(
            "python", "-m", "pytest", *cov_cli_args, *session.posargs
         )
-
+        session.run("./test/cmdline_tests.sh", external=True)
 else:
 
     @session(python=python_versions)
@@ -66,3 +66,4 @@ else:
         session.run(
             "python", "-m", "pytest", *cov_cli_args, *session.posargs
         )
+        session.run("./test/cmdline_tests.sh", external=True)
