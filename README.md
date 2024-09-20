@@ -10,13 +10,31 @@ CITRUS, the CIs and Trans inteRaction nUmerical Simulator, is a tool for simulat
 
 [Command Line Interface](doc/cli.md)
 
-
 ## Installation
 
+For plotting models, you will need to have [graphviz](https://graphviz.org/) installed.
+
+### With conda 
+
+**TODO - conda install instructions**
+
+### With pip 
+
+**TODO - pip install instructions**
+
 ### From source
+
+To install from source (only recommended for development), clone the CITRUS repository and checkout the branch you're interested in:
 
 ```bash
 git clone https://github.com/gymrek-lab/CITRUS.git
 cd CITRUS
-pip install .
+```
+
+Now, create 1) a conda environment with our development tools and 2) a virtual environment with our dependencies and an editable install of CITRUS:
+
+```
+conda env create -n citrus -f dev-env.yml
+conda run -n citrus poetry install
+conda activate citrus
 ```
