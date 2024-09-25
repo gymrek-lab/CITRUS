@@ -31,6 +31,13 @@ conda run -n citrus poetry install
 conda activate citrus
 ```
 
+## Quickstart
+
+```
+# Visualize a model
+citrus plot -c example-files/linear_additive.json
+```
+
 ## Full documentation
 
 [User Guide](doc/user_guide.md)
