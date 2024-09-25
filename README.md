@@ -2,7 +2,7 @@
 
 CITRUS, the CIs and Trans inteRaction nUmerical Simulator, is a collection of tools for simulating phenotypes with complex genetic architectures that go beyond simple models that assume linear, additive contributions of individual SNPs. The goal of CITRUS is to provide better simulations for benchmarking GWAS/PRS models.
 
-The key component of CITRUS is the ability to specify custom models relating genotypes to phenotypes. See the [user Guide](doc/user_guide.md) for details on specifying models. Example models are provided in `example-files/`.
+The key component of CITRUS is the ability to specify custom models relating genotypes to phenotypes. See the [designing simulations](doc/designing_simulations.md) for details on specifying models. Example models are provided in `example-files/`.
 
 CITRUS provides multiple command line utilities for performing and analyzing simulations:
 
