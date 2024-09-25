@@ -4,6 +4,7 @@ See CITRUS/doc/CLI.md and individual tools for more information.
 """
 
 import click
+import sys
         
 @click.group()
 @click.version_option(package_name="citrus", message="%(version)s")
@@ -123,27 +124,35 @@ citrus plot
     help="Output filename (without extension) for saving plot."
 )
 @click.option(
-	'-f', '--format',
+	'-f', '--fmt',
 	type=click.Choice(['jpg', 'png', 'svg']),
 	default='png', 
 	show_default=True, 
 	help="File format and extension for the output plot."
 )
-def plot(config_file: str, out: str, format: str):
+@click.option(
+	'--verbose',
+	is_flag=True,
+	help="Print extra output to the terminal",
+	default=False
+)
+def plot(config_file: str, out: str, fmt: str, verbose: str):
 	"""
 	Save a plot of the network defined by the simulation config file.
 
 	Note: Colors correspond to cis, inheritance, and trans effects
 	"""
 	
-	from pheno_sim import plot
+	from . import plot
 	from json import load
 
 	with open(config_file, "r") as f:
 		config = load(f)
 	
 	# Create a plot of the model
-	plot.visualize(input_spec=config, filename=out, img_format=format)
+	retcode = plot.visualize(input_spec=config, filename=out, 
+		img_format=fmt, verbose=verbose)
+	sys.exit(retcode)
 
 """
 citrus shap
