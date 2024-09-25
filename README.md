@@ -1,10 +1,16 @@
 # CITRUS🍊: A phenotype simulation tool with the flexibility to model complex interactions
 
-CITRUS, the CIs and Trans inteRaction nUmerical Simulator, is a tool for simulating phenotypes with complex genetic archetectures that go beyond simple models that assume linear, additive contributions of individual SNPs. The goal of this tool is to provide better simulations for benchmarking GWAS/PRS models.
+CITRUS, the CIs and Trans inteRaction nUmerical Simulator, is a collection of tools for simulating phenotypes with complex genetic architectures that go beyond simple models that assume linear, additive contributions of individual SNPs. The goal of CITRUS is to provide better simulations for benchmarking GWAS/PRS models.
+
+The key component of CITRUS is the ability to specify custom models relating genotypes to phenotypes. See the [user Guide](doc/user_guide.md) for details on specifying models. Example models are provided in `example-files/`.
+
+CITRUS provides multiple command line utilities for performing and analyzing simulations:
+
+* [citrus simulate](doc/cli.md#simulate): Perform a simulation using a given model
+* [citrus plot](doc/cli.md#plot): Visualize a phenotype model
+* [citrus shap](doc/cli.md#shap): Generate SHAP values for a model
 
 ## Installation
-
-For plotting models, you will need to have [graphviz](https://graphviz.org/) installed.
 
 ### With conda 
 
@@ -31,6 +37,8 @@ conda run -n citrus poetry install
 conda activate citrus
 ```
 
+Note, for plotting models, you will need to have [graphviz](https://graphviz.org/) installed.
+
 ## Quickstart
 
 ```
@@ -40,9 +48,10 @@ citrus plot -c example-files/linear_additive.json
 
 ## Full documentation
 
+[Command Line Interface](doc/cli.md)
+
 [User Guide](doc/user_guide.md)
 
 [Designing Simulations](doc/designing_simulations.md)
 
-[Command Line Interface](doc/cli.md)
 
