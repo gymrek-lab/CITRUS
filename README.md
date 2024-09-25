@@ -2,14 +2,6 @@
 
 CITRUS, the CIs and Trans inteRaction nUmerical Simulator, is a tool for simulating phenotypes with complex genetic archetectures that go beyond simple models that assume linear, additive contributions of individual SNPs. The goal of this tool is to provide better simulations for benchmarking GWAS/PRS models.
 
-## Getting Started
-
-[User Guide](doc/user_guide.md)
-
-[Designing Simulations](doc/designing_simulations.md)
-
-[Command Line Interface](doc/cli.md)
-
 ## Installation
 
 For plotting models, you will need to have [graphviz](https://graphviz.org/) installed.
@@ -38,3 +30,12 @@ conda env create -n citrus -f dev-env.yml
 conda run -n citrus poetry install
 conda activate citrus
 ```
+
+## Full documentation
+
+[User Guide](doc/user_guide.md)
+
+[Designing Simulations](doc/designing_simulations.md)
+
+[Command Line Interface](doc/cli.md)
+
