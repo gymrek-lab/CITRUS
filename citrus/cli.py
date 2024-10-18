@@ -1,59 +1,19 @@
 """CITRUS command line interface.
 
-See CITRUS/doc/CLI.md for more information.
-
-This tool can be used to run the simulation based on either:
-
-	1. A single configuration JSON file that specifies paths to genotype
-		data files.
-		
-		CITRUS_sim -c <path_to_config_file> 
-		
-	2. A single configuration JSON file and a list of paths to genotype
-		data files. The list of paths must be the same length as the
-		number of input source files in the configuration file (i.e. 
-		the length of the list under the 'input' key in the JSON). Any
-		paths in the configuration file will be ignored. The -g or
-		--genotype_files flag can be used to specify the paths to the
-		genotype files.
-		
-		CITRUS_sim -c <path_to_config_file> -g <path_to_genotype_file> \\
-			<path_to_genotype_file> ...
-			
-		CITRUS_sim -c <path_to_config_file> -g <path_to_genotype_file>
-
-Output:
-
-	If no additional flags are provided, output will be written to the
-	current working directory. The output will be a CSV file (output.csv)
-	containing sample IDs and all corresponding values from the simulation,
-	and a JSON file (sim_config.json) containing the simulation configuration
-	(including any random selections made by nodes).
-
-	If the -o or --output_dir flag is provided, if the directory does not
-	exist it will be created, and the output files will be saved to it. By
-	default the output files will be named output.csv and sim_config.json,
-	but these can be changed with the -f or --output_file_name and -j or
-	--output_config_json flags, respectively.
-
-	Output file will by default be a comma seperated CSV file. Use -t or
-	--tsv flag to instead save as a tab seperated TSV file.
-
-Example Usage:
-
-	CITRUS_sim -c config.json -o sim_results/output_dir
-
-	CITRUS_sim -c config.json -g genotype_file_1 genotype_file_2 \\
-		-o sim_results/output_dir -t -f my_output.tsv -j my_sim_config.json
+See CITRUS/doc/CLI.md and individual tools for more information.
 """
 
 import click
+import sys
         
 @click.group()
 @click.version_option(package_name="citrus", message="%(version)s")
 def citrus():
 	pass
 
+"""
+citrus simulate
+"""
 @citrus.command(no_args_is_help=True)
 @click.option(
 	'-c', '--config_file', 
@@ -147,6 +107,9 @@ def simulate(
 		sep="\t" if tsv else ","
 	)
 
+"""
+citrus plot
+"""
 @citrus.command(no_args_is_help=True)
 @click.option(
 	'-c', '--config_file', 
@@ -161,28 +124,39 @@ def simulate(
     help="Output filename (without extension) for saving plot."
 )
 @click.option(
-	'-f', '--format',
+	'-f', '--fmt',
 	type=click.Choice(['jpg', 'png', 'svg']),
 	default='png', 
 	show_default=True, 
 	help="File format and extension for the output plot."
 )
-def plot(config_file: str, out: str, format: str):
+@click.option(
+	'--verbose',
+	is_flag=True,
+	help="Print extra output to the terminal",
+	default=False
+)
+def plot(config_file: str, out: str, fmt: str, verbose: str):
 	"""
 	Save a plot of the network defined by the simulation config file.
 
 	Note: Colors correspond to cis, inheritance, and trans effects
 	"""
 	
-	from pheno_sim import plot
+	from . import plot
 	from json import load
 
 	with open(config_file, "r") as f:
 		config = load(f)
 	
 	# Create a plot of the model
-	plot.visualize(input_spec=config, filename=out, img_format=format)
+	retcode = plot.visualize(input_spec=config, filename=out, 
+		img_format=fmt, verbose=verbose)
+	sys.exit(retcode)
 
+"""
+citrus shap
+"""
 @citrus.command(no_args_is_help=True)
 @click.option(
 	'-c', '--config_file', 
