@@ -52,12 +52,8 @@ Example:
 
 """
 
-from typing import Any
-import numpy as np
-
-from .base_input_source import BaseInputSource
 from .hail_input import HailInputSource
-
+from ...utils import MSG
 
 class InputRunner:
 	""" Steps up and runs the input nodes step of the simulation.
@@ -100,7 +96,7 @@ class InputRunner:
 					aliases and the values are numpy arrays of the input
 					node values.
 		"""
-		print('Loading input data...')
+		MSG('Loading input data...')
 		
 		# Simple case of only one input source file
 		if len(self.input_sources) == 1:
@@ -140,50 +136,3 @@ class InputRunner:
 			input_source.input_config.copy() 
 			for input_source in self.input_sources
 		]
-	
-
-if __name__ == '__main__':
-
-	# For testing
-	sim_config = {
-		"input": [
-			{
-				"file": "../../pheno_sim_demos/1000_genomes_data/ALL.chr19.phase3_shapeit2_mvncall_integrated_v5b.20130502.genotypes.vcf.gz",
-				"file_format": "vcf",
-				"reference_genome": "GRCh37",
-				"force_bgz": True,
-				"input_nodes": [
-					{
-						"alias": "LDLR_upstream_variant",
-						"type": "SNP",
-						"chr": "19",
-						"pos": 11197261
-					},
-					{
-						"alias": "LDLR_intron_A_variants",
-						"type": "SNP",
-						"chr": "19",
-						"pos": [11202306, 11206575]
-					},
-					{
-						"alias": "LDLR_intron_B_variant",
-						"type": "SNP",
-						"chr": "19",
-						"pos": 11216561
-					},
-					{
-						"alias": "LDLR_missense_variants",
-						"type": "SNP",
-						"chr": "19",
-						"pos": [11242133, 11222300]
-					}
-				]
-			}
-		]
-	}
-	
-	input_runner = InputRunner(sim_config['input'])
-
-	sample_ids, input_node_vals = input_runner()
-
-	print(input_runner.get_config())
