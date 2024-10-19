@@ -55,7 +55,8 @@ Example:
 from typing import Any
 import numpy as np
 
-from pheno_sim.input_nodes import BaseInputSource, HailInputSource
+from .base_input_source import BaseInputSource
+from .hail_input import HailInputSource
 
 
 class InputRunner:

@@ -8,7 +8,8 @@ to register.
 
 import inspect
 
-from pheno_sim import AbstractBaseFunctionNode, func_nodes
+from ..base_nodes import AbstractBaseFunctionNode
+from .. import func_nodes
 
 
 class FunctionNodeBuilder:

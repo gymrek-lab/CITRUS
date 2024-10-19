@@ -7,7 +7,7 @@ import re
 import pandas as pd
 import shap
 
-from pheno_sim.shap import SHAPWrapper
+from ..shap.shap_wrapper import SHAPWrapper
 
 
 def run_SHAP(

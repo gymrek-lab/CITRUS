@@ -17,8 +17,8 @@ Classes:
 
 import numpy as np
 
-from pheno_sim.data_types import HaplotypeValues
-from pheno_sim.base_nodes import AbstractBaseCombineFunctionNode
+from ..data_types import HaplotypeValues
+from ..base_nodes import AbstractBaseCombineFunctionNode
 
 
 class AdditiveCombine(AbstractBaseCombineFunctionNode):

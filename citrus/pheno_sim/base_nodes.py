@@ -3,7 +3,7 @@
 from abc import ABC, abstractmethod
 from typing import List, Dict, Union, TypedDict
 import numpy as np
-from pheno_sim.data_types import HaplotypeValues, Values, ValuesDict
+from .data_types import HaplotypeValues, Values, ValuesDict
 
 
 class AbstractBaseInputNode(ABC):

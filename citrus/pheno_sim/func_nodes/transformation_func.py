@@ -16,7 +16,7 @@ Classes:
 
 import numpy as np
 
-from pheno_sim.base_nodes import AbstractBaseFunctionNode
+from ..base_nodes import AbstractBaseFunctionNode
 
 
 class ReLU(AbstractBaseFunctionNode):

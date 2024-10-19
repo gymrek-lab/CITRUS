@@ -3,7 +3,7 @@
 import hail as hl
 import pandas as pd
 
-from pheno_sim.input_nodes import HailInputSource
+from ..input_nodes.hail_input import HailInputSource
 
 
 class InputVariantInfo:

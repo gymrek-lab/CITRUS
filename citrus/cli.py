@@ -82,7 +82,7 @@ def simulate(
 	"""
     
 	from json import load
-	from pheno_sim import PhenoSimulation
+	from .pheno_sim import pheno_simulation
 
 	with open(config_file, "r") as f:
 		config = load(f)
@@ -91,9 +91,8 @@ def simulate(
 		for i, path in enumerate(genotype_files):
 			config['input'][i]['file'] = path
 
-
 	# Create simulation
-	sim = PhenoSimulation(config)
+	sim = pheno_simulation.PhenoSimulation(config)
 	
 	# Run simulation
 	sim_vals = sim.run_simulation()
@@ -218,13 +217,13 @@ def shap(
 	"""
 	Computes the local shapley values of a model.
 	"""
-	from pheno_sim import PhenoSimulation
-	from pheno_sim.shap import run_SHAP
+	from .pheno_sim import pheno_simulation
+	from .pheno_sim.shap import run_SHAP
 	from json import load
 
 	phenotype_key = 'phenotype'
 
-	simulation = PhenoSimulation.from_JSON_file(config_file)
+	simulation = pheno_simulation.PhenoSimulation.from_JSON_file(config_file)
 	
 	with open(config_file, "r") as f:
 		config = load(f)

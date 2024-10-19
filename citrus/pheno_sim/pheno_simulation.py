@@ -46,11 +46,10 @@ from typing import Dict, List
 import numpy as np
 import pandas as pd
 
-from pheno_sim.data_types import ValuesDict
-from pheno_sim.base_nodes import AbstractBaseFunctionNode
-from pheno_sim.func_nodes import FunctionNodeBuilder
-from pheno_sim.input_nodes import InputRunner
-
+from .data_types import ValuesDict
+from .base_nodes import AbstractBaseFunctionNode
+from .func_nodes import FunctionNodeBuilder
+from .input_nodes import InputRunner
 
 class PhenoSimulation:
 	""" Object that runs the simulation. Also handles creating function nodes.

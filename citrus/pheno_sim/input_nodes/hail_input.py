@@ -13,8 +13,8 @@ import inspect
 import numpy as np
 import hail as hl
 
-from pheno_sim.input_nodes import BaseInputSource
-from pheno_sim.data_types import Values, HaplotypeValues
+from .base_input_source import BaseInputSource
+from ..data_types import Values, HaplotypeValues
 
 
 class HailInputSource(BaseInputSource):

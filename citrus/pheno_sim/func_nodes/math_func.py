@@ -11,8 +11,8 @@ Classes:
 
 import numpy as np
 
-from pheno_sim.data_types import HaplotypeValues, Values, ValuesDict
-from pheno_sim.base_nodes import AbstractBaseFunctionNode
+from ..data_types import HaplotypeValues, Values, ValuesDict
+from ..base_nodes import AbstractBaseFunctionNode
 
 
 class Identity(AbstractBaseFunctionNode):
