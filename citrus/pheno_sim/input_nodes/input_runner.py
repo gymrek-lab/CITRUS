@@ -52,6 +52,7 @@ Example:
 
 """
 
+import numpy as np
 from .hail_input import HailInputSource
 from ...utils import MSG
 
@@ -69,6 +70,7 @@ class InputRunner:
 	
 		self.input_sources = []
 
+		MSG('Initializing input sources...')
 		for input_source_config in input_config:
 			if (
 				'engine' not in input_source_config
@@ -81,6 +83,13 @@ class InputRunner:
 				raise ValueError(
 					'Invalid input engine: ' + input_source_config['engine']
 				)
+
+		MSG('Getting samples to use...')
+		sample_ids = set()
+		for input_source in self.input_sources:
+			sample_ids |= set(input_source.input_sample_ids)
+		self.sample_ids = list(sample_ids)
+		MSG("Loaded {nsamp} ids".format(nsamp=len(self.sample_ids)))
 			
 	def __call__(self):
 		""" Runs the input nodes for the simulation.
@@ -97,34 +106,16 @@ class InputRunner:
 					node values.
 		"""
 		MSG('Loading input data...')
-		
-		# Simple case of only one input source file
-		if len(self.input_sources) == 1:
-			input_node_vals = self.input_sources[0].load_inputs()
-			sample_ids = self.input_sources[0].input_sample_ids.copy()
-		else:
-			# Load all values
-			input_vals = []
-			for input_source in self.input_sources:
-				input_vals.append(input_source.load_inputs())
+		input_node_vals = {}
+		for input_source in self.input_sources:
+			for node in input_source.input_config["input_nodes"]:
+				node_alias = node["alias"]
+				input_node_vals[node_alias] = \
+					input_source.load_input_node(node_alias, self.sample_ids)
 
-			# Get common subset of sample ids
-			sample_ids = set()
-			for input_source in self.input_sources:
-				sample_ids |= set(input_source.input_sample_ids)
-			sample_ids = list(sample_ids)
-
-			# Subset input values to common sample ids
-			input_node_vals = {}
-
-			for input_source in self.input_sources:
-				input_node_vals.update(
-					input_source.subset_inputs(sample_ids, input_vals)
-				)
-			
 		# Return input data
-		return sample_ids, input_node_vals
-	
+		return np.array(self.sample_ids), input_node_vals
+
 	def get_config(self):
 		""" Returns the input config for the simulation.
 		
