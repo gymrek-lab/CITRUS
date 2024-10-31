@@ -1,6 +1,11 @@
 # Benchmarking
 benchmarking*/
 
+# Large plots
+paper/pheno_sim/sim_configs/complex_pheno_1.png
+paper/pheno_sim/sim_configs/complex_pheno_1_noise.png
+paper/pheno_sim/sim_configs/complex_pheno_4.png
+
 # Paper eval
 paper/data/
 paper/output/
