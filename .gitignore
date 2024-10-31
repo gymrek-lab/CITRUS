@@ -1,16 +1,15 @@
-# Benchmarking data
-# benchmarking/data/citrus_output/
-# benchmarking/data/citrus_phenos/
-# benchmarking/data/splits/
-# benchmarking/data/ukb/*
-# !benchmarking/data/ukb/
-# !benchmarking/data/ukb/*.py
-
-# benchmarking/prs/plink_output/*
-# !benchmarking/prs/plink_output/
-# !benchmarking/prs/plink_output/*.py
-# benchmarking/prs/prsice2_output/
+# Benchmarking
 benchmarking*/
+
+# Large plots
+paper/pheno_sim/sim_configs/complex_pheno_1.png
+paper/pheno_sim/sim_configs/complex_pheno_1_noise.png
+paper/pheno_sim/sim_configs/complex_pheno_4.png
+
+# Paper eval
+paper/data/
+paper/output/
+paper/pheno_sim/citrus*/
 
 # Tools
 benchmarking/PRSice2/

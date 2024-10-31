@@ -1,0 +1,39 @@
+{
+    "input": [
+        {
+            "file": "../data/geno_data/vcf/phased_chr19.vcf",
+            "file_format": "vcf",
+            "reference_genome": "GRCh37",
+            "input_nodes": [
+                {
+                    "alias": "LOF_vars",
+                    "type": "SNP",
+                    "chr": "19",
+                    "pos": [
+                        24368053,
+                        24451636
+                    ]
+                }
+            ],
+            "sample_id_field": "s"
+        }
+    ],
+    "simulation_steps": [
+        {
+            "type": "AllReduce",
+            "alias": "protein_function",
+            "input_alias": "LOF_vars",
+            "comparison": "lt"
+        },
+        {
+            "type": "MaxCombine",
+            "alias": "gene_function",
+            "input_alias": "protein_function"
+        },
+        {
+            "type": "StandardScaler",
+            "alias": "phenotype",
+            "input_alias": "gene_function"
+        }
+    ]
+}

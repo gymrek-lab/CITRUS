@@ -1,0 +1,431 @@
+{
+	"input": [
+		{
+			"file": "../data/ukb/vcf/phased_chr19.vcf",
+			"file_format": "vcf",
+			"reference_genome": "GRCh37",
+			"input_nodes": [
+				{
+					"alias": "ENSG00000267443_transcribed",
+					"type": "SNP",
+					"chr": "19",
+					"pos": [
+						375779,
+						376008,
+						376382,
+						376585,
+						376653,
+						378566,
+						378597,
+						379164,
+						379227,
+						384724,
+						388463,
+						390319,
+						391125,
+						392840,
+						396396,
+						398636,
+						399132
+					]
+				},
+				{
+					"alias": "ENSG00000267443_promoter",
+					"type": "SNP",
+					"chr": "19",
+					"pos": 399170
+				},
+				{
+					"alias": "CYP4F12_common",
+					"type": "SNP",
+					"chr": "19",
+					"pos": [
+						15797532,
+						15800331,
+						15807305,
+						15807884,
+						15807984,
+						15830583,
+						15839081,
+						15839459
+					]
+				},
+				{
+					"alias": "CYP4F12_rare",
+					"type": "SNP",
+					"chr": "19",
+					"pos": [
+						15807491,
+						15782397,
+						15850632,
+						15839365,
+						15887706
+					]
+				},
+				{
+					"alias": "EID2B_common",
+					"type": "SNP",
+					"chr": "19",
+					"pos": [
+						39994711,
+						40000638,
+						40009683,
+						40008118,
+						40047633,
+						40093111,
+						40116048,
+						40023308,
+						40163241
+					]
+				},
+				{
+					"alias": "EID2B_deleterious",
+					"type": "SNP",
+					"chr": "19",
+					"pos": [
+						39991203,
+						39980412,
+						40058427,
+						40075510,
+						39996347,
+						40081651,
+						40092547
+					]
+				}
+			],
+			"sample_id_field": "s"
+		}
+	],
+	"simulation_steps": [
+		{
+			"type": "RandomConstant",
+			"alias": "ENSG00000267443_betas",
+			"input_match_size": "ENSG00000267443_transcribed",
+			"dist_name": "normal",
+			"dist_kwargs": {
+				"loc": 0.0,
+				"scale": 0.5
+			},
+			"by_feat": true
+		},
+		{
+			"type": "Product",
+			"alias": "ENSG00000267443_effects",
+			"input_aliases": [
+				"ENSG00000267443_betas",
+				"ENSG00000267443_transcribed"
+			]
+		},
+		{
+			"type": "SumReduce",
+			"alias": "ENSG00000267443_effect_sum",
+			"input_alias": "ENSG00000267443_effects"
+		},
+		{
+			"type": "StandardScaler",
+			"alias": "ENSG00000267443_scaled",
+			"input_alias": "ENSG00000267443_effect_sum"
+		},
+		{
+			"type": "Sigmoid",
+			"alias": "ENSG00000267443_damped_effect",
+			"input_alias": "ENSG00000267443_scaled"
+		},
+		{
+			"type": "Distribution",
+			"alias": "ENSG00000267443_promoter_multiplier",
+			"input_match_size": "ENSG00000267443_damped_effect",
+			"dist_name": "normal",
+			"dist_kwargs": {
+				"loc": 0.8,
+				"scale": 0.025
+			}
+		},
+		{
+			"type": "Product",
+			"alias": "ENSG00000267443_effect_with_promoter",
+			"input_aliases": [
+				"ENSG00000267443_damped_effect",
+				"ENSG00000267443_promoter_multiplier"
+			]
+		},
+		{
+			"type": "IfElse",
+			"alias": "ENSG00000267443_haplotype_values",
+			"input_cond_vals": "ENSG00000267443_promoter",
+			"input_if_vals": "ENSG00000267443_effect_with_promoter",
+			"input_else_vals": "ENSG00000267443_damped_effect"
+		},
+		{
+			"type": "MeanCombine",
+			"alias": "ENSG00000267443_no_noise",
+			"input_alias": "ENSG00000267443_haplotype_values",
+			"mean_type": "geometric"
+		},
+		{
+			"type": "Heritability",
+			"alias": "ENSG00000267443",
+			"input_alias": "ENSG00000267443_no_noise",
+			"heritability": 0.8
+		},
+		{
+			"type": "RandomConstant",
+			"alias": "CYP4F12_common_betas",
+			"input_match_size": "CYP4F12_common",
+			"dist_name": "normal",
+			"dist_kwargs": {
+				"loc": 0.0,
+				"scale": 0.2
+			},
+			"by_feat": true
+		},
+		{
+			"type": "RandomConstant",
+			"alias": "CYP4F12_rare_betas",
+			"input_match_size": "CYP4F12_rare",
+			"dist_name": "normal",
+			"dist_kwargs": {
+				"loc": 0.0,
+				"scale": 0.4
+			},
+			"by_feat": true
+		},
+		{
+			"type": "ReLU",
+			"alias": "CYP4F12_rare_betas_pos",
+			"input_alias": "CYP4F12_rare_betas",
+			"neg_slope": -1.0
+		},
+		{
+			"type": "Product",
+			"alias": "CYP4F12_common_effects",
+			"input_aliases": [
+				"CYP4F12_common_betas",
+				"CYP4F12_common"
+			]
+		},
+		{
+			"type": "Product",
+			"alias": "CYP4F12_rare_effects",
+			"input_aliases": [
+				"CYP4F12_rare_betas_pos",
+				"CYP4F12_rare"
+			]
+		},
+		{
+			"type": "Concatenate",
+			"alias": "CYP4F12_effects",
+			"input_aliases": [
+				"CYP4F12_common_effects",
+				"CYP4F12_rare_effects"
+			]
+		},
+		{
+			"type": "SumReduce",
+			"alias": "CYP4F12_hap_val",
+			"input_alias": "CYP4F12_effects"
+		},
+		{
+			"type": "Tanh",
+			"alias": "CYP4F12_hap_val_damped",
+			"input_alias": "CYP4F12_hap_val"
+		},
+		{
+			"type": "MaxCombine",
+			"alias": "CYP4F12_max",
+			"input_alias": "CYP4F12_hap_val_damped"
+		},
+		{
+			"type": "MeanCombine",
+			"alias": "CYP4F12_mean",
+			"input_alias": "CYP4F12_hap_val_damped"
+		},
+		{
+			"type": "Concatenate",
+			"alias": "CYP4F12_comb_vals",
+			"input_aliases": [
+				"CYP4F12_max",
+				"CYP4F12_mean"
+			]
+		},
+		{
+			"type": "Constant",
+			"alias": "CYP4F12_comb_weights",
+			"constant": [
+				0.8,
+				0.2
+			],
+			"input_match_size": "CYP4F12_comb_vals"
+		},
+		{
+			"type": "Product",
+			"alias": "CYP4F12_comb_vals_weighted",
+			"input_aliases": [
+				"CYP4F12_comb_vals",
+				"CYP4F12_comb_weights"
+			]
+		},
+		{
+			"type": "MeanReduce",
+			"alias": "CYP4F12_no_noise",
+			"input_alias": "CYP4F12_comb_vals_weighted"
+		},
+		{
+			"type": "Heritability",
+			"alias": "CYP4F12",
+			"input_alias": "CYP4F12_no_noise",
+			"heritability": 0.8
+		},
+		{
+			"type": "RandomConstant",
+			"alias": "EID2B_common_betas",
+			"input_match_size": "EID2B_common",
+			"dist_name": "uniform",
+			"dist_kwargs": {
+				"low": 0.01,
+				"high": 0.25
+			},
+			"by_feat": true
+		},
+		{
+			"type": "Product",
+			"alias": "EID2B_common_effects",
+			"input_aliases": [
+				"EID2B_common_betas",
+				"EID2B_common"
+			]
+		},
+		{
+			"type": "SumReduce",
+			"alias": "EID2B_common_effects_sum",
+			"input_alias": "EID2B_common_effects"
+		},
+		{
+			"type": "GaussianNoise",
+			"alias": "EID2B_common_effects_sum_w_noise_unbounded",
+			"input_alias": "EID2B_common_effects_sum",
+			"noise_std": 0.025
+		},
+		{
+			"type": "Clip",
+			"alias": "EID2B_common_effects_sum_w_noise",
+			"input_alias": "EID2B_common_effects_sum_w_noise_unbounded",
+			"min_val": 0
+		},
+		{
+			"type": "RandomConstant",
+			"alias": "EID2B_deleterious_multiplier",
+			"input_match_size": "EID2B_deleterious",
+			"dist_name": "normal",
+			"dist_kwargs": {
+				"loc": 0.3,
+				"scale": 0.05
+			},
+			"by_feat": true
+		},
+		{
+			"type": "Constant",
+			"alias": "constant_1",
+			"input_match_size": "EID2B_deleterious",
+			"constant": 1.0
+		},
+		{
+			"type": "IfElse",
+			"alias": "EID2B_multiplier_by_variant",
+			"input_cond_vals": "EID2B_deleterious",
+			"input_if_vals": "EID2B_deleterious_multiplier",
+			"input_else_vals": "constant_1"
+		},
+		{
+			"type": "MinReduce",
+			"alias": "EID2B_deleterious_multiplier_val",
+			"input_alias": "EID2B_multiplier_by_variant"
+		},
+		{
+			"type": "Product",
+			"alias": "EID2B_hap_val",
+			"input_aliases": [
+				"EID2B_deleterious_multiplier_val",
+				"EID2B_common_effects_sum_w_noise"
+			]
+		},
+		{
+			"type": "MeanCombine",
+			"alias": "EID2B_no_noise",
+			"input_alias": "EID2B_hap_val"
+		},
+		{
+			"type": "Heritability",
+			"alias": "EID2B",
+			"input_alias": "EID2B_no_noise",
+			"heritability": 0.8
+		},
+		{
+			"type": "ReLU",
+			"alias": "ReLU_EID2B",
+			"input_alias": "EID2B",
+			"threshold": 0.2,
+			"neg_slope": 1.0,
+			"pos_slope": 1.2
+		},
+		{
+			"type": "Product",
+			"alias": "EID2B_ENSG00000267443_interaction",
+			"input_aliases": [
+				"ReLU_EID2B",
+				"ENSG00000267443"
+			]
+		},
+		{
+			"type": "StandardScaler",
+			"alias": "zscore_ENSG00000267443",
+			"input_alias": "ENSG00000267443"
+		},
+		{
+			"type": "StandardScaler",
+			"alias": "zscore_CYP4F12",
+			"input_alias": "CYP4F12"
+		},
+		{
+			"type": "Concatenate",
+			"alias": "concat_zscores",
+			"input_aliases": [
+				"zscore_ENSG00000267443",
+				"zscore_CYP4F12"
+			]
+		},
+		{
+			"type": "Softmax",
+			"alias": "softmax_zscores",
+			"input_alias": "concat_zscores"
+		},
+		{
+			"type": "MinReduce",
+			"alias": "min_softmax",
+			"input_alias": "softmax_zscores"
+		},
+		{
+			"type": "Product",
+			"alias": "EID2B_relative_abundance_interaction",
+			"input_aliases": [
+				"min_softmax",
+				"EID2B"
+			]
+		},
+		{
+			"type": "Sum",
+			"alias": "no_noise_phenotype",
+			"input_aliases": [
+				"CYP4F12",
+				"EID2B_ENSG00000267443_interaction",
+				"EID2B_relative_abundance_interaction"
+			]
+		},
+		{
+			"type": "Heritability",
+			"alias": "phenotype",
+			"input_alias": "no_noise_phenotype",
+			"heritability": 0.5
+		}
+	]
+}

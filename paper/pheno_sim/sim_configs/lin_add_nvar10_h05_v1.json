@@ -1,0 +1,65 @@
+{
+    "input": [
+        {
+            "file": "../data/ukb/vcf/phased_chr19.vcf",
+            "file_format": "vcf",
+            "reference_genome": "GRCh37",
+            "input_nodes": [
+                {
+                    "alias": "variants",
+                    "type": "SNP",
+                    "chr": "19",
+                    "pos": [
+                        37933936,
+                        54596619,
+                        58547516,
+                        19304899,
+                        41356246,
+                        35615179,
+                        2238667,
+                        50271502,
+                        29368930,
+                        49929193
+                    ]
+                }
+            ]
+        }
+    ],
+    "simulation_steps": [
+        {
+            "type": "RandomConstant",
+            "alias": "variants_betas",
+            "input_match_size": "variants",
+            "dist_name": "normal",
+            "dist_kwargs": {
+                "loc": 0.0,
+                "scale": 1.0
+            },
+            "by_feat": true
+        },
+        {
+            "type": "Product",
+            "alias": "variant_effects",
+            "input_aliases": [
+                "variants_betas",
+                "variants"
+            ]
+        },
+        {
+            "type": "AdditiveCombine",
+            "alias": "combined_variant_effects",
+            "input_alias": "variant_effects"
+        },
+        {
+            "type": "SumReduce",
+            "alias": "no_noise_phenotype",
+            "input_alias": "combined_variant_effects"
+        },
+        {
+            "type": "Heritability",
+            "alias": "phenotype",
+            "input_alias": "no_noise_phenotype",
+            "heritability": 0.05
+        }
+    ]
+}
