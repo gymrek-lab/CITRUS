@@ -1,0 +1,70 @@
+{
+	"input": [
+		{
+			"file": "example-files/example_gts_chr19.vcf.gz",
+			"file_format": "vcf",
+			"reference_genome": "GRCh37",
+			"force_bgz": true,
+			"input_nodes": [
+				{
+					"alias": "chr19_280540_G_A",
+					"type": "SNP",
+					"chr": "19",
+					"pos": 280540
+				},
+				{
+					"alias": "chr19_523746_C_T",
+					"type": "SNP",
+					"chr": "19",
+					"pos": [523746]
+				}
+			]
+		}
+	],
+	"simulation_steps": [
+		{
+			"type": "Constant",
+			"alias": "chr19_280540_G_A_beta",
+			"input_match_size": "chr19_280540_G_A",
+			"constant": 0.1
+		},
+		{
+			"type": "Constant",
+			"alias": "chr19_523746_C_T_beta",
+			"input_match_size": "chr19_523746_C_T",
+			"constant": 0.3
+		},		
+		{
+			"type": "Product",
+			"alias": "chr19_280540_G_A_effect",
+			"input_aliases": [
+				"chr19_280540_G_A_beta", "chr19_280540_G_A"
+			]
+		},
+		{
+			"type": "Product",
+			"alias": "chr19_523746_C_T_effect",
+			"input_aliases": [
+				"chr19_523746_C_T_beta", "chr19_523746_C_T"
+			]
+		},
+		{
+			"type": "Concatenate",
+			"alias": "effects_by_haplotype",
+			"input_aliases": [
+				"chr19_280540_G_A_effect",
+				"chr19_523746_C_T_effect"
+			]
+		},
+		{
+			"type": "AdditiveCombine",
+			"alias": "effects",
+			"input_alias": "effects_by_haplotype"
+		},
+		{
+			"type": "SumReduce",
+			"alias": "phenotype",
+			"input_alias": "effects"
+		}
+	]
+}

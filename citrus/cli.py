@@ -1,35 +1,19 @@
 """CITRUS command line interface.
 
-See CITRUS/doc/CLI.md for more information.
-
-This tool can be used to run the simulation based on either:
-
-	1. A single configuration JSON file that specifies paths to genotype
-		data files.
-		
-		CITRUS_sim -c <path_to_config_file> 
-		
-	2. A single configuration JSON file and a list of paths to genotype
-		data files. The list of paths must be the same length as the
-		number of input source files in the configuration file (i.e. 
-		the length of the list under the 'input' key in the JSON). Any
-		paths in the configuration file will be ignored. The -g or
-		--genotype_files flag can be used to specify the paths to the
-		genotype files.
-		
-		CITRUS_sim -c <path_to_config_file> -g <path_to_genotype_file> \\
-			<path_to_genotype_file> ...
-			
-		CITRUS_sim -c <path_to_config_file> -g <path_to_genotype_file>
+See CITRUS/doc/CLI.md and individual tools for more information.
 """
 
 import click
+import sys
         
 @click.group()
 @click.version_option(package_name="citrus", message="%(version)s")
 def citrus():
 	pass
 
+"""
+citrus simulate
+"""
 @citrus.command(no_args_is_help=True)
 @click.option(
 	'-c', '--config_file', 
@@ -123,6 +107,9 @@ def simulate(
 		sep="\t" if tsv else ","
 	)
 
+"""
+citrus plot
+"""
 @citrus.command(no_args_is_help=True)
 @click.option(
 	'-c', '--config_file', 
@@ -137,28 +124,39 @@ def simulate(
     help="Output filename (without extension) for saving plot."
 )
 @click.option(
-	'-f', '--format',
+	'-f', '--fmt',
 	type=click.Choice(['jpg', 'png', 'svg']),
 	default='png', 
 	show_default=True, 
 	help="File format and extension for the output plot."
 )
-def plot(config_file: str, out: str, format: str):
+@click.option(
+	'--verbose',
+	is_flag=True,
+	help="Print extra output to the terminal",
+	default=False
+)
+def plot(config_file: str, out: str, fmt: str, verbose: str):
 	"""
 	Save a plot of the network defined by the simulation config file.
 
 	Note: Colors correspond to cis, inheritance, and trans effects
 	"""
 	
-	from pheno_sim import plot
+	from . import plot
 	from json import load
 
 	with open(config_file, "r") as f:
 		config = load(f)
 	
 	# Create a plot of the model
-	plot.visualize(input_spec=config, filename=out, img_format=format)
+	retcode = plot.visualize(input_spec=config, filename=out, 
+		img_format=fmt, verbose=verbose)
+	sys.exit(retcode)
 
+"""
+citrus shap
+"""
 @citrus.command(no_args_is_help=True)
 @click.option(
 	'-c', '--config_file', 
@@ -177,6 +175,16 @@ def plot(config_file: str, out: str, format: str):
 		"the order they are provided. (ex: -g genotypes1.vcf -g genotypes2.vcf"
 		" would assign genotypes1.vcf to the first input source in the config's"
 		" 'input' list and genotypes2.vcf to the second input source)."
+	)
+)
+@click.option(
+	'-i', '--included_samples',
+	type=str,
+	default=None,
+	show_default=True,
+	help=(
+		"Path to file containing sample IDs to include in the SHAP analysis. "
+		"File should contain one sample ID per line."
 	)
 )
 @click.option(
@@ -202,12 +210,13 @@ def plot(config_file: str, out: str, format: str):
 )
 def shap(
 	config_file: str, 
-	genotype_files: str, 
+	genotype_files: str,
+	included_samples: str,
 	save_path: str, 
 	save_config_path: str
 ):
 	"""
-	Computes the local and global shapley values of a model.
+	Computes the local shapley values of a model.
 	"""
 	from pheno_sim import PhenoSimulation
 	from pheno_sim.shap import run_SHAP
@@ -224,9 +233,21 @@ def shap(
 		for i, path in enumerate(genotype_files):
 			config['input'][i]['file'] = path
 
-	run_SHAP(
-		simulation,
-		phenotype_key,
-		save_path,
-		save_config_path,
-	)
+	# Load optional sample IDs
+	if included_samples:
+		with open(included_samples, "r") as f:
+			included_samples = [line.strip() for line in f]	# type: ignore
+		run_SHAP(
+			simulation,
+			phenotype_key,
+			included_samples,
+			save_path,
+			save_config_path,
+		)
+	else:
+		run_SHAP(
+			simulation,
+			phenotype_key,
+			save_path,
+			save_config_path,
+		)
