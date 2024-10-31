@@ -1,0 +1,247 @@
+# Scrit to fit BASIL PRS model and then make prediction on test
+# validation set samples on SDSC Expanse.
+#
+# Predictions are saved as test_preds.csv and val_preds.csv with columns
+# 'IID' and 'pred'.
+#
+# Args:
+#   --pheno_file: Path to phenotype file.
+#   --pheno_name: Name of phenotype column in phenotype file.
+#   --geno_file: Path to genotype PGEN file.
+#   --train_samples: Path to file with list of samples to use for training.
+#   --val_samples: Path to file with list of samples to use for validation.
+#       Predictions for these samples will be saved in val_preds.csv.
+#   --test_samples: Path to file with list of samples. Predictions for these
+#       samples will be saved in test_preds.csv.
+#   --alpha: Alpha value for BASIL model. 1 is LASSO, 0 is ridge, and
+#       anything in between is elastic net.
+#   --n_iter: Number of iterations for BASIL model. Default is 50.
+
+
+options(error=traceback)
+
+library(argparse)
+
+# Parse arguments function
+parse_args <- function() {
+    # create parser object
+    parser <- ArgumentParser()
+
+    # add arguments
+    parser$add_argument(
+        "--pheno_file",
+        help="Path to phenotype file"
+    )
+    parser$add_argument(
+        "--pheno_name",
+        help="Name of phenotype column in phenotype file"
+    )
+	parser$add_argument(
+        "--pheno_desc",
+        help="Name of phenotype for saving"
+    )
+    parser$add_argument(
+        "--geno_file",
+        help="Path to genotype PGEN file"
+    )
+    parser$add_argument(
+        "--train_samples",
+        help="Path to file with list of samples to use for training"
+    )
+    parser$add_argument(
+        "--val_samples",
+        help="Path to file with list of samples to use for validation"
+    )
+    parser$add_argument(
+        "--test_samples",
+        help="Path to file with list of samples to use for testing"
+    )
+    parser$add_argument(
+        "--alpha",
+        type="double",
+        help="Alpha value for BASIL model. 1 is LASSO, 0 is ridge, and anything in between is elastic net"
+    )
+    parser$add_argument(
+        "--n_iter",
+        type="integer",
+        help="Number of iterations for BASIL model. Default is 50"
+    )
+
+    # parse arguments
+    args <- parser$parse_args()
+    return(args)
+}
+
+
+### Main script ###
+
+# Load libraries
+library(snpnet)
+library(parallel)
+library(jsonlite)
+
+# Get number of cores
+num.cores <- detectCores(logical = FALSE)
+print(paste("Number of cores:", num.cores))
+
+# Parse arguments
+args <- parse_args()
+
+# Create fit config
+fit.config <- list(
+    nCores = num.cores,
+    niter = args$n_iter,  # max number of iterations (default 50)
+    use.glmnetPlus = TRUE,  # recommended for faster computation
+    early.stopping = TRUE,  # whether to stop based on validation performance (default TRUE)
+    plink2.path = "plink2",   # path to plink2 program
+    zstdcat.path = "zstdcat",  # path to zstdcat program
+    results.dir = ".",
+    KKT.verbose = TRUE,
+    verbose = TRUE
+)
+
+## Create combined covariate and phenotype file ##
+
+# Load phenotype and covariate files
+pheno.data <- read.table(
+    args$pheno_file,
+    header = TRUE,
+    sep = ""
+)
+
+# Inner join and get covariate names
+covariates <- setdiff(names(pheno.data), c("FID", "IID", args$pheno_name))
+
+## Add column indicating train/val/test split and format IDs ##
+
+# Read in sample IDs
+train.ids <- read.table(
+    args$train_samples,
+    header = FALSE,
+    sep = "",
+    col.names = c("FID", "IID")
+)
+val.ids <- read.table(
+    args$val_samples,
+    header = FALSE,
+    sep = "",
+    col.names = c("FID", "IID")
+)
+test.ids <- read.table(
+    args$test_samples,
+    header = FALSE,
+    sep = "",
+    col.names = c("FID", "IID")
+)
+
+# Add column indicating train/val/test split
+pheno.data$split <- "none"
+pheno.data$split[pheno.data$IID %in% train.ids$IID] <- "train"
+pheno.data$split[pheno.data$IID %in% val.ids$IID] <- "val"
+pheno.data$split[pheno.data$IID %in% test.ids$IID] <- "test"
+
+# Rename FID to #FID
+# names(pheno.data)[names(pheno.data) == 'FID'] <- '#FID'
+
+print(table(pheno.data$split))
+head(pheno.data)
+
+## Save covariate and phenotype files ##
+covar_path = file.path(
+	"/mnt/citrus/CITRUS/paper/output/basil", 
+	args$pheno_desc,
+	"nongeno_data.tsv"
+)
+write.table(
+	pheno.data,
+	file = covar_path,
+	sep = "\t",
+	row.names = FALSE
+)
+
+## Fit BASIL model ##
+print("Fitting BASIL model...")
+
+start_time <- Sys.time()
+
+fit_snpnet <- snpnet(
+    genotype.pfile = args$geno_file,
+    phenotype.file = covar_path,
+    phenotype = args$pheno_name,
+    # covariates = covariates,
+    configs = fit.config,
+    family = "gaussian",
+    split.col = "split",
+    alpha=args$alpha,
+)
+
+# Print runtime
+end_time <- Sys.time()
+execution_time <- difftime(end_time, start_time, units = "secs")
+print(execution_time)
+
+# Create output dir
+dir.create(
+	file.path(
+		"/mnt/citrus/CITRUS/paper/output/basil", 
+		args$pheno_desc
+	),
+	showWarnings = FALSE
+)
+
+# Save features included in model
+write.csv(
+    fit_snpnet$features.to.keep,
+    file = file.path(
+		"/mnt/citrus/CITRUS/paper/output/basil", 
+		args$pheno_desc,
+		"included_features.csv"
+	),
+    row.names = FALSE
+)
+
+# Make predictions
+snpnet_preds = predict_snpnet(
+    fit = fit_snpnet,
+    new_genotype_file=args$geno_file,
+    new_phenotype_file = covar_path,
+    phenotype = args$pheno_name,
+    split_col = "split",
+    split_name = list("val", "test"),
+    family = "gaussian"
+)
+
+min_lambda_col <- names(which.max(snpnet_preds$metric$val))
+min_lambda_col
+
+# Extract predictions and row names for val set
+val_predictions <- snpnet_preds$prediction$val[, min_lambda_col]
+val_IIDs <- names(val_predictions)
+
+# Save predictions for val set
+val_preds <- data.frame(IID = val_IIDs, pred = val_predictions)
+write.csv(
+	val_preds,
+	file = file.path(
+		"/mnt/citrus/CITRUS/paper/output/basil", 
+		args$pheno_desc,
+		"val_preds.csv"
+	),
+	row.names = FALSE
+)
+
+# Extract predictions and row names for test set
+test_predictions <- snpnet_preds$prediction$test[, min_lambda_col]
+test_IIDs <- names(test_predictions)
+
+# Save predictions for test set
+test_preds <- data.frame(IID = test_IIDs, pred = test_predictions)
+write.csv(
+	test_preds,
+	file = file.path(
+		"/mnt/citrus/CITRUS/paper/output/basil", 
+		args$pheno_desc,
+		"test_preds.csv"
+	),
+	row.names = FALSE
+)

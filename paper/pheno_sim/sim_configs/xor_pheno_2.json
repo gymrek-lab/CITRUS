@@ -1,0 +1,69 @@
+{
+	"input": [
+		{
+			"file": "../data/geno_data/vcf/phased_chr19.vcf",
+			"file_format": "vcf",
+			"reference_genome": "GRCh37",
+			"input_nodes": [
+				{
+					"alias": "var_1",
+					"type": "SNP",
+					"chr": "19",
+					"pos": [
+						24368053
+					]
+				},
+				{
+					"alias": "var_2",
+					"type": "SNP",
+					"chr": "19",
+					"pos": [
+						24451636
+					]
+				}
+			],
+			"sample_id_field": "s"
+		}
+	],
+	"simulation_steps": [
+		{
+			"type": "Constant",
+			"alias": "XOR_true",
+			"constant": 1.0,
+			"input_match_size": "var_1"
+		},
+		{
+			"type": "Constant",
+			"alias": "XOR_false",
+			"constant": 0.0,
+			"input_match_size": "var_1"
+		},
+		{
+			"type": "Concatenate",
+			"alias": "vars",
+			"input_aliases": [
+				"var_1",
+				"var_2"
+			]
+		},
+		{
+			"type": "SumReduce",
+			"alias": "vars_sum",
+			"input_alias": "vars"
+		},
+		{
+			"type": "IfElse",
+			"alias": "hap_val",
+			"input_cond_vals": "vars_sum",
+			"input_if_vals": "XOR_true",
+			"input_else_vals": "XOR_false",
+			"threshold": 1.0,
+			"comparison": "eq"
+		},
+		{
+			"type": "MeanCombine",
+			"alias": "phenotype",
+			"input_alias": "hap_val"
+		}
+	]
+}

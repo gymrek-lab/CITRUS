@@ -21,30 +21,6 @@ This tool can be used to run the simulation based on either:
 			<path_to_genotype_file> ...
 			
 		CITRUS_sim -c <path_to_config_file> -g <path_to_genotype_file>
-
-Output:
-
-	If no additional flags are provided, output will be written to the
-	current working directory. The output will be a CSV file (output.csv)
-	containing sample IDs and all corresponding values from the simulation,
-	and a JSON file (sim_config.json) containing the simulation configuration
-	(including any random selections made by nodes).
-
-	If the -o or --output_dir flag is provided, if the directory does not
-	exist it will be created, and the output files will be saved to it. By
-	default the output files will be named output.csv and sim_config.json,
-	but these can be changed with the -f or --output_file_name and -j or
-	--output_config_json flags, respectively.
-
-	Output file will by default be a comma seperated CSV file. Use -t or
-	--tsv flag to instead save as a tab seperated TSV file.
-
-Example Usage:
-
-	CITRUS_sim -c config.json -o sim_results/output_dir
-
-	CITRUS_sim -c config.json -g genotype_file_1 genotype_file_2 \\
-		-o sim_results/output_dir -t -f my_output.tsv -j my_sim_config.json
 """
 
 import click

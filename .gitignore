@@ -1,16 +1,10 @@
-# Benchmarking data
-# benchmarking/data/citrus_output/
-# benchmarking/data/citrus_phenos/
-# benchmarking/data/splits/
-# benchmarking/data/ukb/*
-# !benchmarking/data/ukb/
-# !benchmarking/data/ukb/*.py
-
-# benchmarking/prs/plink_output/*
-# !benchmarking/prs/plink_output/
-# !benchmarking/prs/plink_output/*.py
-# benchmarking/prs/prsice2_output/
+# Benchmarking
 benchmarking*/
+
+# Paper eval
+paper/data/
+paper/output/
+paper/pheno_sim/citrus*/
 
 # Tools
 benchmarking/PRSice2/

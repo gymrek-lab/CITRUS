@@ -1,0 +1,516 @@
+{
+	"input": [
+		{
+			"file": "../data/ukb/vcf/phased_chr19.vcf",
+			"file_format": "vcf",
+			"reference_genome": "GRCh37",
+			"input_nodes": [
+				{
+					"alias": "Gene1_vars",
+					"type": "SNP",
+					"chr": "19",
+					"pos": [
+						53420774,
+						55569915,
+						57085769,
+						57162101,
+						57176198,
+						57217621,
+						57398148,
+						57791758,
+						57797663,
+						58708730
+					]
+				},
+				{
+					"alias": "Gene1_mult_1",
+					"type": "SNP",
+					"chr": "19",
+					"pos": [
+						57075629,
+						57008320
+					]
+				},
+				{
+					"alias": "Gene1_mult_2",
+					"type": "SNP",
+					"chr": "19",
+					"pos": [
+						57265933,
+						57320223
+					]
+				},
+				{
+					"alias": "Gene1_mult_3",
+					"type": "SNP",
+					"chr": "19",
+					"pos": [
+						58058329,
+						58207385
+					]
+				},
+				{
+					"alias": "Gene1_mult_4",
+					"type": "SNP",
+					"chr": "19",
+					"pos": [
+						58510010,
+						58684319
+					]
+				},
+
+				{
+					"alias": "Gene2_vars",
+					"type": "SNP",
+					"chr": "19",
+					"pos": [
+						22158299,
+						21283183,
+						22045128,
+						22098198,
+						22114065,
+						22210564,
+						23442629,
+						23646411,
+						23669376,
+						23704463,
+						23899814
+					]
+				},
+				{
+					"alias": "Gene2_mult_1",
+					"type": "SNP",
+					"chr": "19",
+					"pos": [
+						23711555,
+						23569065
+					]
+				},
+				{
+					"alias": "Gene2_mult_2",
+					"type": "SNP",
+					"chr": "19",
+					"pos": [
+						23150326,
+						20171270
+					]
+				},
+				{
+					"alias": "Gene2_mult_3",
+					"type": "SNP",
+					"chr": "19",
+					"pos": [
+						21000562,
+						21563958
+					]
+				},
+				{
+					"alias": "Gene2_mult_4",
+					"type": "SNP",
+					"chr": "19",
+					"pos": [
+						21907988,
+						23483927
+					]
+				}
+			],
+			"sample_id_field": "s"
+		}
+	],
+	"simulation_steps": [
+		{
+			"type": "RandomConstant",
+			"alias": "Gene1_betas",
+			"input_match_size": "Gene1_vars",
+			"dist_name": "normal",
+			"dist_kwargs": {
+				"loc": 2.5,
+				"scale": 0.5
+			},
+			"by_feat": true
+		},
+		{
+			"type": "Product",
+			"alias": "Gene1_effects",
+			"input_aliases": [
+				"Gene1_betas",
+				"Gene1_vars"
+			]
+		},
+		{
+			"type": "SumReduce",
+			"alias": "Gene1_effects_sum",
+			"input_alias": "Gene1_effects"
+		},
+		{
+			"type": "GaussianNoise",
+			"alias": "Gene1_effects_sum_w_noise",
+			"input_alias": "Gene1_effects_sum",
+			"noise_std": 0.5
+		},
+		{
+			"type": "Constant",
+			"alias": "ones_vec",
+			"constant": 1.0,
+			"input_match_size": "Gene1_effects_sum_w_noise"
+		},
+		{
+			"type": "Distribution",
+			"alias": "Gene1_mult_1_multiplier",
+			"input_match_size": "Gene1_effects_sum_w_noise",
+			"dist_name": "normal",
+			"dist_kwargs": {
+				"loc": 0.75,
+				"scale": 0.025
+			}
+		},
+		{
+			"type": "Distribution",
+			"alias": "Gene1_mult_2_multiplier",
+			"input_match_size": "Gene1_effects_sum_w_noise",
+			"dist_name": "normal",
+			"dist_kwargs": {
+				"loc": 1.2,
+				"scale": 0.025
+			}
+		},
+		{
+			"type": "Distribution",
+			"alias": "Gene1_mult_3_multiplier",
+			"input_match_size": "Gene1_effects_sum_w_noise",
+			"dist_name": "normal",
+			"dist_kwargs": {
+				"loc": 1.1,
+				"scale": 0.025
+			}
+		},
+		{
+			"type": "Distribution",
+			"alias": "Gene1_mult_4_multiplier",
+			"input_match_size": "Gene1_effects_sum_w_noise",
+			"dist_name": "normal",
+			"dist_kwargs": {
+				"loc": 0.5,
+				"scale": 0.025
+			}
+		},
+		{
+			"type": "AnyReduce",
+			"alias": "Gene1_has_mult_1",
+			"input_alias": "Gene1_mult_1"
+		},
+		{
+			"type": "AnyReduce",
+			"alias": "Gene1_has_mult_2",
+			"input_alias": "Gene1_mult_2"
+		},
+		{
+			"type": "AnyReduce",
+			"alias": "Gene1_has_mult_3",
+			"input_alias": "Gene1_mult_3"
+		},
+		{
+			"type": "AnyReduce",
+			"alias": "Gene1_has_mult_4",
+			"input_alias": "Gene1_mult_4"
+		},
+		{
+			"type": "IfElse",
+			"alias": "Gene1_mult_1_val",
+			"input_cond_vals": "Gene1_has_mult_1",
+			"input_if_vals": "Gene1_mult_1_multiplier",
+			"input_else_vals": "ones_vec"
+		},
+		{
+			"type": "IfElse",
+			"alias": "Gene1_mult_2_val",
+			"input_cond_vals": "Gene1_has_mult_2",
+			"input_if_vals": "Gene1_mult_2_multiplier",
+			"input_else_vals": "ones_vec"
+		},
+		{
+			"type": "IfElse",
+			"alias": "Gene1_mult_3_val",
+			"input_cond_vals": "Gene1_has_mult_3",
+			"input_if_vals": "Gene1_mult_3_multiplier",
+			"input_else_vals": "ones_vec"
+		},
+		{
+			"type": "IfElse",
+			"alias": "Gene1_mult_4_val",
+			"input_cond_vals": "Gene1_has_mult_4",
+			"input_if_vals": "Gene1_mult_4_multiplier",
+			"input_else_vals": "ones_vec"
+		},
+		{
+			"type": "Distribution",
+			"alias": "Gene1_noise_scaling_term",
+			"input_match_size": "Gene1_effects_sum_w_noise",
+			"dist_name": "normal",
+			"dist_kwargs": {
+				"loc": 1.0,
+				"scale": 0.03
+			}
+		},
+		{
+			"type": "Product",
+			"alias": "Gene1_haps",
+			"input_aliases": [
+				"Gene1_effects_sum_w_noise",
+				"Gene1_mult_1_val",
+				"Gene1_mult_2_val",
+				"Gene1_mult_3_val",
+				"Gene1_mult_4_val",
+				"Gene1_noise_scaling_term"
+			]
+		},
+		{
+			"type": "MaxCombine",
+			"alias": "Gene1_max",
+			"input_alias": "Gene1_haps"
+		},
+		{
+			"type": "MeanCombine",
+			"alias": "Gene1_mean",
+			"input_alias": "Gene1_haps"
+		},
+		{
+			"type": "Concatenate",
+			"alias": "Gene1_comb_vals",
+			"input_aliases": [
+				"Gene1_max",
+				"Gene1_mean"
+			]
+		},
+		{
+			"type": "Constant",
+			"alias": "Gene1_comb_weights",
+			"constant": [
+				0.6,
+				0.4
+			],
+			"input_match_size": "Gene1_comb_vals"
+		},
+		{
+			"type": "Product",
+			"alias": "Gene1_comb_vals_weighted",
+			"input_aliases": [
+				"Gene1_comb_vals",
+				"Gene1_comb_weights"
+			]
+		},
+		{
+			"type": "MeanReduce",
+			"alias": "Gene1",
+			"input_alias": "Gene1_comb_vals_weighted"
+		},
+
+		{
+			"type": "RandomConstant",
+			"alias": "Gene2_betas",
+			"input_match_size": "Gene2_vars",
+			"dist_name": "normal",
+			"dist_kwargs": {
+				"loc": 0.5,
+				"scale": 0.5
+			},
+			"by_feat": true
+		},
+		{
+			"type": "Product",
+			"alias": "Gene2_effects",
+			"input_aliases": [
+				"Gene2_betas",
+				"Gene2_vars"
+			]
+		},
+		{
+			"type": "SumReduce",
+			"alias": "Gene2_effects_sum",
+			"input_alias": "Gene2_effects"
+		},
+		{
+			"type": "GaussianNoise",
+			"alias": "Gene2_effects_sum_w_noise",
+			"input_alias": "Gene2_effects_sum",
+			"noise_std": 0.5
+		},
+		{
+			"type": "Distribution",
+			"alias": "Gene2_mult_1_multiplier",
+			"input_match_size": "Gene2_effects_sum_w_noise",
+			"dist_name": "normal",
+			"dist_kwargs": {
+				"loc": 1.17,
+				"scale": 0.025
+			}
+		},
+		{
+			"type": "Distribution",
+			"alias": "Gene2_mult_2_multiplier",
+			"input_match_size": "Gene2_effects_sum_w_noise",
+			"dist_name": "normal",
+			"dist_kwargs": {
+				"loc": 0.82,
+				"scale": 0.025
+			}
+		},
+		{
+			"type": "Distribution",
+			"alias": "Gene2_mult_3_multiplier",
+			"input_match_size": "Gene2_effects_sum_w_noise",
+			"dist_name": "normal",
+			"dist_kwargs": {
+				"loc": 1.22,
+				"scale": 0.025
+			}
+		},
+		{
+			"type": "Distribution",
+			"alias": "Gene2_mult_4_multiplier",
+			"input_match_size": "Gene2_effects_sum_w_noise",
+			"dist_name": "normal",
+			"dist_kwargs": {
+				"loc": 0.68,
+				"scale": 0.025
+			}
+		},
+		{
+			"type": "AnyReduce",
+			"alias": "Gene2_has_mult_1",
+			"input_alias": "Gene2_mult_1"
+		},
+		{
+			"type": "AnyReduce",
+			"alias": "Gene2_has_mult_2",
+			"input_alias": "Gene2_mult_2"
+		},
+		{
+			"type": "AnyReduce",
+			"alias": "Gene2_has_mult_3",
+			"input_alias": "Gene2_mult_3"
+		},
+		{
+			"type": "AnyReduce",
+			"alias": "Gene2_has_mult_4",
+			"input_alias": "Gene2_mult_4"
+		},
+		{
+			"type": "IfElse",
+			"alias": "Gene2_mult_1_val",
+			"input_cond_vals": "Gene2_has_mult_1",
+			"input_if_vals": "Gene2_mult_1_multiplier",
+			"input_else_vals": "ones_vec"
+		},
+		{
+			"type": "IfElse",
+			"alias": "Gene2_mult_2_val",
+			"input_cond_vals": "Gene2_has_mult_2",
+			"input_if_vals": "Gene2_mult_2_multiplier",
+			"input_else_vals": "ones_vec"
+		},
+		{
+			"type": "IfElse",
+			"alias": "Gene2_mult_3_val",
+			"input_cond_vals": "Gene2_has_mult_3",
+			"input_if_vals": "Gene2_mult_3_multiplier",
+			"input_else_vals": "ones_vec"
+		},
+		{
+			"type": "IfElse",
+			"alias": "Gene2_mult_4_val",
+			"input_cond_vals": "Gene2_has_mult_4",
+			"input_if_vals": "Gene2_mult_4_multiplier",
+			"input_else_vals": "ones_vec"
+		},
+		{
+			"type": "Distribution",
+			"alias": "Gene2_noise_scaling_term",
+			"input_match_size": "Gene2_effects_sum_w_noise",
+			"dist_name": "normal",
+			"dist_kwargs": {
+				"loc": 1.0,
+				"scale": 0.03
+			}
+		},
+		{
+			"type": "Product",
+			"alias": "Gene2_haps",
+			"input_aliases": [
+				"Gene2_effects_sum_w_noise",
+				"Gene2_mult_1_val",
+				"Gene2_mult_2_val",
+				"Gene2_mult_3_val",
+				"Gene2_mult_4_val",
+				"Gene2_noise_scaling_term"
+			]
+		},
+		{
+			"type": "MaxCombine",
+			"alias": "Gene2_max",
+			"input_alias": "Gene2_haps"
+		},
+		{
+			"type": "MinCombine",
+			"alias": "Gene2_min",
+			"input_alias": "Gene2_haps"
+		},
+		{
+			"type": "Concatenate",
+			"alias": "Gene2_comb_vals",
+			"input_aliases": [
+				"Gene2_max",
+				"Gene2_min"
+			]
+		},
+		{
+			"type": "Constant",
+			"alias": "Gene2_comb_weights",
+			"constant": [
+				0.4,
+				0.6
+			],
+			"input_match_size": "Gene2_comb_vals"
+		},
+		{
+			"type": "Product",
+			"alias": "Gene2_comb_vals_weighted",
+			"input_aliases": [
+				"Gene2_comb_vals",
+				"Gene2_comb_weights"
+			]
+		},
+		{
+			"type": "MeanReduce",
+			"alias": "Gene2_wo_noise",
+			"input_alias": "Gene2_comb_vals_weighted"
+		},
+		{
+			"type": "Heritability",
+			"alias": "Gene2",
+			"input_alias": "Gene2_wo_noise",
+			"heritability": 0.6
+		},
+
+		{
+			"type": "ReLU",
+			"alias": "Gene2_relu",
+			"input_alias": "Gene2",
+			"neg_slope": -0.3
+		},
+		{
+			"type": "Product",
+			"alias": "no_noise_phenotype",
+			"input_aliases": [
+				"Gene1",
+				"Gene2_relu"
+			]
+		},
+		{
+			"type": "Heritability",
+			"alias": "phenotype",
+			"input_alias": "no_noise_phenotype",
+			"heritability": 0.5
+		}
+	]
+}
