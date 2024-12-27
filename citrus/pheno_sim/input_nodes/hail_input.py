@@ -55,7 +55,7 @@ class HailInputSource(BaseInputSource):
 		if 'file_format' not in input_config:
 			input_config['file_format'] = 'vcf'
 		if 'reference_genome' not in input_config:
-			input_config['reference_genome'] = 'GRCh38' # TODO seems dangerous
+			input_config['reference_genome'] = 'GRCh38' # TODO seems dangerous. add warning
 
 		# Set filetype specific defaults
 		if input_config['file_format'].lower() == 'vcf':

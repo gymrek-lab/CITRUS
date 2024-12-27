@@ -71,6 +71,7 @@ class InputRunner:
 		self.input_sources = []
 
 		MSG('Initializing input sources...')
+		# TODO - make cyvcf2 the default?
 		for input_source_config in input_config:
 			if (
 				'engine' not in input_source_config
@@ -78,6 +79,18 @@ class InputRunner:
 			):
 				self.input_sources.append(
 					HailInputSource(input_source_config)
+				)
+			elif input_source_config['enging'] == 'cyvcf2':
+				self.input_sources.append(
+					Cyvcf2InputSource(input_source_config)
+				)
+			elif input_source_config['engine'] == 'trtools':
+				self.input_sources.append(
+					TRToolsInputSource(input_source_config)
+				)
+			elif input_source_config['engine'] == 'covar':
+				self.input_sources.append(
+					CovarInputSource(input_source_config)
 				)
 			else:
 				raise ValueError(
