@@ -121,9 +121,28 @@ def test_hail_input_samples(hail_config, vcfdir):
 
 # Checks on hail input node with wrong input
 def test_hail_input_wronginput(hail_config, vcfdir):
+	# test missing config fields
+	new_hail_config = hail_config.copy()
+	del new_hail_config["file_format"]
+	with pytest.raises(KeyError):
+		HailInputSource(new_hail_config)
+	new_hail_config = hail_config.copy()
+	del new_hail_config["reference_genome"]
+	with pytest.raises(KeyError):
+		HailInputSource(new_hail_config)
+	new_hail_config = hail_config.copy()
+	del new_hail_config["force_bgz"]
+	with pytest.raises(KeyError):
+		HailInputSource(new_hail_config)
+		
+	# test unsupported file format
+	new_hail_config = hail_config.copy()
+	new_hail_config["file_format"] = "txt"
+	with pytest.raises(ValueError):
+		HailInputSource(new_hail_config)
+
 	# TODO - test wrong file
 	# TODO - test unindexed file
-	# TODO - test not vcf file
+	# TODO - test wrong file format
 	# TODO - test wrong node id
-	# TODO - test missing config fields
 	assert(True)
