@@ -18,26 +18,38 @@ class BaseInputSource(ABC):
 			reproducibility.
 		input_node_ids: A list of input nodes that use the input source.
 		input_sample_ids: A list of sample ids from the input source.
-		
+		node_conigs: A dictionary of node alias -> node config
 	Methods:
 		load_input_node(): Loads data for a single input node from the 
 		    source file. Optionally pass a list of sample_ids to subset and
 		    reorder according to that sample list
+		check_input_config(): Check if input config has all required
+		    fields.
 	"""
 	
 	def __init__(self, input_config):
 		self.input_config = input_config
-		self.input_node_ids = self.input_config.keys()
 		self.input_sample_ids = []
-	
+		self.node_configs = {}
+		for nodeconfig in self.input_config["input_nodes"]:
+			self.node_configs[nodeconfig["alias"]] = nodeconfig
+		self.input_node_ids = self.node_configs.keys()
+		self.check_input_config()
+		
 	@abstractmethod
-	def load_input_node(self, input_node_config, sample_ids=None):
+	def load_input_node(self, input_node_alias, sample_ids=None):
 		""" Loads the input data from the source file for a single node.
 		"""
 		pass
 
+	@abstractmethod
+	def check_input_config(self):
+		""" Check input configuration
+		"""
+		pass
+
 	def subset_and_order_samples(self, input_node_vals, sample_ids):
-		""" Subsets data ito just the sample
+		""" Subsets data to just the sample
 		ids in sample_ids and in the same order as sample_ids. Used to get
 		corresponding sample ids and data from multiple input sources.
 		

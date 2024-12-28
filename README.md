@@ -54,4 +54,16 @@ citrus plot -c example-files/linear_additive.json
 
 [Designing Simulations](doc/designing_simulations.md)
 
+## Development
 
+To run unit tests:
+
+```
+poetry run pytest --cov=. --cov-report term-missing
+```
+
+To run command line tests:
+
+```
+./test/cmdline_tests.sh
+```

@@ -4,14 +4,12 @@ Combatibile with the following file formats:
 	- VCF
 """
 
-from abc import ABC
-import inspect
-
 import numpy as np
 import hail as hl
 
 from .base_input_source import BaseInputSource
 from ..data_types import Values, HaplotypeValues
+from ...utils import MSG
 
 class HailInputSource(BaseInputSource):
 	""" Hail input source object.		
@@ -31,18 +29,13 @@ class HailInputSource(BaseInputSource):
 			self.hail_mt[self.input_config['sample_id_field']].collect()
 		).astype(str)
 
+	def check_input_config(self):
+		for req_key in ['file_format','reference_genome','force_bgz']:
+			if req_key not in self.input_config.keys():
+				raise KeyError("Missing key {} in hail config".format(req_key))
+
 	def load_matrix_table(self, input_config):
 		"""Load file as a hail MatrixTable object.
-
-		Defines following defaults for loading:
-
-		- 'file_format': 'vcf'
-		- 'reference_genome': 'GRCh38'
-
-		VCF specifc defaults:
-
-		- 'force_bgz': False
-		
 		Args:
 			input_config: The dictionary from the input section of the
 				simulation config file that defines this input source.
@@ -50,34 +43,20 @@ class HailInputSource(BaseInputSource):
 		Returns:
 			A hail MatrixTable object.
 		"""
-
-		# Set overall defaults
-		if 'file_format' not in input_config:
-			input_config['file_format'] = 'vcf'
-		if 'reference_genome' not in input_config:
-			input_config['reference_genome'] = 'GRCh38' # TODO seems dangerous. add warning
-
-		# Set filetype specific defaults
-		if input_config['file_format'].lower() == 'vcf':
-			if 'force_bgz' not in input_config:
-				input_config['force_bgz'] = False
-
 		# Set sample field
 		if 'sample_id_field' not in self.input_config:
 			self.input_config['sample_id_field'] = 's'
 
 		# Load and retrun data as a MatrixTable
 		if input_config['file_format'].lower() == 'vcf':
-			possible_kwargs = set(
-				inspect.signature(hl.import_vcf).parameters.keys()
-			).difference('path')
 			return hl.import_vcf(
 				input_config['file'],
-				**{k: v for k, v in input_config.items() if k in possible_kwargs}
+				reference_genome = input_config["reference_genome"],
+				force_bgz = input_config["force_bgz"]
 			)
 		else:
 			raise ValueError(
-				'Invalid file format: {}'.format(input_config['file_format'])
+				'Unsupported file format: {}'.format(input_config['file_format'])
 			)
 
 	def load_input_node(self, node_name, sample_ids=None):
@@ -88,8 +67,7 @@ class HailInputSource(BaseInputSource):
 		"""
 
 		# Get config
-		input_node_config = [item for item in self.input_config["input_nodes"] \
-			if item["alias"] == node_name][0] # TODO make function
+		input_node_config = self.node_configs[node_name]
 
 		# Subset to loci required by this input node
 		required_loci = self.get_required_loci_for_node(input_node_config)

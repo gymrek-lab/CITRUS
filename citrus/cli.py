@@ -80,7 +80,6 @@ def simulate(
 
 	genotype_files must be VCF files or compressed VCF files.
 	"""
-    
 	from json import load
 	from .pheno_sim import pheno_simulation
 
