@@ -80,18 +80,6 @@ class InputRunner:
 				self.input_sources.append(
 					HailInputSource(input_source_config)
 				)
-			elif input_source_config['enging'] == 'cyvcf2':
-				self.input_sources.append(
-					Cyvcf2InputSource(input_source_config)
-				)
-			elif input_source_config['engine'] == 'trtools':
-				self.input_sources.append(
-					TRToolsInputSource(input_source_config)
-				)
-			elif input_source_config['engine'] == 'covar':
-				self.input_sources.append(
-					CovarInputSource(input_source_config)
-				)
 			else:
 				raise ValueError(
 					'Invalid input engine: ' + input_source_config['engine']

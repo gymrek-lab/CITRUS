@@ -5,7 +5,7 @@ import pytest
 from ..hail_input import *
 import hail as hl
 
-##### Note: sometimes these tests give a weird
+##### Note: sometimes Hail tests give a weird
 ##### spark error? Solved when disconnected from
 ##### the internet?
 
@@ -254,3 +254,7 @@ def test_hail_badinput(hail_config, vcfdir):
 	# test wrong samples
 	with pytest.raises(ValueError):
 		vals = hail.load_input_node("testvar1", ["not_a_sample"])
+
+	# test subset_and_order_samples directly
+	with pytest.raises(ValueError):
+		hail.subset_and_order_samples("not a tuple or array", [])

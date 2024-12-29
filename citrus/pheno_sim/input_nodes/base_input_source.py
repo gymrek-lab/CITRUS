@@ -73,7 +73,6 @@ class BaseInputSource(ABC):
 			np.where(self.input_sample_ids == sid)[0][0] for sid in sample_ids
 		]
 
-		# TODO - aren't these always tuples?
 		if isinstance(input_node_vals, np.ndarray):
 			if input_node_vals.ndim == 1:
 				input_node_vals = input_node_vals[subset_idx]
@@ -94,7 +93,7 @@ class BaseInputSource(ABC):
 				)
 		else:
 			raise ValueError(
-				'Invalid input node value type: ' + str(type(input_node_vals[key]))
+				'Invalid input node value type: ' + str(type(input_node_vals))
 			)
 			
 		return input_node_vals

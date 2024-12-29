@@ -2,6 +2,11 @@
 
 Combatibile with the following file formats:
 	- VCF
+
+TODO:
+- Currently assumes phased, diploid.
+  should also handle unphased and haploid calls
+- handle other file formats?
 """
 
 import numpy as np
@@ -110,7 +115,7 @@ class HailInputSource(BaseInputSource):
 				(np.array(row_data.GT[1].collect()) >= 1).astype(int)
 			)
 
-		# If more that one locus, stack the rows and return as a tuple
+		# If more than one locus, stack the rows and return as a tuple
 		if len(required_loci) > 1:
 			input_node_vals = (
 				np.vstack(hap_1_rows),
