@@ -5,6 +5,10 @@ import pytest
 from ..hail_input import *
 import hail as hl
 
+##### Note: sometimes these tests give a weird
+##### spark error? Solved when disconnected from
+##### the internet?
+
 # Set up hail config
 @pytest.fixture
 def hail_config(tmpdir):
@@ -127,6 +131,20 @@ def test_hail_input_samples(hail_config, vcfdir):
 	assert(vals[0][1]==0)
 	assert(vals[1][0]==0)
 	assert(vals[1][1]==1)
+
+	# now with multi-SNP input
+	hail_config["input_nodes"] = []
+	hail_config["input_nodes"].append({
+		"alias": "test2SNP",
+		"type": "SNP",
+		"chr": "19",
+		"pos": [280540, 523746]
+	})
+	hail = HailInputSource(hail_config)
+	vals = hail.load_input_node("test2SNP", ["HG00096", "HG00101"])
+	assert(isinstance(vals, tuple))
+	assert(len(vals[0])==2)
+	assert(vals[0].ndim == 2)
 
 def test_hail_badinput(hail_config, vcfdir):
 	#### test missing config fields

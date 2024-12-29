@@ -40,13 +40,13 @@ class BaseInputSource(ABC):
 	def load_input_node(self, input_node_alias, sample_ids=None):
 		""" Loads the input data from the source file for a single node.
 		"""
-		pass
+		pass # pragma: no cover
 
 	@abstractmethod
 	def check_input_config(self):
 		""" Check input configuration
 		"""
-		pass
+		pass # pragma: no cover
 
 	def subset_and_order_samples(self, input_node_vals, sample_ids):
 		""" Subsets data to just the sample
@@ -73,6 +73,7 @@ class BaseInputSource(ABC):
 			np.where(self.input_sample_ids == sid)[0][0] for sid in sample_ids
 		]
 
+		# TODO - aren't these always tuples?
 		if isinstance(input_node_vals, np.ndarray):
 			if input_node_vals.ndim == 1:
 				input_node_vals = input_node_vals[subset_idx]
