@@ -35,7 +35,7 @@ class BaseInputSource(ABC):
 			self.node_configs[nodeconfig["alias"]] = nodeconfig
 		self.input_node_ids = self.node_configs.keys()
 		self.check_input_config()
-		
+
 	@abstractmethod
 	def load_input_node(self, input_node_alias, sample_ids=None):
 		""" Loads the input data from the source file for a single node.
@@ -65,6 +65,10 @@ class BaseInputSource(ABC):
 			to just the sample ids in sample_ids and in the same order as
 			sample_ids.
 		"""
+		for sid in sample_ids:
+			if sid not in self.input_sample_ids:
+				raise ValueError('Could not find requested sample {}'.format(sid))
+
 		subset_idx = [
 			np.where(self.input_sample_ids == sid)[0][0] for sid in sample_ids
 		]

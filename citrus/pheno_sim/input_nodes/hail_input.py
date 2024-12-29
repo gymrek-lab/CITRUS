@@ -67,6 +67,8 @@ class HailInputSource(BaseInputSource):
 		"""
 
 		# Get config
+		if node_name not in self.node_configs.keys():
+			raise ValueError('Could not load non-existent node {}'.format(node_name))
 		input_node_config = self.node_configs[node_name]
 
 		# Subset to loci required by this input node
